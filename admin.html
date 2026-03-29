@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Admin Dashboard</title>
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; font-family: 'Press Start 2P', cursive; font-size: 1.5rem; margin-bottom: 20px;}
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
+        textarea, input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
+        textarea { height: 80px; resize: vertical; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        #login-screen { text-align: center; margin-top: 100px; }
+        #admin-panel { display: none; }
+        .success-msg { color: #27ae60; font-weight: bold; margin-top: 10px; margin-bottom: 10px; display: none; }
+        #output-area { margin-top: 20px; }
+        #output-code { width: 100%; height: 200px; font-family: monospace; font-size: 0.9rem; background: #eee; }
+        .section-title { font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; color: #e74c3c; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-screen" class="container">
+        <h1>Admin Login</h1>
+        <p style="margin-bottom: 20px;">Bitte Passwort eingeben (Tipp: admin123)</p>
+        <input type="password" id="password" placeholder="Passwort" style="padding: 10px; font-size: 1rem; margin-bottom: 10px;">
+        <br>
+        <button id="login-btn">Login</button>
+        <p id="login-error" style="color: red; display: none; margin-top: 10px;">Falsches Passwort!</p>
+    </div>
+
+    <div id="admin-panel" class="container">
+        <h1>CV Daten Verwalten</h1>
+        <p style="margin-bottom: 20px;">Hier kannst du alle Texte für das Spiel und das Märchen anpassen.</p>
+        
+        <div id="forms-container"></div>
+        
+        <div style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+            <button id="generate-btn" style="background:#2ecc71; font-size: 1.1rem; padding: 15px;">💾 Neue data.js Generieren</button>
+            <div id="output-area" style="display: none;">
+                <p class="success-msg" style="display: block;">Erfolgreich generiert! Kopiere diesen Code und überschreibe deine alte <b>data.js</b> Datei vollständig.</p>
+                <textarea id="output-code" readonly></textarea>
+                <button id="copy-btn" style="margin-top: 10px; background: #f39c12;">Code Kopieren</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
