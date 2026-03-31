@@ -109,8 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'stadium', x: 800, y: 150, w: 320, h: 250, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
         { id: 'airport', x: 1450, y: 200, w: 280, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
         { id: 'workshop', x: 250, y: 850, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
-        { id: 'office', x: 900, y: 900, w: 250, h: 280, color: '#34495e', name: 'Büro', emoji: '🏢' },
-        { id: 'restaurant', x: 1500, y: 850, w: 220, h: 220, color: '#e67e22', name: 'Restaurant', emoji: '🍔' }
+        { id: 'office', x: 900, y: 900, w: 250, h: 280, color: '#34495e', name: 'Büro', emoji: '🏢' }
     ];
 
     // Pac-Man Points (generated along a loop path)
@@ -356,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (currentBuilding.id) {
             case 'stadium': startStadium(); break;
             case 'airport': startAirport(); break;
-            case 'restaurant': startRestaurant(); break;
             case 'workshop': startWorkshop(); break;
             case 'uni': startUni(); break;
             case 'office': startOffice(); break;
@@ -481,57 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 3. Restaurant
-    let rOrder = null;
-    function startRestaurant() {
-        document.getElementById('restaurant-modal').classList.remove('hidden');
-        const res = document.getElementById('restaurant-result');
-        res.classList.add('hidden');
-        document.querySelectorAll('.btn-order').forEach(b => b.classList.remove('selected'));
-        rOrder = null; let solved = 0; let active = true;
-
-        document.querySelectorAll('.timer-bar').forEach(b => { b.style.width = '100%'; b.style.background = '#2ecc71'; });
-        document.querySelectorAll('.rest-guest').forEach(g => { g.style.background = '#fff'; g.dataset.served = "false"; });
-
-        let time = 100;
-        const intv = setInterval(() => {
-            if (!active) return;
-            time -= 2;
-            document.querySelectorAll('.timer-bar').forEach(b => {
-                if (b.parentElement.parentElement.dataset.served === "false") {
-                    b.style.width = time + '%';
-                    if (time < 40) b.style.background = '#e74c3c';
-                }
-            });
-            if (time <= 0) {
-                active = false;
-                handleFail('restaurant', startRestaurant);
-            }
-        }, 100);
-        activeIntervals.push(intv);
-
-        document.querySelectorAll('.btn-order').forEach(o => {
-            o.onclick = () => {
-                if (!active) return;
-                document.querySelectorAll('.btn-order').forEach(x => x.classList.remove('selected'));
-                o.classList.add('selected');
-                rOrder = o.id.replace('order-', '');
-            };
-        });
-
-        document.querySelectorAll('.rest-guest').forEach(g => {
-            g.onclick = () => {
-                if (!active || !rOrder || g.dataset.served === "true") return;
-                if (g.dataset.order === rOrder) {
-                    g.style.background = '#27ae60'; g.dataset.served = "true"; solved++;
-                    if (solved >= 2) { active = false; handleWin('restaurant', 'Perfekter Service!'); }
-                } else {
-                    active = false; handleFail('restaurant', startRestaurant);
-                }
-                rOrder = null; document.querySelectorAll('.btn-order').forEach(x => x.classList.remove('selected'));
-            };
-        });
-    }
 
     // 4. Workshop
     function startWorkshop() {
@@ -669,9 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     bcs.forEach(bx => bx.onclick = null);
                                 };
                             });
-                        }, 400); // let them land
+                        }, 800); // let them land
                     }
-                }, 400); // 400ms interval for smoother arc feeling
+                }, 800); // 800ms interval for smoother arc feeling
             }, 1500); // 1.5 seconds instead of 1 so it's impossible to miss!
         };
     }
