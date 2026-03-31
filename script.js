@@ -450,35 +450,51 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('airport-modal').classList.remove('hidden');
         const plane = document.getElementById('airplane');
         const res = document.getElementById('airport-result');
-        res.classList.add('hidden'); plane.style.top = '20px'; plane.style.left = '-50px'; plane.style.transition = 'none';
+        res.classList.add('hidden'); 
+        
+        plane.style.transition = 'none';
+        plane.style.top = '20px'; 
+        plane.style.left = '-60px'; 
+        plane.style.transform = 'rotate(70deg)'; // Nose slightly down during cruise
 
-        let pX = -50; let active = true;
+        let pX = -60; let active = true;
+        const gameAreaWidth = document.getElementById('airport-game-area').clientWidth;
+
         const intv = setInterval(() => {
-            pX += 8;
-            if (pX > 600) pX = -50;
+            pX += 6; // Move right horizontally
+            if (pX > gameAreaWidth) pX = -60;
             plane.style.left = pX + 'px';
-        }, 40);
+        }, 30);
         activeIntervals.push(intv);
 
         document.getElementById('airport-game-area').onclick = () => {
             if (!active) return; active = false; clearInterval(intv);
-            plane.style.transition = 'top 0.5s ease-in, left 0.5s linear';
-            plane.style.top = '140px'; plane.style.left = (pX + 30) + 'px';
+            
+            // Dive towards the runway
+            plane.style.transition = 'top 0.7s ease-in, left 0.7s linear, transform 0.6s ease-in';
+            plane.style.top = '175px'; 
+            
+            const landX = pX + 80; // keep moving forward while dropping
+            plane.style.left = landX + 'px';
+            plane.style.transform = 'rotate(110deg)'; // dive sharply
 
             setTimeout(() => {
-                const dropPos = pX + 30; // approx center of plane
-                // Runway is at center (~250-350 within the modal)
-                const w = document.getElementById('airport-game-area').clientWidth;
-                const rCenter = w / 2;
-                if (dropPos > rCenter - 60 && dropPos < rCenter + 20) {
+                plane.style.transition = 'transform 0.3s ease-out';
+                plane.style.transform = 'rotate(45deg)'; // flare/level out flat on runway
+
+                // Center of game area is the center of the runway
+                // Runway width is 250px.
+                // Left limit is center - 125, Right limit is center + 125.
+                // We give a small margin of error (say +/- 100).
+                const center = gameAreaWidth / 2;
+                if (landX > center - 100 && landX < center + 100) {
                     handleWin('airport', 'Sichere Landung! 🛬');
                 } else {
                     handleFail('airport', startAirport);
                 }
-            }, 600);
+            }, 700);
         };
     }
-
 
     // 4. Workshop
     function startWorkshop() {
