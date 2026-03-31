@@ -58,15 +58,14 @@
             <div class="modal-content minigame-content">
                 <button class="close-btn close-minigame-btn">&times;</button>
                 <h2>Stadium: Der Perfekte Schuss</h2>
-                <p>Warte, bis das Fadenkreuz genau beim Torwart in der Mitte ist, und klicke dann zum Schießen!</p>
+                <p>Klicke zum Schießen, wenn das Ziel 'V' genau in der Mitte steht!</p>
                 <div id="game-pitch">
                     <div id="goal-net"></div>
                     <div id="goalie">🧤</div>
                     <div id="aim-needle">V</div>
                     <div id="ball">⚽</div>
                 </div>
-                <div id="minigame-hint" class="hidden hint-text">TIPP: Du musst genau in der Mitte abdrücken, wenn das
-                    gelbe 'V' auf einer Linie mit den Handschuhen ist.</div>
+                <div id="minigame-hint" class="hidden hint-text">TIPP: Genau im Rhythmus klicken!</div>
                 <div id="minigame-result" class="hidden minigame-result"></div>
             </div>
         </div>
@@ -76,18 +75,42 @@
             <div class="modal-content minigame-content">
                 <button class="close-btn close-minigame-btn">&times;</button>
                 <h2>Flughafen: Landeanflug</h2>
-                <p>Das Flugzeug sinkt langsam. Nutze die L/R Tasten, um es mittig über die Landebahn zu lenken!</p>
-                <div id="airport-game-area">
-                    <div id="runway"></div>
-                    <div id="airplane">✈️</div>
+                <p>Klicke auf die Landebahn, wenn das Flugzeug genau mittig ist!</p>
+                <div id="airport-game-area" style="cursor:pointer;">
+                    <div id="runway" style="pointer-events:none;"></div>
+                    <div id="airplane" style="pointer-events:none;">✈️</div>
                 </div>
-                <div style="margin-top:10px; display:flex; justify-content:center; gap:20px;">
-                    <button id="btn-steer-left" class="btn">⬅️ Links steer</button>
-                    <button id="btn-steer-right" class="btn">Rechts steer ➡️</button>
-                </div>
-                <div id="airport-hint" class="hidden hint-text">TIPP: Korrigiere die Position rechtzeitig. Es muss nah
-                    der weißen Mittellinie landen.</div>
+                <div id="airport-hint" class="hidden hint-text">TIPP: Klicke in den himmelblauen Bereich zur richtigen Zeit.</div>
                 <div id="airport-result" class="hidden minigame-result"></div>
+            </div>
+        </div>
+
+        <!-- Restaurant Minigame -->
+        <div id="restaurant-modal" class="modal hidden minigame-container">
+            <div class="modal-content minigame-content">
+                <button class="close-btn close-minigame-btn">&times;</button>
+                <h2>Restaurant: Stressiger Service</h2>
+                <p>Wähle das passende Getränk unten aus und klicke auf den richtigen Tisch, bevor die Zeit abläuft!</p>
+                
+                <div style="display:flex; justify-content:space-around; margin:20px 0;">
+                    <div class="rest-guest" data-order="coffee" style="padding:20px; font-size:3rem; border:2px solid #ccc; position:relative; overflow:hidden;">
+                        👨‍💼
+                        <div style="font-size:1.5rem; position:absolute; top:2px; right:5px;">☕</div>
+                        <div style="width:100%; height:8px; background:#ddd; position:absolute; bottom:0; left:0;"><div class="timer-bar"></div></div>
+                    </div>
+                    <div class="rest-guest" data-order="burger" style="padding:20px; font-size:3rem; border:2px solid #ccc; position:relative; overflow:hidden;">
+                        👩‍🎓
+                        <div style="font-size:1.5rem; position:absolute; top:2px; right:5px;">🍔</div>
+                        <div style="width:100%; height:8px; background:#ddd; position:absolute; bottom:0; left:0;"><div class="timer-bar"></div></div>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:center; gap:10px;">
+                    <button class="btn btn-order" id="order-coffee">☕ Kaffee</button>
+                    <button class="btn btn-order" id="order-burger">🍔 Burger</button>
+                </div>
+                <div id="restaurant-hint" class="hidden hint-text">TIPP: Erst Button unten anklicken, dann den Gast bedienen!</div>
+                <div id="restaurant-result" class="hidden minigame-result"></div>
             </div>
         </div>
 
@@ -96,23 +119,22 @@
             <div class="modal-content minigame-content">
                 <button class="close-btn close-minigame-btn">&times;</button>
                 <h2>Werkstatt: Schrauben eindrehen</h2>
-                <p>Klicke je 3 Mal auf "Eindrehen", bis alle Schrauben fest sitzen.</p>
+                <p>Klicke schnell auf die 3 Zahnräder, bis alle Schrauben fest sitzen!</p>
                 <div id="workshop-game-area" style="display:flex; justify-content:center; gap:40px; padding:30px 0;">
-                    <div class="screw-wrapper">
-                        <div class="screw-clickable" id="screw-0">⚙️</div>
-                        <button class="btn screw-btn" id="sbtn-0" style="padding:10px;">Drehen</button>
+                    <div class="screw-wrapper" style="width:80px;">
+                        <div class="screw-clickable" id="screw-0" data-index="0" style="font-size:4rem; cursor:pointer;">⚙️</div>
+                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-0" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
                     </div>
-                    <div class="screw-wrapper">
-                        <div class="screw-clickable" id="screw-1">⚙️</div>
-                        <button class="btn screw-btn" id="sbtn-1" style="padding:10px;">Drehen</button>
+                    <div class="screw-wrapper" style="width:80px;">
+                        <div class="screw-clickable" id="screw-1" data-index="1" style="font-size:4rem; cursor:pointer;">⚙️</div>
+                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-1" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
                     </div>
-                    <div class="screw-wrapper">
-                        <div class="screw-clickable" id="screw-2">⚙️</div>
-                        <button class="btn screw-btn" id="sbtn-2" style="padding:10px;">Drehen</button>
+                    <div class="screw-wrapper" style="width:80px;">
+                        <div class="screw-clickable" id="screw-2" data-index="2" style="font-size:4rem; cursor:pointer;">⚙️</div>
+                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-2" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
                     </div>
                 </div>
-                <div id="workshop-hint" class="hidden hint-text">TIPP: Du musst einfach nur auf jeden Knopf 3x
-                    hintereinander drücken.</div>
+                <div id="workshop-hint" class="hidden hint-text">TIPP: Klicke direkt auf die Zahnräder, nicht daneben!</div>
                 <div id="workshop-result" class="hidden minigame-result"></div>
             </div>
         </div>
@@ -121,16 +143,12 @@
         <div id="uni-modal" class="modal hidden minigame-container">
             <div class="modal-content minigame-content">
                 <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Universität: Das Quiz</h2>
-                <p>Eine einfache Frage für schnelle Denker.</p>
-                <div style="font-size:2rem; margin:30px 0; font-weight:bold; color:#2c3e50;">Was ist 7 x 8?</div>
-                <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:15px;" id="uni-answers">
-                    <button class="btn uni-btn" style="font-size:1.5rem;">42</button>
-                    <button class="btn uni-btn" style="font-size:1.5rem;">54</button>
-                    <button class="btn uni-btn" style="font-size:1.5rem;">56</button>
-                    <button class="btn uni-btn" style="font-size:1.5rem;">64</button>
+                <h2>Universität: Noten fangen</h2>
+                <p>Klicke auf die fallende 7, um die Prüfung zu bestehen!</p>
+                <div id="uni-game-area" style="position:relative; height:250px; background:#ecf0f1; border-radius:10px; overflow:hidden; border:2px solid #ccc; margin-top:20px;">
+                    <!-- Bubbles fall here via JS -->
                 </div>
-                <div id="uni-hint" class="hidden hint-text">TIPP: 7 x 8 summiert sich zu 56.</div>
+                <div id="uni-hint" class="hidden hint-text">TIPP: Es fallen gleich Zahlen herunter. Klicke schnell auf die '7'!</div>
                 <div id="uni-result" class="hidden minigame-result"></div>
             </div>
         </div>
@@ -141,22 +159,17 @@
                 <button class="close-btn close-minigame-btn">&times;</button>
                 <h2>Büro: Welcher Koffer?</h2>
                 <p>Gleich wird ein Koffer kurz den Schlüssel zeigen. Merke dir diesen Koffer, wenn sie sich mischen!</p>
-                <button id="start-office-btn" class="btn" style="margin-bottom:20px; font-size:1.2rem;">Bereit?
-                    Starten!</button>
-                <div id="office-game-area"
-                    style="position:relative; height:180px; background:#bdc3c7; border-radius:10px; padding:20px; border:3px solid #95a5a6; display:flex; justify-content:space-around; align-items:flex-end;">
-                    <div class="briefcase" id="bc-0">💼<div class="key-hidden">🔑</div>
-                    </div>
-                    <div class="briefcase" id="bc-1">💼<div class="key-hidden">🔑</div>
-                    </div>
-                    <div class="briefcase" id="bc-2">💼<div class="key-hidden">🔑</div>
-                    </div>
+                <button id="start-office-btn" class="btn" style="margin-bottom:20px; font-size:1.2rem;">Bereit? Starten!</button>
+                <div id="office-game-area" style="position:relative; height:180px; background:#bdc3c7; border-radius:10px; padding:20px;">
+                    <div class="briefcase" id="bc-0" style="position:absolute; left:15%; bottom:20px; transition:left 0.3s ease;">💼<div class="key-hidden hidden" style="position:absolute; top:-30px; font-size:30px; opacity:1 !important;">🔑</div></div>
+                    <div class="briefcase" id="bc-1" style="position:absolute; left:45%; bottom:20px; transition:left 0.3s ease;">💼<div class="key-hidden hidden" style="position:absolute; top:-30px; font-size:30px; opacity:1 !important;">🔑</div></div>
+                    <div class="briefcase" id="bc-2" style="position:absolute; left:75%; bottom:20px; transition:left 0.3s ease;">💼<div class="key-hidden hidden" style="position:absolute; top:-30px; font-size:30px; opacity:1 !important;">🔑</div></div>
                 </div>
-                <div id="office-hint" class="hidden hint-text">TIPP: Schau sofort nach Start auf den großen,
-                    aufpoppenden Schlüssel. Halte den Fokus auf DIESEM Koffer.</div>
+                <div id="office-hint" class="hidden hint-text">TIPP: Folge dem leuchtenden Schlüssel mit den Augen!</div>
                 <div id="office-result" class="hidden minigame-result"></div>
             </div>
         </div>
+
 
     </div>
 

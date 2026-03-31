@@ -577,16 +577,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 6. Office
+    // 6. Office
     function startOffice() {
         document.getElementById('office-modal').classList.remove('hidden');
         const res = document.getElementById('office-result');
         res.classList.add('hidden');
         const bcs = [document.getElementById('bc-0'), document.getElementById('bc-1'), document.getElementById('bc-2')];
         const keys = document.querySelectorAll('.key-hidden');
+        const positions = ['15%', '45%', '75%'];
+        let bcsOrder = [0, 1, 2];
 
         keys.forEach(k => k.classList.add('hidden'));
-        bcs.forEach(b => {
-            b.style.left = '0px'; b.style.top = '0px';
+        bcs.forEach((b, i) => {
+            b.style.left = positions[i];
+            b.style.bottom = '20px';
             b.onclick = null; // disable click
         });
 
@@ -602,17 +606,23 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 keys[trueIdx].classList.add('hidden');
                 // Shuffle visually
-                let swaps = 10;
+                let swaps = 8;
                 const intv = setInterval(() => {
                     swaps--;
-                    bcs.forEach(b => {
-                        b.style.left = (Math.random() * 20 - 10) + 'px';
-                        b.style.bottom = (Math.random() * 10 - 5) + 'px';
-                    });
+                    const pairs = [[0,1], [1,2], [0,2]];
+                    const pair = pairs[Math.floor(Math.random() * pairs.length)];
+                    let i = pair[0], j = pair[1];
+                    
+                    let temp = bcsOrder[i];
+                    bcsOrder[i] = bcsOrder[j];
+                    bcsOrder[j] = temp;
+                    
+                    bcs[0].style.left = positions[bcsOrder.indexOf(0)];
+                    bcs[1].style.left = positions[bcsOrder.indexOf(1)];
+                    bcs[2].style.left = positions[bcsOrder.indexOf(2)];
+
                     if (swaps <= 0) {
                         clearInterval(intv);
-                        bcs.forEach(b => { b.style.left = '0px'; b.style.bottom = '0px'; });
-                        // Enable click guessing
                         bcs.forEach((b, idx) => {
                             b.onclick = () => {
                                 keys[trueIdx].classList.remove('hidden');
@@ -622,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             };
                         });
                     }
-                }, 200);
+                }, 350);
             }, 1000);
         };
     }
