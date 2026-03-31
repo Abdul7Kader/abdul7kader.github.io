@@ -390,35 +390,60 @@ document.addEventListener('DOMContentLoaded', () => {
     function startStadium() {
         document.getElementById('minigame-modal').classList.remove('hidden');
         const ball = document.getElementById('ball');
-        const needle = document.getElementById('aim-needle');
-        const res = document.getElementById('minigame-result');
-        res.classList.add('hidden'); ball.style.bottom = '20px'; ball.style.left = '50%';
+        const crosshair = document.getElementById('aim-crosshair');
+        const goalie = document.getElementById('goalie');
+        const res = document.getElementById('stadium-result');
+        
+        res.classList.add('hidden'); 
+        ball.style.bottom = '20px'; 
+        ball.style.left = '50%';
+        ball.style.display = 'block';
+        ball.style.transform = `translateX(-50%) rotate(0deg)`;
 
-        let needlePos = 0; let nDir = 1; let active = true;
+        let cx = 0; let cDir = 1; let active = true;
+        
+        // Animate Crosshair
         const intv = setInterval(() => {
-            needlePos += 5 * nDir;
-            if (needlePos > 40) nDir = -1;
-            if (needlePos < -40) nDir = 1;
-            needle.style.transform = `translateX(calc(-50% + ${needlePos}px))`;
+            cx += 8 * cDir;
+            if (cx > 140) cDir = -1;
+            if (cx < -140) cDir = 1;
+            crosshair.style.transform = `translateX(calc(-50% + ${cx}px))`;
         }, 50);
-        activeIntervals.push(intv);
 
-        document.getElementById('game-pitch').onclick = () => {
+        // Animate Goalie
+        let gx = 0; let gDir = 1;
+        const gIntv = setInterval(() => {
+            gx += 12 * gDir;
+            if (gx > 120) gDir = -1;
+            if (gx < -120) gDir = 1;
+            goalie.style.transform = `translateX(calc(-50% + ${gx}px))`;
+        }, 50);
+
+        activeIntervals.push(intv, gIntv);
+
+        ball.onclick = (e) => {
+            e.stopPropagation();
             if (!active) return;
-            active = false; clearInterval(intv);
-
-            ball.style.bottom = '150px';
-            ball.style.left = `calc(50% + ${needlePos}px)`;
+            active = false; 
+            clearInterval(intv);
+            clearInterval(gIntv);
+            
+            ball.style.bottom = '160px'; 
+            ball.style.left = `calc(50% + ${cx}px)`;
+            ball.style.transform = `translateX(-50%) rotate(720deg)`;
 
             setTimeout(() => {
-                // If needle is near 0 (center), win.
-                if (Math.abs(needlePos) < 15) {
-                    handleWin('minigame', 'TOOOOR! 🏆 Perfekt gezielt!');
-                } else {
-                    handleFail('minigame', startStadium);
-                    ball.style.left = '50%';
+                if (Math.abs(cx - gx) < 45) {
+                    handleFail('stadium', startStadium);
+                    ball.style.display = 'none';
                 }
-            }, 500);
+                else if (Math.abs(cx) <= 150) {
+                    handleWin('stadium', 'TOOOOR! 🏆');
+                } else {
+                    handleFail('stadium', startStadium);
+                    ball.style.display = 'none';
+                }
+            }, 300);
         };
     }
 
