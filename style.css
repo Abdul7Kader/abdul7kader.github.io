@@ -165,7 +165,7 @@ canvas {
 
 /* 6. Office */
 .briefcase { font-size: 3.5rem; cursor: pointer; user-select: none; position: relative; transition: left 0.2s, bottom 0.2s; }
-.key-hidden { position: absolute; font-size: 3rem; top: 10px; left: 10px; opacity: 0; transition: top 0.3s, opacity 0.3s; z-index: 5; text-shadow: 0 0 10px yellow;}
+.key-hidden { position: absolute; font-size: 4rem; top: -60px; left: 0; opacity: 1; z-index: 15; text-shadow: 0 0 15px yellow; pointer-events:none; }
 
 /* Fairy Tale View */
 #fairytale-view {

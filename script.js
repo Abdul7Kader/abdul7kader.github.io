@@ -579,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Office
     // 6. Office
     function startOffice() {
+        console.log("OFFICE GAME LOADED: Version 4 with 3D Shuffle!");
         document.getElementById('office-modal').classList.remove('hidden');
         const res = document.getElementById('office-result');
         res.classList.add('hidden');
@@ -591,6 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bcs.forEach((b, i) => {
             b.style.left = positions[i];
             b.style.bottom = '20px';
+            b.style.zIndex = '2';
             b.onclick = null; // disable click
         });
 
@@ -605,10 +607,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 keys[trueIdx].classList.add('hidden');
-                // Shuffle visually
-                let swaps = 8;
+                // Shuffle visually with arcs
+                let swaps = 10;
                 const intv = setInterval(() => {
                     swaps--;
+                    // Reset all bottoms and z-index quickly
+                    bcs.forEach(b => { b.style.bottom = '20px'; b.style.zIndex = '2'; });
+                    
                     const pairs = [[0,1], [1,2], [0,2]];
                     const pair = pairs[Math.floor(Math.random() * pairs.length)];
                     let i = pair[0], j = pair[1];
@@ -617,23 +622,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     bcsOrder[i] = bcsOrder[j];
                     bcsOrder[j] = temp;
                     
+                    // Arc physics
+                    bcs[i].style.bottom = '60px'; // Goes over
+                    bcs[i].style.zIndex = '5';
+                    bcs[j].style.bottom = '-10px'; // Goes under
+                    bcs[j].style.zIndex = '1';
+
                     bcs[0].style.left = positions[bcsOrder.indexOf(0)];
                     bcs[1].style.left = positions[bcsOrder.indexOf(1)];
                     bcs[2].style.left = positions[bcsOrder.indexOf(2)];
 
                     if (swaps <= 0) {
                         clearInterval(intv);
-                        bcs.forEach((b, idx) => {
-                            b.onclick = () => {
-                                keys[trueIdx].classList.remove('hidden');
-                                if (idx === trueIdx) handleWin('office', 'Gefunden! Büro offen.');
-                                else handleFail('office', startOffice);
-                                bcs.forEach(bx => bx.onclick = null);
-                            };
-                        });
+                        setTimeout(() => {
+                            bcs.forEach(b => { b.style.bottom = '20px'; b.style.zIndex = '2'; });
+                            bcs.forEach((b, idx) => {
+                                b.onclick = () => {
+                                    keys[trueIdx].classList.remove('hidden');
+                                    if (idx === trueIdx) handleWin('office', 'Gefunden! Büro offen.');
+                                    else handleFail('office', startOffice);
+                                    bcs.forEach(bx => bx.onclick = null);
+                                };
+                            });
+                        }, 400); // let them land
                     }
-                }, 350);
-            }, 1000);
+                }, 400); // 400ms interval for smoother arc feeling
+            }, 1500); // 1.5 seconds instead of 1 so it's impossible to miss!
         };
     }
 });
