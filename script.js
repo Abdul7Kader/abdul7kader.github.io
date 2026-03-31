@@ -133,12 +133,29 @@ document.addEventListener('DOMContentLoaded', () => {
     pathSegments.forEach(seg => {
         let items = Math.floor(seg.w / 100) + Math.floor(seg.h / 100);
         for (let i = 0; i < items; i++) {
-            collectibles.push({
-                x: seg.x + 20 + Math.random() * (seg.w - 40),
-                y: seg.y + 20 + Math.random() * (seg.h - 40),
-                eaten: false
-            });
-            maxScore++;
+            let cx, cy;
+            let isValid = false;
+            let attempts = 0;
+            
+            while (!isValid && attempts < 20) {
+                cx = seg.x + 20 + Math.random() * (seg.w - 40);
+                cy = seg.y + 20 + Math.random() * (seg.h - 40);
+                
+                isValid = true;
+                for (let b of buildings) {
+                    // Check if point is inside a building, with a 20px safety margin
+                    if (cx > b.x - 20 && cx < b.x + b.w + 20 && cy > b.y - 20 && cy < b.y + b.h + 20) {
+                        isValid = false;
+                        break;
+                    }
+                }
+                attempts++;
+            }
+
+            if (isValid) {
+                collectibles.push({ x: cx, y: cy, eaten: false });
+                maxScore++;
+            }
         }
     });
 
