@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let cameraX = 0; let cameraY = 0;
 
     const buildings = [
-        { id: 'uni', x: 200, y: 200, w: 220, h: 220, color: '#3498db', name: 'Universität', emoji: '🎓' },
-        { id: 'stadium', x: 800, y: 150, w: 320, h: 250, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
+        { id: 'stadium', x: 200, y: 150, w: 320, h: 250, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
+        { id: 'uni', x: 850, y: 200, w: 220, h: 220, color: '#3498db', name: 'Universität', emoji: '🎓' },
         { id: 'airport', x: 1450, y: 200, w: 280, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
         { id: 'workshop', x: 250, y: 850, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
         { id: 'office', x: 900, y: 900, w: 250, h: 280, color: '#34495e', name: 'Büro', emoji: '🏢' }
