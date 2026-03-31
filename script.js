@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.getElementById('close-congrats-btn').addEventListener('click', () => {
+        document.getElementById('congrats-modal').classList.add('hidden');
+        setTimeout(() => { isModalOpen = false; }, 100);
+    });
+
     // TABS
     tabGame.addEventListener('click', () => {
         if (!isFairytaleMode) return;
@@ -206,6 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     c.eaten = true;
                     currentScore++;
                     document.getElementById('score-val').textContent = currentScore;
+                    if (currentScore >= collectibles.length && collectibles.length > 0) {
+                        setTimeout(() => {
+                            const modal = document.getElementById('congrats-modal');
+                            if(modal) { modal.classList.remove('hidden'); isModalOpen = true; }
+                        }, 500);
+                    }
                 }
             });
         }
@@ -223,15 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = '#d7ccc8'; // Dirt path color
         pathSegments.forEach(seg => {
             ctx.beginPath(); ctx.roundRect(seg.x, seg.y, seg.w, seg.h, 20); ctx.fill();
-        });
-
-        // Draw Collectibles
-        collectibles.forEach(c => {
-            if (!c.eaten) {
-                ctx.fillStyle = '#f1c40f'; // Pacman dot
-                ctx.beginPath(); ctx.arc(c.x, c.y, 8, 0, Math.PI * 2); ctx.fill();
-                ctx.strokeStyle = '#f39c12'; ctx.lineWidth = 2; ctx.stroke();
-            }
         });
 
         // Add a lake
@@ -265,6 +267,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // Door
             ctx.fillStyle = '#3e2723'; ctx.fillRect(b.x + b.w / 2 - 25, b.y + b.h - 50, 50, 50);
         }
+
+        // Draw Collectibles (always on top of scenery)
+        collectibles.forEach(c => {
+            if (!c.eaten) {
+                ctx.fillStyle = '#f1c40f'; // Pacman dot
+                ctx.beginPath(); ctx.arc(c.x, c.y, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#f39c12'; ctx.lineWidth = 2; ctx.stroke();
+                
+                // Add a small pulsing glow
+                const glow = Math.abs(Math.sin(Date.now() / 200)) * 5;
+                ctx.beginPath(); ctx.arc(c.x, c.y, 10 + glow, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(241, 196, 15, 0.3)'; ctx.fill();
+            }
+        });
 
         // Draw Player (Animated!)
         const legS = Math.sin(walkAnim) * 10;
