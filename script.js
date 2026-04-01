@@ -282,7 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillText(b.emoji, b.x + b.w / 2, b.y + b.h / 2 + 20);
 
             // Door
-            ctx.fillStyle = '#3e2723'; ctx.fillRect(b.x + b.w / 2 - 25, b.y + b.h - 50, 50, 50);
+            ctx.fillStyle = '#3e2723'; 
+            if (b.y < worldHeight / 2) {
+                // Top map buildings: door faces down
+                ctx.fillRect(b.x + b.w / 2 - 25, b.y + b.h - 50, 50, 50);
+            } else {
+                // Bottom map buildings: door faces up (towards the center paths)
+                ctx.fillRect(b.x + b.w / 2 - 25, b.y, 50, 50);
+            }
         }
 
         // Draw Collectibles (always on top of scenery)
