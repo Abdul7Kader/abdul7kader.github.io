@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Simple auth
     loginBtn.addEventListener('click', () => {
-        if (passwordInput.value === 'admin123') {
+        if (passwordInput.value === 'Developer-2026') {
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             buildForm(window.resumeData);
@@ -55,10 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addSectionTitle('Berufserfahrung (Büro)');
         createJSONField('experience', 'Berufserfahrung (JSON)');
         createStringField('fairytale.experience', 'Märchen: Berufserfahrung');
-
-        addSectionTitle('Gastro & Minijobs (Restaurant)');
-        createJSONField('minijobs', 'Minijobs (JSON)');
-        createStringField('fairytale.minijobs', 'Märchen: Minijobs');
     }
 
     function addSectionTitle(titleText) {
