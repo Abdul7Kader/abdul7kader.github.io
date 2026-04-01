@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // World Data
-    const worldWidth = 2000; const worldHeight = 1500;
+    const worldWidth = 1400; const worldHeight = 1100;
 
     const player = {
         x: worldWidth / 2, y: worldHeight / 2, width: 40, height: 40,
@@ -110,21 +110,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let cameraX = 0; let cameraY = 0;
 
     const buildings = [
-        { id: 'stadium', x: 200, y: 150, w: 320, h: 250, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
-        { id: 'uni', x: 850, y: 200, w: 220, h: 220, color: '#3498db', name: 'Universität', emoji: '🎓' },
-        { id: 'airport', x: 1450, y: 200, w: 280, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
-        { id: 'workshop', x: 250, y: 850, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
-        { id: 'office', x: 900, y: 900, w: 250, h: 280, color: '#34495e', name: 'Büro', emoji: '🏢' }
+        { id: 'stadium', x: 260, y: 140, w: 250, h: 200, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
+        { id: 'uni', x: 640, y: 140, w: 200, h: 200, color: '#3498db', name: 'Universität', emoji: '🎓' },
+        { id: 'airport', x: 960, y: 140, w: 260, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
+        { id: 'workshop', x: 280, y: 760, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
+        { id: 'office', x: 630, y: 760, w: 220, h: 220, color: '#34495e', name: 'Büro', emoji: '🏢' }
     ];
 
     // Pac-Man Points (generated along a loop path)
     const collectibles = [];
     const pathSegments = [
-        { x: 300, y: 500, w: 1400, h: 80 }, // Top horizontal
-        { x: 300, y: 700, w: 1400, h: 80 }, // Bottom horizontal
-        { x: 400, y: 400, w: 80, h: 500 },  // Left vertical 1
-        { x: 950, y: 400, w: 80, h: 600 },  // Mid vertical
-        { x: 1600, y: 400, w: 80, h: 500 }  // Right vertical
+        { x: 250, y: 450, w: 900, h: 80 },  // Top horizontal
+        { x: 250, y: 580, w: 900, h: 80 },  // Bottom horizontal
+        { x: 340, y: 350, w: 80, h: 400 },  // Left vertical
+        { x: 700, y: 350, w: 80, h: 400 },  // Mid vertical
+        { x: 1050, y: 350, w: 80, h: 400 }  // Right vertical
     ];
 
     let maxScore = 0; let currentScore = 0;
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('score-max').textContent = maxScore;
 
     const trees = [];
-    for (let i = 0; i < 60; i++) trees.push({ x: Math.random() * (worldWidth - 50), y: Math.random() * (worldHeight - 50) });
+    for (let i = 0; i < 40; i++) trees.push({ x: Math.random() * (worldWidth - 50), y: Math.random() * (worldHeight - 50) });
 
     const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
 
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add a lake
         ctx.fillStyle = '#29b6f6';
-        ctx.beginPath(); ctx.ellipse(1500, 500, 150, 80, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(1200, 700, 100, 60, 0, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = '#0288d1'; ctx.lineWidth = 4; ctx.stroke();
 
         ctx.lineWidth = 10; ctx.strokeStyle = '#33691e'; ctx.strokeRect(0, 0, worldWidth, worldHeight);
