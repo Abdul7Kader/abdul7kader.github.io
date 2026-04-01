@@ -34,27 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         addSectionTitle('Allgemein');
         createStringField('intro', 'Begrüßungstext im Startbildschirm');
-        createStringField('fairytale.intro', 'Märchen: Begrüßung');
 
         addSectionTitle('Hobbies & Sport (Stadion)');
         createJSONField('hobbies', 'Hobbies (JSON Liste, jedes Element in "")');
-        createStringField('fairytale.hobbies', 'Märchen: Hobbies');
 
         addSectionTitle('Ausbildung (Universität)');
         createJSONField('education', 'Ausbildung (JSON)');
-        createStringField('fairytale.education', 'Märchen: Ausbildung');
 
         addSectionTitle('Reisen (Flughafen)');
         createJSONField('travels', 'Reisen (JSON)');
-        createStringField('fairytale.travels', 'Märchen: Reisen');
 
         addSectionTitle('Fähigkeiten (Werkstatt)');
         createJSONField('skills', 'Fähigkeiten (JSON)');
-        createStringField('fairytale.skills', 'Märchen: Fähigkeiten');
 
         addSectionTitle('Berufserfahrung (Büro)');
         createJSONField('experience', 'Berufserfahrung (JSON)');
-        createStringField('fairytale.experience', 'Märchen: Berufserfahrung');
     }
 
     function addSectionTitle(titleText) {

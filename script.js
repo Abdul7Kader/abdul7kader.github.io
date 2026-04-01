@@ -11,11 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiLayer = document.getElementById('ui-layer');
     const infoModal = document.getElementById('info-modal');
 
-    // Tabs & Fairytale
-    const tabGame = document.getElementById('tab-game');
-    const tabFairytale = document.getElementById('tab-fairytale');
-    const fairytaleView = document.getElementById('fairytale-view');
-    const fairytaleContent = document.getElementById('fairytale-content');
+
     const mobileControls = document.getElementById('mobile-controls');
 
     // Init Data
@@ -36,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Game State
     let isModalOpen = true;
-    let isFairytaleMode = false;
 
     // Attempt tracking
     let currentAttempts = 0;
@@ -60,44 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { isModalOpen = false; }, 100);
     });
 
-    // TABS
-    tabGame.addEventListener('click', () => {
-        if (!isFairytaleMode) return;
-        isFairytaleMode = false;
-        tabGame.classList.add('active');
-        tabFairytale.classList.remove('active');
-        fairytaleView.classList.add('hidden');
-        uiLayer.style.display = 'block';
-        if (window.innerWidth <= 800) mobileControls.style.display = 'flex';
-    });
 
-    tabFairytale.addEventListener('click', () => {
-        if (isFairytaleMode) return;
-        isFairytaleMode = true;
-        tabFairytale.classList.add('active');
-        tabGame.classList.remove('active');
-        populateFairytale();
-        fairytaleView.classList.remove('hidden');
-        uiLayer.style.display = 'none';
-        mobileControls.style.display = 'none';
-    });
-
-    function populateFairytale() {
-        if (!data.fairytale) {
-            fairytaleContent.innerHTML = "<p>Märchen-Texte wurden noch nicht konfiguriert. Nutze das Admin-Dashboard!</p>";
-            return;
-        }
-        fairytaleContent.innerHTML = `
-            <div class="fairytale-section"><em>${data.fairytale.intro}</em></div>
-            <div class="fairytale-section"><h3>Das Training (Ausbildung)</h3><p>${data.fairytale.education}</p></div>
-            <div class="fairytale-section"><h3>Die großen Reisen</h3><p>${data.fairytale.travels}</p></div>
-            <div class="fairytale-section"><h3>Die Anfänge (Minijobs)</h3><p>${data.fairytale.minijobs}</p></div>
-            <div class="fairytale-section"><h3>Die Taten (Erfahrung)</h3><p>${data.fairytale.experience}</p></div>
-            <div class="fairytale-section"><h3>Die Künste (Fähigkeiten)</h3><p>${data.fairytale.skills}</p></div>
-            <div class="fairytale-section"><h3>Der Ausgleich (Hobbies)</h3><p>${data.fairytale.hobbies}</p></div>
-            <div style="text-align:center; margin-top:40px; font-weight:bold;">...und die Reise geht weiter!</div>
-        `;
-    }
 
     // World Data
     const worldWidth = 1400; const worldHeight = 1100;
@@ -169,14 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', e => {
         let key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         if (keys.hasOwnProperty(key)) keys[key] = true;
-        if ((key === 'e' || key === ' ') && !isModalOpen && !isFairytaleMode) handleInteraction();
+        if ((key === 'e' || key === ' ') && !isModalOpen) handleInteraction();
     });
     window.addEventListener('keyup', e => {
         let key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         if (keys.hasOwnProperty(key)) keys[key] = false;
     });
 
-    const mobileAction = () => { if (!isModalOpen && !isFairytaleMode) handleInteraction(); };
+    const mobileAction = () => { if (!isModalOpen) handleInteraction(); };
     document.getElementById('btn-action').addEventListener('touchstart', (e) => { e.preventDefault(); mobileAction(); });
     document.getElementById('btn-action').addEventListener('click', mobileAction);
 
@@ -198,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let walkAnim = 0; let walkDir = 1;
 
     function update() {
-        if (!isModalOpen && !isFairytaleMode) {
+        if (!isModalOpen) {
             let dx = 0; let dy = 0;
             if (keys.w || keys.ArrowUp) dy -= player.speed;
             if (keys.s || keys.ArrowDown) dy += player.speed;
@@ -242,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function draw() {
-        if (isFairytaleMode) return;
         ctx.fillStyle = '#689F38'; ctx.fillRect(0, 0, canvas.width, canvas.height); // Darker grass
 
         ctx.save(); ctx.translate(-cameraX, -cameraY);

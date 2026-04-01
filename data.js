@@ -35,16 +35,7 @@ const resumeData = {
         { date: "2016 - 2018", role: "Kellner & Barista", company: "Café Zentral" },
         { date: "2015 - 2016", role: "Küchenhilfe", company: "Restaurant bella Italia" },
         { date: "2014 - 2015", role: "Aushilfe Catering", company: "Event Gastro" }
-    ],
-    fairytale: {
-        intro: "Es war einmal in einem weit entfernten Code-Königreich, da machte sich ein tapferer Entdecker auf den Weg, um die Welt der Technologie, Gastronomie und fernen Länder zu erobern...",
-        hobbies: "Wann immer der Held sein Schwert ruhen ließ, fand er Freude daran, über den grünen Rasen zu rennen, magische Runen (Code) in seine Tastatur zu hämmern und verborgene Bücher nach altem Wissen zu durchforsten.",
-        education: "In den Hallen der Gelehrten eignete sich der Held die Künste der Informatik an, wo er lernte, wie die Maschinen von Geisterhand flüsterten.",
-        travels: "Mit Siebenmeilenstiefeln bereiste er ferne Welten: Vom fernen Sonnenaufgang in Tokyo bis hin zu den antiken Gladiatoren-Arenen Roms. Jeder Ort hinterließ eine Spur auf seiner Seele.",
-        skills: "Durch viele Schlachten schmiedete er wertvolle Fähigkeiten: Er lenkte die Ströme des Webs (HTML/CSS/JS) so meisterhaft wie ein Zauberer und bewahrte selbst im hitzigsten Tavernen-Chaos (Gastro-Stress) stets einen kühlen Kopf.",
-        experience: "Im großen Ratszimmer der Gilden bewies er sich als eifriger Software-Entwickler, nachdem er zuvor das Netzwerk der städtischen Kaufmannsgilde am Laufen gehalten hatte.",
-        minijobs: "Doch seine Anfänge waren bescheiden: Als Tränke-Mischer (Barista) und fleißiger Helfer in den tiefsten Küchen des Königreichs erlernte er Demut und harte Arbeit."
-    }
+    ]
 };
 
 window.resumeData = resumeData;
