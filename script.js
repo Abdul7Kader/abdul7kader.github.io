@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pdfBtn) {
         pdfBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (window.playSound) window.playSound('click');
             generatePrintResume();
             setTimeout(() => window.print(), 100);
         });
@@ -89,20 +90,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const pr = document.getElementById('print-resume');
         if (!pr || !data) return;
         
-        // Remove file extensions from name
-        const displayName = (data.name || 'Lebenslauf').replace(/\.[^/.]+$/, "");
+        // Use fixed name or fallback
+        const displayName = "Abdul Kader Sabouni";
         
         let html = `
-            <h1>${displayName}</h1>
-            <div class="print-contact">
-                <strong>Softwareentwickler</strong><br>
-                ${data.about ? data.about : ''}
+            <div style="text-align:center; margin-bottom: 40px;">
+                <h1 style="margin-bottom:5px; border:none;">${displayName}</h1>
+                <p style="font-size:1.2rem; color:#555; margin-top:0;">Softwareentwickler / Informatikstudent</p>
+                <div style="font-size:0.9rem; color:#777; margin-top:10px;">
+                    Dortmund, Deutschland | Interaktiver Lebenslauf Portfolio
+                </div>
             </div>
         `;
         
-        if (data.jobs && data.jobs.length > 0) {
+        // Berufserfahrung (experience in data.js)
+        const jobs = data.experience || data.jobs || [];
+        if (jobs.length > 0) {
             html += `<h2>Berufserfahrung</h2>`;
-            data.jobs.forEach(j => {
+            jobs.forEach(j => {
                 html += `
                 <div class="print-entry">
                     <div class="print-header">
@@ -114,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Projekte (projects in data.js)
         if (data.projects && data.projects.length > 0) {
             html += `<h2>Projekte & Portfolio</h2>`;
             data.projects.forEach(p => {
@@ -127,37 +133,44 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
+        // Ausbildung (education in data.js uses title/detail)
         if (data.education && data.education.length > 0) {
             html += `<h2>Ausbildung & Sprachkurse</h2>`;
             data.education.forEach(e => {
                 html += `
                 <div class="print-entry">
                     <div class="print-header">
-                        <span class="print-title">${e.degree || e.course}</span>
+                        <span class="print-title">${e.title || e.degree || e.course}</span>
                         <span class="print-date">${e.date}</span>
                     </div>
-                    <div class="print-subtitle">${e.school}</div>
+                    <div class="print-subtitle">${e.detail || e.school}</div>
                 </div>`;
             });
         }
 
-        html += `<div class="grid-2col">`;
+        html += `<div class="grid-2col" style="margin-top:20px;">`;
 
+        // Skills (skills in data.js is array of {name, level})
         if (data.skills && data.skills.length > 0) {
-            html += `<div><h2>IT & Fähigkeiten</h2><ul>`;
-            const sks = typeof data.skills === 'string' ? data.skills.split(',') : data.skills;
-            sks.forEach(s => html += `<li>${s.trim()}</li>`);
+            html += `<div><h2>Fähigkeiten & IT</h2><ul>`;
+            data.skills.forEach(s => {
+                html += `<li><strong>${s.name}:</strong> ${s.level}</li>`;
+            });
             html += `</ul></div>`;
         }
         
         html += `<div><h2>Weitere Kenntnisse</h2><ul>`;
+        // Languages (if any extra outside skills)
         if (data.languages && data.languages.length > 0) {
             html += `<li><strong>Sprachen:</strong> ${data.languages.join(', ')}</li>`;
         }
-        if (data.travel && data.travel.length > 0) {
-            const travels = data.travel.map(t => typeof t === 'string' ? t : t.country).join(', ');
-            html += `<li><strong>Reiseerfahrung:</strong> ${travels}</li>`;
+        // Travels (travels in data.js)
+        const travels = data.travels || data.travel || [];
+        if (travels.length > 0) {
+            const travelString = travels.map(t => t.country).join(', ');
+            html += `<li><strong>Reiseerfahrung:</strong> ${travelString}</li>`;
         }
+        // Hobbies (hobbies in data.js)
         if (data.hobbies && data.hobbies.length > 0) {
             html += `<li><strong>Hobbies:</strong> ${data.hobbies.join(', ')}</li>`;
         }
