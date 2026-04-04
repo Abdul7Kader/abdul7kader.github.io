@@ -43,7 +43,7 @@ const resumeData = {
         },
         {
             "date": "Besucht",
-            "country": "Spanien, Griechenland, Italien (Sizilien), Algerien, Marokko, Kroatien"
+            "country": "Spanien, Griechenland, Italien, Algerien, Marokko, Kroatien"
         },
         {
             "date": "Besucht",
@@ -88,7 +88,7 @@ const resumeData = {
         {
             "date": "11.2023 - Aktuell",
             "role": "Softwareentwickler (Werkstudent)",
-            "company": "PSI SE"
+            "company": "PSI Software SE"
         },
         {
             "date": "01.2020 - 12.2021",
@@ -114,24 +114,25 @@ const resumeData = {
     "minijobs": [],
     "projects": [
         {
-            "title": "Drive Pluz",
-            "tech": "Software & App",
-            "detail": "Fahrschulverwaltung und Schüler-App (Gescheitert)."
-        },
-        {
             "title": "E-Commerce Onlineshop",
             "tech": "Shop-System",
             "detail": "Kunden-Shop-System für über 3000 Produkte."
         },
+
         {
             "title": "Resturantify",
             "tech": "Web-Plattform",
-            "detail": "Eigenes Projekt: Plattform für Restaurants, um kostenlos oder günstig Webseiten zu konfigurieren."
+            "detail": "Eigenes Projekt: Plattform für Restaurants, um kostenlos oder günstig Webseiten zu konfigurieren (Coming soon!)."
         },
         {
-            "title": "Ein neues Buch",
+            "title": "Ein eigenes Buch",
             "tech": "Autor",
             "detail": "Ich schreibe gerade ein Buch (Coming soon!)."
+        },
+        {
+            "title": "Drive Pluz",
+            "tech": "Software & App",
+            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Gescheitert)."
         }
     ],
     "profileImage": "profilbild.jpg",

@@ -543,35 +543,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Uni
+    // 5. Uni
     function startUni() {
         document.getElementById('uni-modal').classList.remove('hidden');
         const res = document.getElementById('uni-result');
-        const area = document.getElementById('uni-game-area');
-        res.classList.add('hidden'); area.innerHTML = '';
+        const board = document.getElementById('memory-board');
+        res.classList.add('hidden'); 
+        board.innerHTML = '';
 
-        const vals = [6, 7, 9];
-        let active = true;
+        const symbols = ['💻', '🧠', '☕', '🎓'];
+        let cards = [...symbols, ...symbols];
+        
+        cards.sort(() => Math.random() - 0.5);
 
-        vals.forEach((v, i) => {
-            const b = document.createElement('div');
-            b.className = 'uni-bubble'; b.textContent = v;
-            b.style.left = (20 + i * 30) + '%';
-            area.appendChild(b);
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let pairsFound = 0;
 
-            b.onclick = () => {
-                if (!active) return; active = false;
-                if (v === 7) handleWin('uni', 'Akademisch brilliant!'); else handleFail('uni', startUni);
-            };
+        cards.forEach(sym => {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.symbol = sym;
+            card.innerHTML = `<div class="front"></div><div class="back">${sym}</div>`;
+            board.appendChild(card);
+
+            card.addEventListener('click', () => {
+                if (lockBoard) return;
+                if (card === firstCard) return;
+                if (card.classList.contains('flipped')) return;
+
+                card.classList.add('flipped');
+
+                if (!firstCard) {
+                    firstCard = card;
+                    return;
+                }
+
+                secondCard = card;
+                lockBoard = true;
+
+                if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+                    pairsFound++;
+                    firstCard = null;
+                    secondCard = null;
+                    lockBoard = false;
+                    if (pairsFound === symbols.length) {
+                        setTimeout(() => handleWin('uni', 'Prüfungen bestanden!'), 600);
+                    }
+                } else {
+                    setTimeout(() => {
+                        firstCard.classList.remove('flipped');
+                        secondCard.classList.remove('flipped');
+                        firstCard = null;
+                        secondCard = null;
+                        lockBoard = false;
+                    }, 800);
+                }
+            });
         });
-
-        let bubbleY = -50;
-        const intv = setInterval(() => {
-            if (!active) return;
-            bubbleY += 2;
-            document.querySelectorAll('.uni-bubble').forEach(b => b.style.top = bubbleY + 'px');
-            if (bubbleY > 250) { active = false; handleFail('uni', startUni); } // Missed
-        }, 50);
-        activeIntervals.push(intv);
     }
 
     // 6. Office
