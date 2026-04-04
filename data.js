@@ -5,102 +5,133 @@
 const resumeData = {
     "intro": "Hallo! Willkommen in meiner interaktiven Welt. Steuere mich mit den Pfeiltasten (oder W/A/S/D) und besuche die Gebäude. Drücke 'E' an einem Gebäude, um mehr über meinen Lebenslauf zu erfahren! (Auf dem Handy nutze die Buttons unten)",
     "hobbies": [
-        "⚽ Fußball & Sport",
-        "💻 Programmieren & Tech",
+        "🏊 Fitness & Schwimmen",
+        "🏄 Wassersportarten (SUP und Paddelboot)",
         "🌍 Reisen & Neue Kulturen",
-        "📚 Lesen & Weiterbildung"
+        "💻 Programmieren & Tech"
     ],
     "education": [
         {
-            "date": "2018 - 2022",
-            "title": "Bachelor of Science: Informatik",
-            "detail": "Technische Universität Musterstadt"
+            "date": "09.2021 - Aktuell",
+            "title": "Informatik",
+            "detail": "FH Dortmund"
         },
         {
-            "date": "2015 - 2018",
-            "title": "Fachabitur",
-            "detail": "Berufsschule für Technik"
+            "date": "08.2016 - 12.2019",
+            "title": "Allgemeine Hochschulreife",
+            "detail": "Dortmund"
+        },
+        {
+            "date": "01.2016 - 04.2016",
+            "title": "Sprachkurs B1",
+            "detail": "Dortmund"
+        },
+        {
+            "date": "03.2015 - 06.2015",
+            "title": "Integrationskurs VHS",
+            "detail": "Marburg"
         }
     ],
     "travels": [
         {
-            "date": "1988",
-            "country": "Reise in die DDR (Meine erste große Reise)"
+            "date": "Heimat",
+            "country": "Syrien & Deutschland"
         },
         {
-            "date": "2012",
-            "country": "Spanien, Barcelona"
+            "date": "10.2014",
+            "country": "Einreise nach Deutschland"
         },
         {
-            "date": "2016",
-            "country": "USA, California Roadtrip"
+            "date": "Besucht",
+            "country": "Spanien, Griechenland, Italien (Sizilien), Algerien, Marokko, Kroatien"
         },
         {
-            "date": "2019",
-            "country": "Japan, Tokyo & Kyoto"
+            "date": "Besucht",
+            "country": "Dänemark, Belgien, Holland, Österreich, Schweiz, Luxemburg, Liechtenstein"
         },
         {
-            "date": "2023",
-            "country": "Italien, Rom"
+            "date": "Besucht",
+            "country": "Polen, Schweden, Tschechien, Ungarn, Türkei, Libanon"
         }
     ],
     "skills": [
         {
-            "name": "Webentwicklung (HTML, CSS, JS)",
-            "level": "Experte"
+            "name": "Programmiersprachen",
+            "level": "Java, R, C, C++, SQL, HTML, CSS, JS"
         },
         {
-            "name": "Teamführung & Kommunikation",
-            "level": "Sehr gut"
+            "name": "Tools & Software",
+            "level": "MS Office, Linux, Figma, Jira, GitHub, ITSM"
         },
         {
-            "name": "Problemlösung",
-            "level": "Stark"
+            "name": "Fachkenntnisse",
+            "level": "IT-Support, Digital Design, Frontend-Design"
         },
         {
-            "name": "Gastro-Stressresistenz",
-            "level": "Überragend"
+            "name": "Arabisch",
+            "level": "Muttersprache"
+        },
+        {
+            "name": "Deutsch",
+            "level": "Wort und Schrift (Abitur, Studium)"
+        },
+        {
+            "name": "Englisch",
+            "level": "Wort und Schrift (B2)"
+        },
+        {
+            "name": "Französisch",
+            "level": "A2"
         }
     ],
     "experience": [
         {
-            "date": "2022 - Heute",
-            "role": "Junior Softwareentwickler",
-            "company": "Tech StartUp Berlin"
+            "date": "11.2023 - Aktuell",
+            "role": "Softwareentwickler (Werkstudent)",
+            "company": "PSI SE"
         },
         {
-            "date": "2020 - 2022",
-            "role": "IT-Systemadministrator",
-            "company": "Mittelstands GmbH"
+            "date": "01.2020 - 12.2021",
+            "role": "Call Center Agent",
+            "company": "Samsung, Telekom, Amevida Dortmund"
+        },
+        {
+            "date": "05.2017 - 04.2019",
+            "role": "Corporate Accounting & Tax",
+            "company": "Adesso SE, Dortmund"
+        },
+        {
+            "date": "03.2023 - 08.2023",
+            "role": "Gastronomie",
+            "company": "SKR Bochum"
+        },
+        {
+            "date": "06.2015 - 12.2015",
+            "role": "Kassierer",
+            "company": "McDonalds, Marburg-Biedenkopf"
         }
     ],
-    "minijobs": [
-        {
-            "date": "2016 - 2018",
-            "role": "Kellner & Barista",
-            "company": "Café Zentral"
-        },
-        {
-            "date": "2015 - 2016",
-            "role": "Küchenhilfe",
-            "company": "Restaurant bella Italia"
-        },
-        {
-            "date": "2014 - 2015",
-            "role": "Aushilfe Catering",
-            "company": "Event Gastro"
-        }
-    ],
+    "minijobs": [],
     "projects": [
         {
-            "title": "Portfolio Interactive",
-            "tech": "HTML, CSS, JS",
-            "detail": "Diese interaktive CV Webseite."
+            "title": "Drive Pluz",
+            "tech": "Software & App",
+            "detail": "Fahrschulverwaltung und Schüler-App (Gescheitert)."
         },
         {
-            "title": "Lagerverwaltung App",
-            "tech": "React & SQLite",
-            "detail": "Dashboard zur Warenbestands- und Kundenverwaltung."
+            "title": "E-Commerce Onlineshop",
+            "tech": "Shop-System",
+            "detail": "Kunden-Shop-System für über 3000 Produkte."
+        },
+        {
+            "title": "Resturantify",
+            "tech": "Web-Plattform",
+            "detail": "Eigenes Projekt: Plattform für Restaurants, um kostenlos oder günstig Webseiten zu konfigurieren."
+        },
+        {
+            "title": "Ein neues Buch",
+            "tech": "Autor",
+            "detail": "Ich schreibe gerade ein Buch (Coming soon!)."
         }
     ],
     "profileImage": "profilbild.jpg",
