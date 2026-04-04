@@ -154,11 +154,32 @@ canvas {
 
 
 
+/* 7. Construction */
+.build-block { width: 80px; height: 40px; background: #e74c3c; border: 3px solid #c0392b; border-radius: 4px; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; font-family: var(--font-pixel); font-size: 0.7rem; text-shadow: 1px 1px 0 #000; box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2); position: absolute; }
+
 /* Mobile */
 #mobile-controls { position: absolute; bottom: 30px; left: 0; width: 100%; display: none; flex-direction: column; align-items: center; gap: 15px; z-index: 5; opacity: 0.85; pointer-events: none;}
 .horizontal-btns { display: flex; gap: 30px; }
 #mobile-controls button { width: 65px; height: 65px; font-size: 1.8rem; pointer-events: auto; border-radius: 50%; border: 3px solid #000; background: rgba(255,255,255,0.9); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 0 #000; cursor: pointer; }
 #mobile-controls button:active { box-shadow: 0 0px 0 #000; transform: translateY(4px); background: #f1c40f; }
+
+/* Admin Link */
+#admin-gear-link {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    text-decoration: none;
+    z-index: 2000;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+#admin-gear-link:hover {
+    transform: rotate(90deg) scale(1.1);
+    opacity: 1;
+}
 
 @media (max-width: 800px) {
     #mobile-controls { display: flex; }

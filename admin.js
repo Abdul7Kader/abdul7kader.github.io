@@ -10,9 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputCode = document.getElementById('output-code');
     const copyBtn = document.getElementById('copy-btn');
 
+    // Helper function to hash passwords
+    async function hashPassword(msg) {
+        const msgBuffer = new TextEncoder().encode(msg);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
+
     // Simple auth
-    loginBtn.addEventListener('click', () => {
-        if (passwordInput.value === 'Developer-2026') {
+    loginBtn.addEventListener('click', async () => {
+        const inputHash = await hashPassword(passwordInput.value);
+        // Hash for "hackable"
+        if (inputHash === '9b8e060c591c2bd78bf08ae09879c5324c3e9a3d67026bfd8f5ac147a092afb5') {
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             buildForm(window.resumeData);
@@ -34,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         addSectionTitle('Allgemein');
         createStringField('intro', 'Begrüßungstext im Startbildschirm');
+        createStringField('profileImage', 'Profilbild URL (Begrüßung) z.B. https://...');
+        createStringField('congratsImage', 'Abschlussbild URL (Glückwunsch)');
 
         addSectionTitle('Hobbies & Sport (Stadion)');
         createJSONField('hobbies', 'Hobbies (JSON Liste, jedes Element in "")');
@@ -49,6 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addSectionTitle('Berufserfahrung (Büro)');
         createJSONField('experience', 'Berufserfahrung (JSON)');
+
+        addSectionTitle('Eigene Projekte (Baustelle)');
+        createJSONField('projects', 'Projekte (JSON)');
     }
 
     function addSectionTitle(titleText) {

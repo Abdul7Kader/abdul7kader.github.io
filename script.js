@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Init Data
     introText.textContent = data.intro;
+    if (data.profileImage && data.profileImage.trim() !== '') {
+        const picCont = document.getElementById('profile-picture-container');
+        picCont.innerHTML = `<img src="${data.profileImage}" alt="Profilbild" style="width:100%; height:100%; object-fit:cover;">`;
+    }
+    if (data.congratsImage && data.congratsImage.trim() !== '') {
+        const congratsPic = document.getElementById('congrats-pic');
+        if (congratsPic) congratsPic.src = data.congratsImage;
+    }
 
     // Load Character Sprite
     const charImg = new Image();
@@ -72,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'uni', x: 640, y: 140, w: 200, h: 200, color: '#3498db', name: 'Universität', emoji: '🎓' },
         { id: 'airport', x: 960, y: 140, w: 260, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
         { id: 'workshop', x: 280, y: 760, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
-        { id: 'office', x: 630, y: 760, w: 220, h: 220, color: '#34495e', name: 'Büro', emoji: '🏢' }
+        { id: 'office', x: 630, y: 760, w: 220, h: 220, color: '#34495e', name: 'Büro', emoji: '🏢' },
+        { id: 'construction', x: 960, y: 760, w: 220, h: 220, color: '#e67e22', name: 'Baustelle', emoji: '🏗️' }
     ];
 
     // Pac-Man Points (generated along a loop path)
@@ -320,6 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (bId === 'restaurant') {
             title = 'Gastro & Minijobs 🍔';
             if (data.minijobs) data.minijobs.forEach(m => html += `<div class="cv-item"><div class="cv-date">${m.date || ''}</div><div class="cv-title">${m.role || ''}</div><div class="cv-desc">${m.company || ''}</div></div>`);
+        } else if (bId === 'construction') {
+            title = 'Eigene Projekte 🏗️';
+            if (data.projects) data.projects.forEach(p => html += `<div class="cv-item"><div class="cv-date">${p.tech || ''}</div><div class="cv-title">${p.title || ''}</div><div class="cv-desc">${p.detail || ''}</div></div>`);
         } else if (bId === 'stadium') {
             title = 'Hobbies & Sport ⚽';
             html += `<ul class="cv-list">`;
@@ -355,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'workshop': startWorkshop(); break;
             case 'uni': startUni(); break;
             case 'office': startOffice(); break;
+            case 'construction': startConstruction(); break;
             default: populateModalInfo(currentBuilding.id); break;
         }
     }
@@ -633,6 +646,103 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }, 800); // 800ms interval for smoother arc feeling
             }, 1500); // 1.5 seconds instead of 1 so it's impossible to miss!
+        };
+    }
+
+    // 7. Construction
+    function startConstruction() {
+        document.getElementById('construction-modal').classList.remove('hidden');
+        const res = document.getElementById('construction-result');
+        res.classList.add('hidden');
+        
+        const hookAsm = document.getElementById('crane-hook-assembly');
+        const movingBlock = document.getElementById('moving-block');
+        const stackArea = document.getElementById('block-stack');
+        const startBtn = document.getElementById('start-construction-btn');
+        const gameAreaWidth = document.getElementById('construction-game-area').clientWidth;
+        
+        stackArea.innerHTML = '';
+        movingBlock.style.display = 'none';
+        
+        let active = false;
+        let cX = gameAreaWidth / 2;
+        let cDir = 1;
+        let intv = null;
+        let currentBlocks = 0;
+        let dropsLeft = 10;
+        
+        const dropsLeftSpan = document.getElementById('crane-drops-left');
+        dropsLeftSpan.textContent = dropsLeft;
+        
+        hookAsm.style.left = cX + 'px';
+        
+        startBtn.style.display = 'block';
+        startBtn.onclick = () => {
+            startBtn.style.display = 'none';
+            playRound();
+        };
+        
+        function playRound() {
+            if (currentBlocks >= 3) return;
+            if (dropsLeft <= 0) {
+                handleFail('construction', startConstruction);
+                return;
+            }
+            
+            movingBlock.style.display = 'flex';
+            movingBlock.style.transition = 'none';
+            movingBlock.style.top = '55px';
+            
+            active = true;
+            intv = setInterval(() => {
+                cX += 6 * cDir;
+                if (cX > gameAreaWidth - 50) cDir = -1;
+                if (cX < 50) cDir = 1;
+                hookAsm.style.left = cX + 'px';
+                movingBlock.style.left = cX + 'px';
+            }, 30);
+            activeIntervals.push(intv);
+        }
+        
+        document.getElementById('construction-game-area').onclick = () => {
+            if (!active) return;
+            active = false;
+            clearInterval(intv);
+            
+            dropsLeft--;
+            dropsLeftSpan.textContent = dropsLeft;
+            
+            movingBlock.style.transition = 'top 0.4s cubic-bezier(0.5, 0, 1, 1)';
+            const dropTop = 320 - 30 - 40 - (currentBlocks * 40); 
+            movingBlock.style.top = dropTop + 'px';
+            
+            setTimeout(() => {
+                const center = gameAreaWidth / 2;
+                if (Math.abs(cX - center) < 30) {
+                    currentBlocks++;
+                    const dropped = document.createElement('div');
+                    dropped.className = 'build-block';
+                    dropped.style.left = '50%';
+                    dropped.style.transform = 'translateX(-50%)';
+                    dropped.style.bottom = ((currentBlocks-1) * 40) + 'px';
+                    dropped.textContent = "Projekt " + currentBlocks;
+                    stackArea.appendChild(dropped);
+                    
+                    movingBlock.style.display = 'none';
+                    if (currentBlocks < 3) {
+                        setTimeout(playRound, 500);
+                    } else {
+                        handleWin('construction', 'Perfekt gestapelt!');
+                    }
+                } else {
+                    movingBlock.style.display = 'none';
+                    if (dropsLeft <= 0) {
+                        handleFail('construction', startConstruction);
+                    } else {
+                        setTimeout(playRound, 500);
+                    }
+                }
+            }, 450);
         };
     }
 });
