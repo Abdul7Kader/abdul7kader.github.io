@@ -235,3 +235,43 @@ canvas {
 
 .btn-order { opacity: 0.6; transition: 0.2s; background:#7f8c8d; box-shadow:inset -4px -4px 0px rgba(0,0,0,0.2), 0 5px 0px #555;}
 .btn-order.selected { opacity: 1; background: #f1c40f; color:#2c3e50; border:2px solid #333; box-shadow:inset 4px 4px 0px rgba(0,0,0,0.2), 0 0px 0px #333;}
+
+/* --- PRINT LAYOUT --- */
+.print-only { display: none; }
+
+@media print {
+    body { background: white; margin: 0; padding: 0; overflow: visible; }
+    
+    /* Hide game UI */
+    #ui-layer, canvas, #admin-gear-link, #mobile-controls, .modal, .dialog-box { display: none !important; }
+    
+    /* Make resume visible */
+    .print-only { 
+        display: block !important; 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        color: #000;
+        padding: 0;
+        line-height: 1.5;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    /* Print Layout Styling */
+    #print-resume h1 { border-bottom: 3px solid #000; padding-bottom: 5px; margin-bottom: 5px; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; }
+    #print-resume .print-contact { margin-bottom: 30px; font-size: 1rem; color: #444; }
+    #print-resume h2 { margin-top: 30px; border-bottom: 1.5px solid #aaa; padding-bottom: 5px; color: #222; font-size: 1.4rem; text-transform: uppercase;}
+    
+    #print-resume .print-entry { margin-bottom: 15px; page-break-inside: avoid; }
+    #print-resume .print-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+    #print-resume .print-title { font-size: 1.15rem; font-weight: bold; }
+    #print-resume .print-date { font-weight: bold; color: #555; }
+    #print-resume .print-subtitle { font-style: italic; color: #555; margin-bottom: 5px; }
+    #print-resume .print-detail { margin: 0; font-size: 1rem; color: #333; }
+    
+    #print-resume ul { padding-left: 20px; margin-top: 5px; margin-bottom: 15px; }
+    #print-resume li { margin-bottom: 4px; font-size: 1rem; }
+    
+    #print-resume .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    
+    @page { margin: 1.5cm; }
+}

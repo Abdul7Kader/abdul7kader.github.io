@@ -74,6 +74,98 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = window.resumeData;
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    
+    // PDF Export Logic
+    const pdfBtn = document.getElementById('pdf-download-btn');
+    if (pdfBtn) {
+        pdfBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            generatePrintResume();
+            setTimeout(() => window.print(), 100);
+        });
+    }
+
+    function generatePrintResume() {
+        const pr = document.getElementById('print-resume');
+        if (!pr || !data) return;
+        
+        // Remove file extensions from name
+        const displayName = (data.name || 'Lebenslauf').replace(/\.[^/.]+$/, "");
+        
+        let html = `
+            <h1>${displayName}</h1>
+            <div class="print-contact">
+                <strong>Softwareentwickler</strong><br>
+                ${data.about ? data.about : ''}
+            </div>
+        `;
+        
+        if (data.jobs && data.jobs.length > 0) {
+            html += `<h2>Berufserfahrung</h2>`;
+            data.jobs.forEach(j => {
+                html += `
+                <div class="print-entry">
+                    <div class="print-header">
+                        <span class="print-title">${j.role}</span>
+                        <span class="print-date">${j.date}</span>
+                    </div>
+                    <div class="print-subtitle">${j.company}</div>
+                </div>`;
+            });
+        }
+
+        if (data.projects && data.projects.length > 0) {
+            html += `<h2>Projekte & Portfolio</h2>`;
+            data.projects.forEach(p => {
+                html += `
+                <div class="print-entry">
+                    <div class="print-header">
+                        <span class="print-title">${p.title} <span style="font-weight:normal;font-size:0.9rem">(${p.tech})</span></span>
+                    </div>
+                    <p class="print-detail">${p.detail}</p>
+                </div>`;
+            });
+        }
+        
+        if (data.education && data.education.length > 0) {
+            html += `<h2>Ausbildung & Sprachkurse</h2>`;
+            data.education.forEach(e => {
+                html += `
+                <div class="print-entry">
+                    <div class="print-header">
+                        <span class="print-title">${e.degree || e.course}</span>
+                        <span class="print-date">${e.date}</span>
+                    </div>
+                    <div class="print-subtitle">${e.school}</div>
+                </div>`;
+            });
+        }
+
+        html += `<div class="grid-2col">`;
+
+        if (data.skills && data.skills.length > 0) {
+            html += `<div><h2>IT & Fähigkeiten</h2><ul>`;
+            const sks = typeof data.skills === 'string' ? data.skills.split(',') : data.skills;
+            sks.forEach(s => html += `<li>${s.trim()}</li>`);
+            html += `</ul></div>`;
+        }
+        
+        html += `<div><h2>Weitere Kenntnisse</h2><ul>`;
+        if (data.languages && data.languages.length > 0) {
+            html += `<li><strong>Sprachen:</strong> ${data.languages.join(', ')}</li>`;
+        }
+        if (data.travel && data.travel.length > 0) {
+            const travels = data.travel.map(t => typeof t === 'string' ? t : t.country).join(', ');
+            html += `<li><strong>Reiseerfahrung:</strong> ${travels}</li>`;
+        }
+        if (data.hobbies && data.hobbies.length > 0) {
+            html += `<li><strong>Hobbies:</strong> ${data.hobbies.join(', ')}</li>`;
+        }
+        html += `</ul></div>`;
+        html += `</div>`; // end grid
+        
+        pr.innerHTML = html;
+    }
 
     // UI Elements
     const introBox = document.getElementById('intro-box');

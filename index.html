@@ -23,9 +23,9 @@
         <div id="score-display">Punkte: <span id="score-val">0</span> / <span id="score-max">0</span></div>
 
         <!-- PDF Download Button -->
-        <a id="pdf-download-btn" href="lebenslauf.pdf" target="_blank" title="Lebenslauf als PDF herunterladen">
-            📄 PDF-CV
-        </a>
+        <button id="pdf-download-btn" title="Lebenslauf exportieren">
+            📄 PDF-Export
+        </button>
 
         <!-- Landscape Warning (Mobile) -->
         <div id="landscape-warning" class="hidden">
@@ -217,6 +217,9 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
+    
+    <!-- PDF Print Container -->
+    <div id="print-resume" class="print-only"></div>
 </body>
 
 </html>

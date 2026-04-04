@@ -115,14 +115,14 @@ const resumeData = {
     "projects": [
         {
             "title": "E-Commerce Onlineshop",
-            "tech": "Shop-System",
-            "detail": "Kunden-Shop-System für über 3000 Produkte."
+            "tech": "Online Verkauf",
+            "detail": "Verkauf auf unterschiedlichen Plattformen."
         },
 
         {
-            "title": "Resturantify",
+            "title": "Gastrofy",
             "tech": "Web-Plattform",
-            "detail": "Eigenes Projekt: Plattform für Restaurants, um kostenlos oder günstig Webseiten zu konfigurieren (Coming soon!)."
+            "detail": "Eigenes Projekt: Plattform für Restaurants(Coming soon!)."
         },
         {
             "title": "Ein eigenes Buch",
