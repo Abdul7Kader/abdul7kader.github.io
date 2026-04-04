@@ -1,4 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Landscape Warning Logic
+    const landscapeWarning = document.getElementById('landscape-warning');
+    const landscapeDismiss = document.getElementById('landscape-dismiss');
+    
+    function checkOrientation() {
+        // Show warning if portrait on mobile (width < 768 and height > width)
+        if (!landscapeWarning.classList.contains('dismissed')) {
+            if (window.innerWidth < 768 && window.innerHeight > window.innerWidth) {
+                landscapeWarning.classList.remove('hidden');
+            } else {
+                landscapeWarning.classList.add('hidden');
+            }
+        }
+    }
+    window.addEventListener('resize', checkOrientation);
+    checkOrientation();
+    
+    landscapeDismiss.addEventListener('click', () => {
+        landscapeWarning.classList.add('hidden');
+        landscapeWarning.classList.add('dismissed');
+    });
+
+    // Audio System (Lazy init to bypass browser limits)
+    let audioCtx = null;
+    window.playSound = function(type) {
+        try {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if (type === 'coin') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(987.77, now); // B5
+                osc.frequency.setValueAtTime(1318.51, now + 0.1); // E6
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            } else if (type === 'click') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'win') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.15); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.3); // G5
+                osc.frequency.setValueAtTime(1046.50, now + 0.45); // C6
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+                osc.start(now); osc.stop(now + 0.8);
+            } else if (type === 'drop') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.linearRampToValueAtTime(50, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            }
+        } catch(e) { console.log('Audio error', e); }
+    };
+
     const data = window.resumeData;
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -194,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!c.eaten && Math.hypot((player.x + 20) - c.x, (player.y + 20) - c.y) < 30) {
                     c.eaten = true;
                     currentScore++;
+                    window.playSound('coin');
                     document.getElementById('score-val').textContent = currentScore;
                     if (currentScore >= collectibles.length && collectibles.length > 0) {
                         setTimeout(() => {
@@ -387,6 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleWin(bId, msg) {
+        window.playSound('win');
         resetAllMinigames();
         const resBox = document.getElementById(`${bId}-result`);
         resBox.innerHTML = `<span class="win-text">${msg} Lade Info...</span>`;
@@ -573,6 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (card === firstCard) return;
                 if (card.classList.contains('flipped')) return;
 
+                window.playSound('click');
                 card.classList.add('flipped');
 
                 if (!firstCard) {
@@ -739,6 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
             active = false;
             clearInterval(intv);
             
+            window.playSound('drop');
             dropsLeft--;
             dropsLeftSpan.textContent = dropsLeft;
             
