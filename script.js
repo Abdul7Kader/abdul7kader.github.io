@@ -207,13 +207,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('keydown', e => {
         let key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-        if (keys.hasOwnProperty(key)) keys[key] = true;
+        if (keys.hasOwnProperty(key)) {
+            keys[key] = true;
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                e.preventDefault(); // Prevent page scrolling
+            }
+        }
         if ((key === 'e' || key === ' ') && !isModalOpen) handleInteraction();
-    });
+    }, { passive: false });
+    
     window.addEventListener('keyup', e => {
         let key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         if (keys.hasOwnProperty(key)) keys[key] = false;
     });
+
+    // Unblock Audio globally on first interaction (Safari Fix)
+    document.body.addEventListener('click', function unblockAudio() {
+        window.playSound('init');
+        document.body.removeEventListener('click', unblockAudio);
+    }, { once: true });
+    
+    document.body.addEventListener('touchstart', function unblockAudio() {
+        window.playSound('init');
+        document.body.removeEventListener('touchstart', unblockAudio);
+    }, { once: true });
 
     const mobileAction = () => { if (!isModalOpen) handleInteraction(); };
     document.getElementById('btn-action').addEventListener('touchstart', (e) => { e.preventDefault(); mobileAction(); });
