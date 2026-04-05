@@ -94,12 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayName = "Abdul Kader Sabouni";
         
         let html = `
-            <div style="text-align:center; margin-bottom: 40px;">
-                <h1 style="margin-bottom:5px; border:none;">${displayName}</h1>
-                <p style="font-size:1.2rem; color:#555; margin-top:0;">Softwareentwickler / Informatikstudent</p>
-                <div style="font-size:0.9rem; color:#777; margin-top:10px;">
-                    Dortmund, Deutschland | Interaktiver Lebenslauf Portfolio
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 40px; border-bottom: 2px solid #000; padding-bottom: 20px;">
+                <div style="text-align:left;">
+                    <h1 style="margin-bottom:5px; border:none; padding-bottom:0;">${displayName}</h1>
+                    <p style="font-size:1.2rem; color:#555; margin-top:0;">Softwareentwickler / Informatikstudent</p>
+                    <div style="font-size:0.9rem; color:#777; margin-top:10px;">
+                        Dortmund, Deutschland | Interaktiver Lebenslauf Portfolio
+                    </div>
                 </div>
+                ${data.profileImage ? `<img src="${data.profileImage}" style="width:120px; height:120px; border-radius:10px; border: 2px solid #000; object-fit:cover;">` : ''}
             </div>
         `;
         
