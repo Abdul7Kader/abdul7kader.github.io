@@ -7,7 +7,7 @@ const resumeData = {
     "hobbies": [
         "🏊 Fitness & Schwimmen",
         "🏄 Wassersportarten (SUP und Paddelboot)",
-        "🌍 Reisen & Neue Kulturen",
+        "🌍 Reisen & Neue Kulturen + Essen",
         "💻 Programmieren & Tech"
     ],
     "education": [
@@ -19,17 +19,17 @@ const resumeData = {
         {
             "date": "08.2016 - 12.2019",
             "title": "Allgemeine Hochschulreife",
-            "detail": "Dortmund"
+            "detail": "Westfalen-Kolleg Dortmund"
         },
         {
             "date": "01.2016 - 04.2016",
             "title": "Sprachkurs B1",
-            "detail": "Dortmund"
+            "detail": "Auslandsgesellschaft Dortmund"
         },
         {
             "date": "03.2015 - 06.2015",
             "title": "Integrationskurs VHS",
-            "detail": "Marburg"
+            "detail": "Marburg-Biedenkopf"
         }
     ],
     "travels": [
@@ -57,15 +57,15 @@ const resumeData = {
     "skills": [
         {
             "name": "Programmiersprachen",
-            "level": "Java, R, C, C++, SQL, HTML, CSS, JS"
+            "level": "Java, C, C++, JS, CSS, SQL, HTML, R"
         },
         {
             "name": "Tools & Software",
-            "level": "MS Office, Linux, Figma, Jira, GitHub, ITSM"
+            "level": "MS Office, Linux, Figma, Jira, GitHub"
         },
         {
             "name": "Fachkenntnisse",
-            "level": "IT-Support, Digital Design, Frontend-Design"
+            "level": "IT-Support, Digital Design, Frontend-Design, ITSM"
         },
         {
             "name": "Arabisch",
@@ -122,7 +122,7 @@ const resumeData = {
         {
             "title": "Gastrofy",
             "tech": "Web-Plattform",
-            "detail": "Eigenes Projekt: Plattform für Restaurants(Coming soon!)."
+            "detail": "Ein Mehrwert für Restaurants und Gäste (Coming soon!)."
         },
         {
             "title": "Ein eigenes Buch",
