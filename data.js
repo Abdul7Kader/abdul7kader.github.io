@@ -61,7 +61,7 @@ const resumeData = {
         },
         {
             "name": "Tools & Software",
-            "level": "MS Office, Linux, Figma, Jira, GitHub"
+            "level": "MS Office, Linux, Figma, Jira, GitHub, Shopify"
         },
         {
             "name": "Fachkenntnisse",
@@ -73,7 +73,7 @@ const resumeData = {
         },
         {
             "name": "Deutsch",
-            "level": "Wort und Schrift (Abitur, Studium)"
+            "level": "Wort und Schrift C1 "
         },
         {
             "name": "Englisch",
@@ -116,11 +116,11 @@ const resumeData = {
         {
             "title": "E-Commerce Onlineshop",
             "tech": "Online Verkauf",
-            "detail": "Verkauf auf unterschiedlichen Plattformen."
+            "detail": "Verkauf auf unterschiedlichen Plattformen (Amazon, Ebay, Etsy, Shopify)."
         },
 
         {
-            "title": "Gastrofy",
+            "title": "Gastro-Webseitendienst",
             "tech": "Web-Plattform",
             "detail": "Ein Mehrwert für Restaurants und Gäste (Coming soon!)."
         },
@@ -132,7 +132,7 @@ const resumeData = {
         {
             "title": "Drive Pluz",
             "tech": "Software & App",
-            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Gescheitert)."
+            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Nicht umgesetzt/ unerfüllt)."
         }
     ],
     "profileImage": "profilbild.jpg",
