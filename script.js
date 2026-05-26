@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h1 style="margin-bottom:5px; border:none; padding-bottom:0;">${displayName}</h1>
                     <p style="font-size:1.2rem; color:#555; margin-top:0;">Softwareentwickler / Informatikstudent</p>
                     <div style="font-size:0.9rem; color:#777; margin-top:10px;">
-                        Dortmund, Deutschland | Interaktiver Lebenslauf Portfolio
+                        Dortmund, Deutschland | Interaktives Lebenslauf-Portfolio
                     </div>
                 </div>
                 ${data.profileImage ? `<img src="${data.profileImage}" style="width:120px; height:120px; border-radius:10px; border: 2px solid #000; object-fit:cover;">` : ''}
@@ -214,9 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        player.speed = window.innerWidth < 768 ? 4 : 6;
+        updateViewport();
     }
     window.addEventListener('resize', resize);
-    resize();
 
     // Game State
     let isModalOpen = true;
@@ -254,9 +255,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let cameraX = 0; let cameraY = 0;
+    const viewport = { scale: 1, offsetX: 0, offsetY: 0, visibleWidth: worldWidth, visibleHeight: worldHeight };
+
+    function updateViewport() {
+        const isDesktop = canvas.width >= 1024 && canvas.height >= 700;
+        const fitScale = Math.min(canvas.width / worldWidth, canvas.height / worldHeight);
+
+        viewport.scale = isDesktop ? Math.min(1, Math.max(0.7, fitScale)) : 1;
+        viewport.visibleWidth = canvas.width / viewport.scale;
+        viewport.visibleHeight = canvas.height / viewport.scale;
+        viewport.offsetX = Math.max(0, (canvas.width - worldWidth * viewport.scale) / 2);
+        viewport.offsetY = Math.max(0, (canvas.height - worldHeight * viewport.scale) / 2);
+    }
+    resize();
 
     const buildings = [
-        { id: 'stadium', x: 260, y: 140, w: 250, h: 200, color: '#2ecc71', name: 'Stadium', emoji: '🏟️' },
+        { id: 'stadium', x: 260, y: 140, w: 250, h: 200, color: '#2ecc71', name: 'Stadion', emoji: '🏟️' },
         { id: 'uni', x: 640, y: 140, w: 200, h: 200, color: '#3498db', name: 'Universität', emoji: '🎓' },
         { id: 'airport', x: 960, y: 140, w: 260, h: 200, color: '#f39c12', name: 'Flughafen', emoji: '✈️' },
         { id: 'workshop', x: 280, y: 760, w: 200, h: 200, color: '#9b59b6', name: 'Werkstatt', emoji: '🛠️' },
@@ -402,14 +416,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-        cameraX = Math.max(0, Math.min(player.x + player.width / 2 - canvas.width / 2, worldWidth - canvas.width));
-        cameraY = Math.max(0, Math.min(player.y + player.height / 2 - canvas.height / 2, worldHeight - canvas.height));
+        cameraX = getCameraPosition(player.x + player.width / 2, viewport.visibleWidth, worldWidth);
+        cameraY = getCameraPosition(player.y + player.height / 2, viewport.visibleHeight, worldHeight);
+    }
+
+    function getCameraPosition(target, visibleSize, worldSize) {
+        if (visibleSize >= worldSize) return 0;
+        return Math.max(0, Math.min(target - visibleSize / 2, worldSize - visibleSize));
     }
 
     function draw() {
         ctx.fillStyle = '#689F38'; ctx.fillRect(0, 0, canvas.width, canvas.height); // Darker grass
 
-        ctx.save(); ctx.translate(-cameraX, -cameraY);
+        ctx.save();
+        ctx.translate(viewport.offsetX, viewport.offsetY);
+        ctx.scale(viewport.scale, viewport.scale);
+        ctx.translate(-cameraX, -cameraY);
 
         // Draw paths
         ctx.fillStyle = '#d7ccc8'; // Dirt path color
@@ -593,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { if (isModalOpen) populateModalInfo(bId); }, 1500);
     }
 
-    // 1. Stadium Minigame
+    // 1. Stadion Minigame
     function startStadium() {
         document.getElementById('minigame-modal').classList.remove('hidden');
         const ball = document.getElementById('ball');

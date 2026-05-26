@@ -7,7 +7,7 @@ const resumeData = {
     "hobbies": [
         "🏊 Fitness & Schwimmen",
         "🏄 Wassersportarten (SUP und Paddelboot)",
-        "🌍 Reisen & Neue Kulturen + Essen",
+        "🌍 Reisen, neue Kulturen & Essen",
         "💻 Programmieren & Tech"
     ],
     "education": [
@@ -73,11 +73,11 @@ const resumeData = {
         },
         {
             "name": "Deutsch",
-            "level": "Wort und Schrift C1 "
+            "level": "in Wort und Schrift, C1"
         },
         {
             "name": "Englisch",
-            "level": "Wort und Schrift (B2)"
+            "level": "in Wort und Schrift (B2)"
         },
         {
             "name": "Französisch",
@@ -108,19 +108,19 @@ const resumeData = {
         {
             "date": "06.2015 - 12.2015",
             "role": "Kassierer",
-            "company": "McDonalds, Marburg-Biedenkopf"
+            "company": "McDonald's, Marburg-Biedenkopf"
         }
     ],
     "minijobs": [],
     "projects": [
         {
-            "title": "E-Commerce Onlineshop",
-            "tech": "Online Verkauf",
-            "detail": "Verkauf auf unterschiedlichen Plattformen (Amazon, Ebay, Etsy, Shopify)."
+            "title": "E-Commerce-Onlineshop",
+            "tech": "Online-Verkauf",
+            "detail": "Verkauf auf unterschiedlichen Plattformen (Amazon, eBay, Etsy, Shopify)."
         },
 
         {
-            "title": "Gastro-Webseitendienst",
+            "title": "RestIQ",
             "tech": "Web-Plattform",
             "detail": "Ein Mehrwert für Restaurants und Gäste (Coming soon!)."
         },
@@ -132,7 +132,7 @@ const resumeData = {
         {
             "title": "Drive Pluz",
             "tech": "Software & App",
-            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Nicht umgesetzt/ unerfüllt)."
+            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Nicht umgesetzt / offen)."
         }
     ],
     "profileImage": "profilbild.jpg",

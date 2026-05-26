@@ -144,7 +144,7 @@ window.resumeData = resumeData;`;
         copyBtn.textContent = 'Kopiert!';
         copyBtn.style.background = '#27ae60';
         setTimeout(() => {
-            copyBtn.textContent = 'Code Kopieren';
+            copyBtn.textContent = 'Code kopieren';
             copyBtn.style.background = '#f39c12';
         }, 2000);
     });
