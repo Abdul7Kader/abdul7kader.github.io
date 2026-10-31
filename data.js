@@ -3,7 +3,105 @@
 // Nutze die admin.html Seite, um diese Daten komfortabel zu bearbeiten.
 
 const resumeData = {
-    "intro": "Hallo! Willkommen in meiner interaktiven Welt. Steuere mich mit den Pfeiltasten (oder W/A/S/D) und besuche die Gebäude. Drücke 'E' an einem Gebäude, um mehr über meinen Lebenslauf zu erfahren! (Auf dem Handy nutze die Buttons unten)",
+    "name": "Abdul Kader Sabouni",
+    "firstName": "Abdul",
+    "title": "Softwareentwickler · Informatikstudent",
+    "location": "Dortmund",
+    "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – erleben Sie meinen Weg als kleine, begehbare Welt.",
+    "availability": "Offen für neue Herausforderungen",
+    "contact": {
+        "email": "",
+        "phone": "",
+        "linkedin": "",
+        "github": "https://github.com/Abdul7Kader"
+    },
+    "intro": "Willkommen in meiner Welt! Laufen Sie mit WASD/Pfeiltasten oder per Klick. Jedes Gebäude ist eine Station meines Lebenslaufs.",
+    "strengths": [
+        {
+            "icon": "📈",
+            "title": "Steile Lernkurve",
+            "text": "Neustart 2014 – heute Deutsch auf C1-Niveau, Abitur und Informatikstudium."
+        },
+        {
+            "icon": "💻",
+            "title": "Praxis in der Softwareentwicklung",
+            "text": "Seit 11/2023 Werkstudent in der Softwareentwicklung bei PSI Software SE."
+        },
+        {
+            "icon": "🤝",
+            "title": "Kommunikation & Kundenfokus",
+            "text": "Kundenservice für Samsung & Telekom, vier Sprachen."
+        },
+        {
+            "icon": "🚀",
+            "title": "Eigeninitiative",
+            "text": "Eigener Onlineshop, eigene Produktideen und ein Buch in Arbeit."
+        }
+    ],
+    "facts": [
+        "Wussten Sie schon? Abdul hat sein Abitur parallel zum Job bei adesso SE gemacht.",
+        "Seit 11/2023 entwickelt Abdul Software bei PSI Software SE.",
+        "Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen.",
+        "Informatikstudium und Werkstudentenjob gleichzeitig? Zeitmanagement ist für Abdul Alltag.",
+        "Kundenservice für Samsung und Telekom – da lernt man, auch unter Druck freundlich zu bleiben.",
+        "Abdul hat schon über 20 Länder bereist."
+    ],
+    "stations": {
+        "arrival": {
+            "title": "Ankunft & Reisen",
+            "era": "seit 10.2014",
+            "badge": "Weltoffen",
+            "badgeIcon": "🌍",
+            "story": "Im Oktober 2014 begann mein Neuanfang in Deutschland. Seitdem habe ich viele Länder bereist – neue Kulturen machen mich offen, neugierig und anpassungsfähig."
+        },
+        "language": {
+            "title": "Sprachschule",
+            "era": "2015 – 2016",
+            "badge": "Sprachtalent",
+            "badgeIcon": "🗣️",
+            "story": "Sprache war mein erster Schlüssel: Integrationskurs, dann B1 – heute spreche ich Deutsch auf C1-Niveau, dazu Arabisch, Englisch und Französisch."
+        },
+        "school": {
+            "title": "Campus",
+            "era": "2016 – heute",
+            "badge": "Wissensdurst",
+            "badgeIcon": "🎓",
+            "story": "Abitur am Westfalen-Kolleg – parallel zu meinem Job bei adesso. Seit 2021 studiere ich Informatik an der FH Dortmund."
+        },
+        "career": {
+            "title": "Business-Viertel",
+            "era": "2015 – heute",
+            "badge": "Kundenfokus",
+            "badgeIcon": "🤝",
+            "story": "Von der Kasse über Corporate Accounting bei adesso bis zum Kundenservice für Samsung & Telekom: Ich arbeite zuverlässig – auch wenn es hektisch wird."
+        },
+        "lab": {
+            "title": "Tech-Lab",
+            "era": "seit 11.2023",
+            "badge": "Problemlöser",
+            "badgeIcon": "🧠",
+            "story": "Bei PSI Software SE entwickle ich als Werkstudent Software in einem professionellen Team. Hier wird aus Theorie Praxis."
+        },
+        "projects": {
+            "title": "Projekt-Baustelle",
+            "era": "laufend",
+            "badge": "Macher",
+            "badgeIcon": "🚀",
+            "story": "Ideen setze ich gern selbst um: vom eigenen Onlineshop über die Plattform-Idee RestIQ bis zu meinem eigenen Buch."
+        },
+        "lake": {
+            "title": "See & Sport",
+            "era": "Freizeit",
+            "badge": "Ausdauer",
+            "badgeIcon": "🏊",
+            "story": "Ausgleich finde ich beim Schwimmen, im Fitnessstudio und auf dem SUP-Board. Ausdauer zahlt sich aus – im Sport wie im Job."
+        },
+        "finale": {
+            "title": "Nächstes Kapitel",
+            "era": "Zukunft",
+            "story": "Danke, dass Sie sich die Zeit für meinen Weg genommen haben. Das nächste Kapitel würde ich gern mit Ihrem Team schreiben."
+        }
+    },
     "hobbies": [
         "🏊 Fitness & Schwimmen",
         "🏄 Wassersportarten (SUP und Paddelboot)",
@@ -66,18 +164,20 @@ const resumeData = {
         {
             "name": "Fachkenntnisse",
             "level": "IT-Support, Digital Design, Frontend-Design, ITSM"
-        },
+        }
+    ],
+    "languages": [
         {
             "name": "Arabisch",
             "level": "Muttersprache"
         },
         {
             "name": "Deutsch",
-            "level": "in Wort und Schrift, C1"
+            "level": "C1 – in Wort und Schrift"
         },
         {
             "name": "Englisch",
-            "level": "in Wort und Schrift (B2)"
+            "level": "B2 – in Wort und Schrift"
         },
         {
             "name": "Französisch",
@@ -111,14 +211,12 @@ const resumeData = {
             "company": "McDonald's, Marburg-Biedenkopf"
         }
     ],
-    "minijobs": [],
     "projects": [
         {
             "title": "E-Commerce-Onlineshop",
             "tech": "Online-Verkauf",
             "detail": "Verkauf auf unterschiedlichen Plattformen (Amazon, eBay, Etsy, Shopify)."
         },
-
         {
             "title": "RestIQ",
             "tech": "Web-Plattform",

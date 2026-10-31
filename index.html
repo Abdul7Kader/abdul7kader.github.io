@@ -3,223 +3,137 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open-World-Lebenslauf</title>
-    <meta name="description" content="Mein interaktiver Open-World-Lebenslauf.">
-    <!-- Google Fonts for retro pixel look and modern text -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@400;600&display=swap"
-        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Abdul Kader Sabouni – Interaktiver Lebenslauf</title>
+    <meta name="description" content="Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als kleine, begehbare Spielwelt – oder kompakt in 30 Sekunden.">
+    <meta property="og:title" content="Abdul Kader Sabouni – Interaktiver Lebenslauf">
+    <meta property="og:description" content="Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – als begehbare Spielwelt.">
+    <meta property="og:image" content="profilbild.jpg">
+    <meta name="theme-color" content="#1b2a4a">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- Die Spielwelt -->
+    <canvas id="world" aria-label="Begehbare Lebenslauf-Welt"></canvas>
+    <div id="vignette" aria-hidden="true"></div>
+    <div id="bubbles" aria-hidden="true"></div>
 
-
-
-    <!-- Game UI Overlay -->
-    <div id="ui-layer">
-
-        <!-- Pac-Man / World Score -->
-        <div id="score-display">Punkte: <span id="score-val">0</span> / <span id="score-max">0</span></div>
-
-        <!-- PDF Download Button -->
-        <button id="pdf-download-btn" title="Lebenslauf exportieren">
-            📄 PDF-Export
+    <!-- HUD -->
+    <header id="hud" class="hidden">
+        <button id="hud-profile" class="glass" title="Meine Stationen anzeigen">
+            <img id="hud-photo" alt="">
+            <span class="hud-id">
+                <strong id="hud-name"></strong>
+                <span id="hud-progress-label">0 / 7 Stationen</span>
+                <span class="progress"><span id="hud-progress-bar"></span></span>
+            </span>
         </button>
+        <div id="hud-badges" class="glass" title="Gesammelte Stärken"></div>
+        <div class="hud-actions">
+            <button id="btn-cv" class="glass pill strong" title="Lebenslauf kompakt">⚡ <span class="lbl">Lebenslauf kompakt</span></button>
+            <button id="btn-map" class="glass icon" title="Stationen &amp; Schnellreise">🗺️</button>
+            <button id="btn-sound" class="glass icon" title="Soundeffekte an/aus">🔊</button>
+            <button id="btn-music" class="glass icon off" title="Musik an/aus">♪</button>
+        </div>
+    </header>
 
-        <!-- Landscape Warning (Mobile) -->
-        <div id="landscape-warning" class="hidden">
-            <div class="landscape-content">
-                <h2>📱 Handy quer halten!</h2>
-                <p>Für das beste Erlebnis empfehlen wir, dein Gerät ins Querformat (Landscape) zu drehen.</p>
-                <button id="landscape-dismiss" class="btn" style="margin-top:15px; font-size:1rem; padding:10px 15px;">Ok, verstanden</button>
+    <button id="objective" class="glass hidden" title="Automatisch hinlaufen">
+        <span class="obj-kicker">Nächstes Ziel</span>
+        <span id="objective-text"></span>
+        <span class="obj-go">Hinlaufen →</span>
+    </button>
+
+    <div id="tokens" class="glass hidden" title="Gesammelte Skill-Sterne">⭐ <span id="tokens-val">0</span>/<span id="tokens-max">0</span></div>
+
+    <div id="controls-hint" class="hidden"></div>
+
+    <button id="action-btn" class="hidden">Betreten</button>
+    <div id="joystick" class="hidden"><div id="joystick-knob"></div></div>
+
+    <div id="toasts" aria-live="polite"></div>
+
+    <!-- Startbildschirm -->
+    <section id="start" class="overlay">
+        <div class="start-card">
+            <div class="start-photo-wrap">
+                <img id="start-photo" alt="Foto von Abdul Kader Sabouni">
+                <span class="wave">👋</span>
             </div>
-        </div>
-
-        <!-- Welcome Intro -->
-        <div id="intro-box" class="dialog-box">
-            <div id="profile-picture-container">
-                <div class="profile-placeholder">Profilbild</div>
+            <p id="start-greeting" class="kicker"></p>
+            <h1 id="start-title"></h1>
+            <p id="start-role" class="role"></p>
+            <p id="start-tagline" class="tagline"></p>
+            <div id="start-stats" class="stats"></div>
+            <div class="start-buttons">
+                <button id="start-play" class="btn primary big">
+                    <span>▶ Welt erkunden</span><small>ca. 3 Minuten · spielerisch</small>
+                </button>
+                <button id="start-cv" class="btn ghost big">
+                    <span>⚡ Lebenslauf kompakt</span><small>30 Sekunden · klassisch</small>
+                </button>
             </div>
-            <h1 style="font-family: 'Press Start 2P'; font-size: 1.2rem; color: #e74c3c; margin-bottom: 20px;">Open
-                World CV</h1>
-            <p id="intro-text"></p>
-            <button id="close-intro" class="btn">Los geht's!</button>
+            <p class="start-foot" id="start-foot"></p>
         </div>
+    </section>
 
-        <!-- Interaction Hint -->
-        <div id="interaction-prompt" class="hidden">
-            Drücke [E] zum Eintreten
-        </div>
-
-        <!-- Congrats Modal (All Collectibles Found) -->
-        <div id="congrats-modal" class="modal hidden" style="z-index: 1000;">
-            <div class="modal-content" style="text-align: center; max-width: 500px; padding: 40px 20px;">
-                <button class="close-btn">&times;</button>
-                <div style="margin-bottom: 25px;">
-                    <!-- Nutze ein vorhandenes Bild, z.B. profile.jpg, sonst Fallback -->
-                    <img id="congrats-pic" src="profile.jpg" alt="Mein Bild" onerror="this.src='https://via.placeholder.com/150x150.png?text=Bewerber'" style="border-radius: 50%; width: 160px; height: 160px; object-fit: cover; border: 5px solid #f39c12; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    <!-- Stations-Dialog (Story, Minispiel, Infos) -->
+    <section id="station" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="station-title">
+        <div class="panel">
+            <button class="close" id="station-close" aria-label="Schließen">✕</button>
+            <header class="panel-head">
+                <span id="station-emoji" class="panel-emoji"></span>
+                <div>
+                    <span id="station-era" class="kicker"></span>
+                    <h2 id="station-title"></h2>
                 </div>
-                <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 2rem;">Herzlichen Glückwunsch! 🎉</h2>
-                <p style="font-size: 1.2rem; line-height: 1.6; color: #333;">Du hast alle versteckten Lebenslauf-Punkte auf der Karte gefunden. <br><br>Vielen Dank, dass du dir die Zeit genommen hast, meinen Open-World-Lebenslauf zu erkunden!</p>
-                <p style="margin-top: 25px; font-weight: bold; font-family: 'Press Start 2P', sans-serif; font-size: 0.8rem; color: #e74c3c;">– Vielen Dank –</p>
-                <button class="btn" id="close-congrats-btn" style="margin-top:25px; font-size: 1.2rem;">Welt weiter erkunden</button>
-            </div>
+            </header>
+            <div id="station-body"></div>
         </div>
+    </section>
 
-        <!-- Info Modal Template (For standard building info after minigame) -->
-        <div id="info-modal" class="modal hidden">
-            <div class="modal-content">
-                <button class="close-btn" id="close-info">&times;</button>
-                <h2 id="modal-title">Titel</h2>
-                <div id="modal-body"></div>
-            </div>
-        </div>
-
-        <!-- === MINIGAMES === -->
-
-        <!-- Stadion Minigame -->
-        <div id="minigame-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Stadion: Der perfekte Schuss</h2>
-                <p>Klicke auf den Ball, wenn das Fadenkreuz (+) im Tor ist und weiche dem Torwart aus!</p>
-                <div id="game-pitch">
-                    <div id="goal-net"></div>
-                    <div id="goalie">🧤</div>
-                    <div id="aim-crosshair">➕</div>
-                    <div id="ball">⚽</div>
+    <!-- Reise-/Stationsliste -->
+    <section id="journey" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Stationen">
+        <div class="panel narrow">
+            <button class="close" data-close="journey" aria-label="Schließen">✕</button>
+            <header class="panel-head">
+                <span class="panel-emoji">🗺️</span>
+                <div>
+                    <span class="kicker">Mein Weg in 8 Stationen</span>
+                    <h2>Schnellreise</h2>
                 </div>
-                <div id="stadium-hint" class="hidden hint-text">TIPP: Warte auf den richtigen Moment. Der Ball fliegt dorthin, wo das + gerade ist.</div>
-                <div id="stadium-result" class="hidden minigame-result"></div>
-            </div>
+            </header>
+            <p class="muted">Klicken Sie auf eine Station – ich laufe automatisch hin.</p>
+            <ol id="journey-list"></ol>
         </div>
+    </section>
 
-        <!-- Airport Minigame -->
-        <div id="airport-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Flughafen: Landeanflug</h2>
-                <p>Klicke auf die Landebahn, wenn das Flugzeug genau mittig ist!</p>
-                <div id="airport-game-area" style="cursor:pointer;">
-                    <div id="runway" style="pointer-events:none;"></div>
-                    <div id="airplane" style="pointer-events:none;">✈️</div>
-                </div>
-                <div id="airport-hint" class="hidden hint-text">TIPP: Klicke in den himmelblauen Bereich zur richtigen Zeit.</div>
-                <div id="airport-result" class="hidden minigame-result"></div>
-            </div>
+    <!-- Kompakter Lebenslauf (auch Druck/PDF) -->
+    <section id="cv" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Lebenslauf kompakt">
+        <div class="cv-sheet" id="cv-sheet"></div>
+    </section>
+
+    <noscript>
+        <div style="padding:24px;font-family:sans-serif">
+            <h1>Abdul Kader Sabouni</h1>
+            <p>Softwareentwickler (Werkstudent) bei PSI Software SE · Informatikstudium an der FH Dortmund.</p>
+            <p>Für die interaktive Version bitte JavaScript aktivieren.</p>
         </div>
+    </noscript>
 
-        <!-- Workshop Minigame -->
-        <div id="workshop-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Werkstatt: Schrauben eindrehen</h2>
-                <p>Klicke schnell auf die 3 Zahnräder, bis alle Schrauben fest sitzen!</p>
-                <div id="workshop-game-area" style="display:flex; justify-content:center; gap:40px; padding:30px 0;">
-                    <div class="screw-wrapper" style="width:80px;">
-                        <div class="screw-clickable" id="screw-0" data-index="0" style="font-size:4rem; cursor:pointer;">⚙️</div>
-                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-0" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
-                    </div>
-                    <div class="screw-wrapper" style="width:80px;">
-                        <div class="screw-clickable" id="screw-1" data-index="1" style="font-size:4rem; cursor:pointer;">⚙️</div>
-                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-1" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
-                    </div>
-                    <div class="screw-wrapper" style="width:80px;">
-                        <div class="screw-clickable" id="screw-2" data-index="2" style="font-size:4rem; cursor:pointer;">⚙️</div>
-                        <div style="width:100%; height:15px; background:#ddd; border-radius:5px; margin-top:10px; overflow:hidden;"><div id="sbar-2" class="screw-bar" style="height:100%; background:#27ae60;"></div></div>
-                    </div>
-                </div>
-                <div id="workshop-hint" class="hidden hint-text">TIPP: Klicke direkt auf die Zahnräder, nicht daneben!</div>
-                <div id="workshop-result" class="hidden minigame-result"></div>
-            </div>
-        </div>
-
-        <!-- University Minigame -->
-        <div id="uni-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Universität: IT-Memory</h2>
-                <p>Finde die passenden Paare, um die Prüfungen zu bestehen!</p>
-                <div id="memory-board" class="memory-board">
-                    <!-- Cards created via JS -->
-                </div>
-                <div id="uni-hint" class="hidden hint-text">TIPP: Merke dir die Positionen!</div>
-                <div id="uni-result" class="hidden minigame-result"></div>
-            </div>
-        </div>
-
-        <!-- Office Minigame -->
-        <div id="office-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Büro: Welcher Koffer?</h2>
-                <p>Gleich wird ein Koffer kurz den Schlüssel zeigen. Merke dir diesen Koffer, wenn sie sich mischen!</p>
-                <button id="start-office-btn" class="btn" style="margin-bottom:20px; font-size:1.2rem;">Bereit? Starten!</button>
-                <div id="office-game-area" style="position:relative; height:180px; background:#bdc3c7; border-radius:10px; padding:20px;">
-                    <div class="briefcase" id="bc-0" style="position:absolute; left:15%; bottom:20px; transition:all 0.4s ease-in-out; z-index:2;">💼<div class="key-hidden hidden">🔑</div></div>
-                    <div class="briefcase" id="bc-1" style="position:absolute; left:45%; bottom:20px; transition:all 0.4s ease-in-out; z-index:2;">💼<div class="key-hidden hidden">🔑</div></div>
-                    <div class="briefcase" id="bc-2" style="position:absolute; left:75%; bottom:20px; transition:all 0.4s ease-in-out; z-index:2;">💼<div class="key-hidden hidden">🔑</div></div>
-                </div>
-                <div id="office-hint" class="hidden hint-text">TIPP: Folge dem leuchtenden Schlüssel mit den Augen!</div>
-                <div id="office-result" class="hidden minigame-result"></div>
-            </div>
-        </div>
-
-        <!-- Construction Minigame -->
-        <div id="construction-modal" class="modal hidden minigame-container">
-            <div class="modal-content minigame-content">
-                <button class="close-btn close-minigame-btn">&times;</button>
-                <h2>Baustelle: Projekte stapeln</h2>
-                <p>Klicke im richtigen Moment, um 3 Projekt-Blöcke übereinander zu stapeln!</p>
-                <div style="font-weight: bold; margin-bottom: 10px; color: #d35400;">Versuche übrig: <span id="crane-drops-left">10</span></div>
-                <button id="start-construction-btn" class="btn" style="margin-bottom:20px; font-size:1.2rem;">Kran starten</button>
-                <div id="construction-game-area" style="position:relative; height:320px; background:linear-gradient(#87CEEB, #E0F7FA); border-radius:10px; overflow:hidden; border:4px solid #333; cursor:pointer;">
-                    <div id="crane-rail" style="position:absolute; top:0; left:0; width:100%; height:15px; background:#e67e22; border-bottom:3px solid #d35400; z-index:3;"></div>
-                    <div id="crane-hook-assembly" style="position:absolute; top:15px; left:50%; transform:translateX(-50%); z-index:2; transition:none;">
-                        <div style="width:4px; height:40px; background:#555; margin:0 auto;"></div>
-                        <div style="width:30px; height:15px; border:4px solid #333; border-top:none; border-radius:0 0 5px 5px; margin:0 auto;"></div>
-                    </div>
-                    
-                    <div id="moving-block" class="build-block" style="position:absolute; top:65px; left:50%; transform:translateX(-50%); display:none; z-index:2;">Projekt</div>
-                    
-                    <div id="construction-ground" style="position:absolute; bottom:0; left:0; width:100%; height:30px; background:#7f8c8d; border-top:4px dashed #bdc3c7; z-index:3;">
-                        <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:90px; height:34px; background:#f1c40f; border: 3px solid #f39c12; border-bottom: none; border-radius: 4px 4px 0 0; text-align:center; font-weight:bold; font-family: monospace; font-size:10px; line-height:28px; color:#d35400;">ZIEL</div>
-                    </div>
-                    
-                    <div id="block-stack" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); width:80px; z-index:1;"></div>
-                </div>
-                <div id="construction-hint" class="hidden hint-text">TIPP: Ziele genau mittig auf die schon liegenden Steine.</div>
-                <div id="construction-result" class="hidden minigame-result"></div>
-            </div>
-        </div>
-
-    </div>
-
-
-
-    <!-- The 2D World Canvas Engine -->
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- Admin Gear Icon -->
-    <a href="admin.html" id="admin-gear-link" title="Admin-Login">⚙️</a>
-
-    <!-- Controls for mobile touch screens -->
-    <div id="mobile-controls">
-        <button id="btn-up">⬆️</button>
-        <div class="horizontal-btns">
-            <button id="btn-left">⬅️</button>
-            <button id="btn-action">E</button>
-            <button id="btn-right">➡️</button>
-        </div>
-        <button id="btn-down">⬇️</button>
-    </div>
+    <a href="admin.html" id="admin-link" title="Admin">⚙︎</a>
 
     <script src="data.js"></script>
-    <script src="script.js"></script>
-    
-    <!-- PDF Print Container -->
-    <div id="print-resume" class="print-only"></div>
+    <script src="js/util.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

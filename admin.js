@@ -43,28 +43,71 @@ document.addEventListener('DOMContentLoaded', () => {
         currentData = JSON.parse(JSON.stringify(data)); // copy
         formsContainer.innerHTML = '';
         
-        addSectionTitle('Allgemein');
-        createStringField('intro', 'Begrüßungstext im Startbildschirm');
-        createStringField('profileImage', 'Profilbild URL (Begrüßung) z.B. https://...');
-        createStringField('congratsImage', 'Abschlussbild URL (Glückwunsch)');
+        addSectionTitle('Personalisierter Link für Bewerbungen');
+        createLinkBuilder();
 
-        addSectionTitle('Hobbies & Sport (Stadion)');
+        addSectionTitle('Allgemein');
+        createStringField('name', 'Vollständiger Name');
+        createStringField('firstName', 'Vorname (wird in Texten genutzt)');
+        createStringField('title', 'Berufsbezeichnung / Untertitel');
+        createStringField('location', 'Wohnort');
+        createStringField('tagline', 'Kurzbeschreibung im Startbildschirm');
+        createStringField('availability', 'Verfügbarkeit (grünes Label im Lebenslauf)');
+        createStringField('intro', 'Begrüßungstext (Fallback)');
+        createStringField('profileImage', 'Profilbild (Datei oder URL)');
+        createStringField('congratsImage', 'Abschlussbild (Finale)');
+
+        addSectionTitle('Kontakt (leere Felder werden ausgeblendet)');
+        currentData.contact = currentData.contact || {};
+        ['email', 'phone', 'linkedin', 'github'].forEach(k => { if (currentData.contact[k] == null) currentData.contact[k] = ''; });
+        createStringField('contact.email', 'E-Mail (aktiviert den Button „Gespräch vereinbaren“)');
+        createStringField('contact.phone', 'Telefon');
+        createStringField('contact.linkedin', 'LinkedIn-URL');
+        createStringField('contact.github', 'GitHub-URL');
+
+        addSectionTitle('Stärken (Kompakt-Lebenslauf)');
+        createJSONField('strengths', 'Stärken (JSON: icon, title, text)');
+
+        addSectionTitle('Stationen der Welt (Titel, Zeitraum, Abzeichen, Geschichte)');
+        createJSONField('stations', 'Stationen (JSON) – arrival, language, school, career, lab, projects, lake, finale');
+
+        addSectionTitle('Fakten der Bewohner');
+        createJSONField('facts', 'Sätze, die die Figuren in der Welt sagen (JSON-Liste)');
+
+        addSectionTitle('Hobbies & Sport (See)');
         createJSONField('hobbies', 'Hobbies (JSON Liste, jedes Element in "")');
 
-        addSectionTitle('Ausbildung (Universität)');
+        addSectionTitle('Ausbildung (Campus & Sprachschule)');
         createJSONField('education', 'Ausbildung (JSON)');
 
-        addSectionTitle('Reisen (Flughafen)');
+        addSectionTitle('Reisen (Ankunft)');
         createJSONField('travels', 'Reisen (JSON)');
 
-        addSectionTitle('Fähigkeiten (Werkstatt)');
+        addSectionTitle('Fähigkeiten (Tech-Lab)');
         createJSONField('skills', 'Fähigkeiten (JSON)');
 
-        addSectionTitle('Berufserfahrung (Büro)');
+        addSectionTitle('Sprachen (Sprachschule)');
+        createJSONField('languages', 'Sprachen (JSON: name, level – z. B. "C1")');
+
+        addSectionTitle('Berufserfahrung (Business-Viertel)');
         createJSONField('experience', 'Berufserfahrung (JSON)');
 
         addSectionTitle('Eigene Projekte (Baustelle)');
         createJSONField('projects', 'Projekte (JSON)');
+    }
+
+    function createLinkBuilder() {
+        const div = document.createElement('div');
+        div.className = 'form-group';
+        div.innerHTML = '<label>Firmenname – erscheint als Begrüßung und auf dem Finale-Gebäude</label>' +
+            '<input type="text" id="firm-link-input" placeholder="z. B. Musterfirma GmbH">' +
+            '<p style="margin-top:8px;font-family:monospace;word-break:break-all;" id="firm-link-out"></p>';
+        formsContainer.appendChild(div);
+        const inp = div.querySelector('#firm-link-input'), out = div.querySelector('#firm-link-out');
+        const base = location.origin + location.pathname.replace(/admin\.html$/, '');
+        const upd = () => { out.textContent = base + (inp.value.trim() ? '?firma=' + encodeURIComponent(inp.value.trim()) : ''); };
+        inp.addEventListener('input', upd);
+        upd();
     }
 
     function addSectionTitle(titleText) {
