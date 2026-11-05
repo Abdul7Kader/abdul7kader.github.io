@@ -823,123 +823,157 @@
         }
     });
 
-    // ================================================================== 4) Business: Kunden-Theke
-    // Kunden kommen an die Theke und zeigen, was sie brauchen – das passende Produkt antippen.
-    const PRODUCTS = [['📱', 'Smartphone'], ['🎧', 'Kopfhörer'], ['⌚', 'Smartwatch'], ['💻', 'Laptop'], ['📺', 'Fernseher'], ['🔌', 'Ladekabel'], ['📷', 'Kamera'], ['🎮', 'Konsole']];
-    const LOOKS = [
-        { skin: '#f1c7a5', hair: '#6b4423', top: '#3a86ff' }, { skin: '#c68863', hair: '#1f1a17', top: '#ff7a3d' },
-        { skin: '#8d5a3b', hair: '#111', top: '#2ec4b6' }, { skin: '#f4d2b8', hair: '#d9a441', top: '#8338ec' },
-        { skin: '#e0ac69', hair: '#3b2a20', top: '#e63946' }, { skin: '#ffdcc2', hair: '#9aa0a6', top: '#16a34a' }
+    // ================================================================== 4) Business: Prompt-Fabrik
+    // Ein KI-Agent braucht einen guten Prompt: Rolle, Kontext, Beispiel und Format.
+    // Die Bausteine fahren übers Fließband – den Baustein antippen, dessen Platz gerade leuchtet.
+    const PIECES = [
+        { k: 'rolle', ic: '👤', name: 'Rolle', col: '#7b5cff' },
+        { k: 'kontext', ic: '📄', name: 'Kontext', col: '#3a86ff' },
+        { k: 'beispiel', ic: '💡', name: 'Beispiel', col: '#f59e0b' },
+        { k: 'format', ic: '📋', name: 'Format', col: '#16a34a' }
     ];
+    const VAGUE = { k: 'vage', ic: '❓', name: 'Unklar', col: '#9aa1ad' };
     M.career = arcade('career', {
-        name: 'Kunden-Theke', icon: '🛍️', color: '#0fa89a', time: 15, stars: [8, 20, 34],
-        goal: 'Kunden kommen an die Theke und zeigen, was sie suchen. Tippen Sie schnell auf das passende Produkt!',
-        controls: ['click', 'tap', 'keys'],
-        result: () => 'Zuhören, verstehen, die passende Lösung anbieten – genau das habe ich in der Beratung für die Telekom und Samsung jeden Tag gemacht.',
+        name: 'Prompt-Fabrik', icon: '🤖', color: '#7b5cff', time: 15, stars: [10, 24, 40],
+        goal: 'Bauen Sie dem KI-Roboter einen guten Prompt: Tippen Sie auf dem Fließband den Baustein an, dessen Platz gerade leuchtet.',
+        controls: ['click', 'tap'],
+        result: () => 'Rolle, Kontext, Beispiel, Format – so schreibe ich Prompts, damit KI-Agenten wie Claude Code verlässlich arbeiten. Darauf baut mein eigenes Unternehmen auf.',
         make(g) {
-            const SLOT_Y = H - 64, SLOT_W = 150, SLOT_H = 84, GAP = 22;
-            const slotX = (i) => W / 2 + (i - 1) * (SLOT_W + GAP);
-            let cust = null, leaving = [], slots = [], waitT = 0.2, served = 0;
-            function nextCustomer() {
-                const want = pick(PRODUCTS);
-                const others = CV.shuffle(PRODUCTS.filter(p => p !== want)).slice(0, 2);
-                slots = CV.shuffle([want, ...others]).map(p => ({ p, bump: 0, flash: 0 }));
-                const vip = served > 1 && Math.random() < 0.16;
-                cust = { want, vip, look: pick(LOOKS), x: -80, tx: W / 2, t: 0, dur: Math.max(1.7, 3.3 - g.t * 0.1), mood: 'wait', bob: Math.random() * TAU };
+            const BELT_Y = 312, PW = 104, PH = 60;
+            const SLOT_Y = 150, SLOT_W = 82, SLOT_H = 56, SLOT_X0 = 198, SLOT_GAP = 8;
+            const slotX = (i) => SLOT_X0 + i * (SLOT_W + SLOT_GAP) + SLOT_W / 2;
+            let items = [], flying = [], filled = 0, spawnT = 0.2, speed = 150, belt = 0, robo = { happy: 0, think: 0 }, outputs = [], done = 0;
+            function spawn() {
+                const need = PIECES[filled % 4];
+                const r = Math.random();
+                const kind = r < 0.42 ? need : r < 0.56 ? VAGUE : pick(PIECES);
+                items.push({ kind, x: W + PW / 2 + 4, y: BELT_Y, shake: 0, wob: Math.random() * TAU });
             }
-            function choose(i) {
-                if (!cust || cust.mood !== 'wait' || cust.x < cust.tx - 30) return;
-                const s = slots[i]; if (!s) return;
-                s.bump = 1;
-                if (s.p === cust.want) {
-                    const fast = cust.t < cust.dur * 0.45;
-                    const pts = (cust.vip ? 3 : 1) + (fast ? 1 : 0);
-                    g.hit(pts, cust.x, 150, cust.vip ? 'VIP zufrieden!' : fast ? 'Super schnell!' : 'Danke!', cust.vip ? '#ffd166' : '#b8f2e6');
-                    g.burst(cust.x, 190, 16, ['#ffd166', '#2ec4b6', '#fff', '#ff8a3d'], 240, { shape: 'sq', size: 6 });
-                    g.sfx(cust.vip ? 'bonus' : 'good');
-                    cust.mood = 'happy'; s.flash = 1; served++;
-                    leaving.push(cust); cust = null; waitT = 0.25;
+            function tap(it) {
+                if (filled >= 4) return;
+                const need = PIECES[filled];
+                if (it.kind === need) {
+                    it.dead = true;
+                    flying.push({ kind: it.kind, x: it.x, y: it.y, tx: slotX(filled), ty: SLOT_Y, t: 0 });
+                    g.hit(1, it.x, it.y - 46, it.kind.name, '#fff');
+                    g.sfx('pop');
+                    filled++;
+                    if (filled === 4) {
+                        done++;
+                        setTimeout(() => {
+                            if (g.state !== 'play') return;
+                            g.add(5, 100, 92, 'Prompt perfekt!', '#ffd166');
+                            g.sfx('bonus'); g.flash('#e9e3ff', 0.35);
+                            g.burst(92, 150, 26, ['#ffd166', '#b9a8ff', '#fff', '#7ee8fa'], 300, { shape: 'star', size: 6, grav: 120 });
+                            robo.happy = 1.2;
+                            outputs.push({ x: 92, y: 150, t: 0 });
+                            filled = 0;
+                        }, 260);
+                        robo.think = 0.3;
+                    }
                 } else {
-                    s.flash = -1;
-                    cust.t += cust.dur * 0.35;
-                    g.miss(cust.x, 150, 'Falsches Produkt');
+                    it.shake = 0.4;
+                    g.miss(it.x, it.y - 46, it.kind === VAGUE ? 'Zu unklar!' : `Erst ${need.name}!`);
                 }
             }
-            function person(c, p) {
-                const x = p.x, y = 300 + Math.sin(g.now * 6 + p.bob) * (p.mood === 'wait' ? 1 : 3);
-                c.fillStyle = 'rgba(0,0,0,0.12)'; ell(c, x, 340, 36, 8); c.fill();
-                c.fillStyle = p.look.top; rr(c, x - 34, y - 40, 68, 80, 26); c.fill();
-                c.fillStyle = p.look.skin; ell(c, x, y - 72, 30, 32); c.fill();
-                c.fillStyle = p.look.hair; c.beginPath(); c.arc(x, y - 78, 31, Math.PI * 1.05, Math.PI * 1.95); c.closePath(); c.fill();
-                if (p.vip) { c.fillStyle = '#ffc53d'; c.beginPath(); c.moveTo(x - 20, y - 104); c.lineTo(x - 22, y - 122); c.lineTo(x - 10, y - 112); c.lineTo(x, y - 126); c.lineTo(x + 10, y - 112); c.lineTo(x + 22, y - 122); c.lineTo(x + 20, y - 104); c.closePath(); c.fill(); }
-                c.fillStyle = '#1b2a4a'; ell(c, x - 10, y - 74, 3, 3.5); c.fill(); ell(c, x + 10, y - 74, 3, 3.5); c.fill();
-                c.strokeStyle = '#1b2a4a'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath();
-                const frac = p.mood === 'wait' ? 1 - p.t / p.dur : 1;
-                if (p.mood === 'happy') c.arc(x, y - 62, 10, 0.15 * Math.PI, 0.85 * Math.PI);
-                else if (p.mood === 'angry' || frac < 0.3) c.arc(x, y - 50, 9, 1.2 * Math.PI, 1.8 * Math.PI);
-                else { c.moveTo(x - 7, y - 58); c.lineTo(x + 7, y - 58); }
-                c.stroke();
-                if (p.mood === 'happy') { c.fillStyle = '#ff7a3d'; rr(c, x + 30, y - 6, 30, 34, 6); c.fill(); c.strokeStyle = '#c2410c'; c.lineWidth = 2.5; c.beginPath(); c.arc(x + 45, y - 6, 8, Math.PI, 0); c.stroke(); }
+            function card(c, kind, x, y, s = 1, alpha = 1) {
+                c.save(); c.translate(x, y); c.scale(s, s); c.globalAlpha = alpha;
+                c.fillStyle = 'rgba(0,0,0,0.18)'; rr(c, -PW / 2 + 2, -PH / 2 + 5, PW, PH, 14); c.fill();
+                c.fillStyle = kind.col; rr(c, -PW / 2, -PH / 2, PW, PH, 14); c.fill();
+                c.fillStyle = 'rgba(255,255,255,0.18)'; rr(c, -PW / 2 + 4, -PH / 2 + 4, PW - 8, PH / 2 - 4, 10); c.fill();
+                emo(c, kind.ic, -PW / 2 + 24, 0, 24);
+                txt(c, kind.name, 14, 1, 14, '#fff', 'center', 800);
+                c.restore(); c.globalAlpha = 1;
             }
             return {
                 update(dt) {
                     const live = g.state === 'play';
-                    if (live && !cust) { waitT -= dt; if (waitT <= 0) nextCustomer(); }
-                    if (cust) {
-                        cust.x = CV.lerp(cust.x, cust.tx, Math.min(1, dt * 9));
-                        if (live && cust.x > cust.tx - 30) cust.t += dt;
-                        if (cust.t >= cust.dur) {
-                            cust.mood = 'angry'; g.miss(cust.x, 150, 'Kunde gegangen', true); g.sfx('bad'); g.shake(4);
-                            leaving.push(cust); cust = null; waitT = 0.3;
-                        }
-                    }
-                    for (const p of leaving) p.x += (p.mood === 'happy' ? 520 : -520) * dt;
-                    leaving = leaving.filter(p => p.x > -120 && p.x < W + 120);
-                    for (const s of slots) { s.bump = Math.max(0, s.bump - dt * 5); s.flash = s.flash > 0 ? Math.max(0, s.flash - dt * 3) : Math.min(0, s.flash + dt * 3); }
+                    if (live) {
+                        speed = 150 + g.t * 7;
+                        spawnT -= dt;
+                        if (spawnT <= 0) { spawn(); spawnT = Math.max(0.5, 0.82 - g.t * 0.015); }
+                    } else if (!items.length && g.state !== 'over') { for (let i = 0; i < 5; i++) items.push({ kind: i % 2 ? pick(PIECES) : VAGUE, x: 70 + i * 120, y: BELT_Y, shake: 0, wob: 0 }); }
+                    const sp = live ? speed : 40;
+                    belt += sp * dt;
+                    for (const it of items) { it.x -= sp * dt; it.shake = Math.max(0, it.shake - dt); }
+                    items = items.filter(it => !it.dead && it.x > -PW);
+                    if (!live && g.state !== 'over') for (const it of items) if (it.x < -PW / 2 + 5) it.x += W + PW;
+                    for (const f of flying) f.t += dt * 3.2;
+                    flying = flying.filter(f => f.t < 1);
+                    robo.happy = Math.max(0, robo.happy - dt); robo.think = Math.max(0, robo.think - dt);
+                    for (const o of outputs) o.t += dt;
+                    outputs = outputs.filter(o => o.t < 1.2);
                 },
                 draw(c) {
-                    const wall = c.createLinearGradient(0, 0, 0, H);
-                    wall.addColorStop(0, '#e8f6f3'); wall.addColorStop(1, '#d2ece6');
-                    c.fillStyle = wall; c.fillRect(0, 0, W, H);
-                    // Regale mit Produkten
-                    c.fillStyle = '#c9a77c';
-                    [115, 185].forEach(y => { c.fillRect(24, y, 150, 8); c.fillRect(W - 174, y, 150, 8); });
-                    [[50, 107, '📱'], [100, 107, '🎧'], [148, 107, '⌚'], [50, 177, '📷'], [100, 177, '🔌'], [148, 177, '🎮'],
-                     [W - 150, 107, '💻'], [W - 100, 107, '📺'], [W - 50, 107, '🎧'], [W - 150, 177, '⌚'], [W - 100, 177, '📱'], [W - 50, 177, '📷']]
-                        .forEach(([x, y, e]) => { c.globalAlpha = 0.85; emo(c, e, x, y - 14, 24); c.globalAlpha = 1; });
-                    c.fillStyle = '#0fa89a'; rr(c, W / 2 - 90, 18, 180, 34, 10); c.fill();
-                    txt(c, 'SERVICE & BERATUNG', W / 2, 35, 13, '#fff');
-                    for (const p of leaving) person(c, p);
-                    if (cust) {
-                        person(c, cust);
-                        // Wunsch-Blase mit Geduldsring
-                        const bx = cust.x + 70, by = 150, frac = 1 - cust.t / cust.dur;
-                        c.fillStyle = '#fff'; ell(c, bx, by, 38, 38); c.fill();
-                        c.beginPath(); c.moveTo(bx - 26, by + 22); c.lineTo(bx - 44, by + 46); c.lineTo(bx - 10, by + 32); c.fill();
-                        c.strokeStyle = frac > 0.5 ? '#2ec4b6' : frac > 0.25 ? '#ffb703' : '#ff5f6d'; c.lineWidth = 6; c.lineCap = 'round';
-                        c.beginPath(); c.arc(bx, by, 38, -Math.PI / 2, -Math.PI / 2 + TAU * Math.max(0, frac)); c.stroke();
-                        emo(c, cust.want[0], bx, by + 2, 36);
+                    const bg = c.createLinearGradient(0, 0, 0, H);
+                    bg.addColorStop(0, '#f1edff'); bg.addColorStop(1, '#e2f3ff');
+                    c.fillStyle = bg; c.fillRect(0, 0, W, H);
+                    c.strokeStyle = 'rgba(123,92,255,0.07)'; c.lineWidth = 1;
+                    for (let x = 0; x < W; x += 30) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+                    for (let y = 0; y < H; y += 30) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+                    // KI-Roboter
+                    const rx = 92, ry = 150 + Math.sin(g.now * 3) * 4 - robo.happy * 6;
+                    c.strokeStyle = '#4b4f6b'; c.lineWidth = 4; c.beginPath(); c.moveTo(rx, ry - 50); c.lineTo(rx, ry - 66); c.stroke();
+                    c.fillStyle = robo.think > 0 || robo.happy > 0 ? '#ffd166' : '#ff6b8b'; ell(c, rx, ry - 70, 7, 7); c.fill();
+                    c.fillStyle = '#ffffff'; rr(c, rx - 56, ry - 50, 112, 92, 26); c.fill();
+                    c.strokeStyle = '#d6d9ec'; c.lineWidth = 3; c.stroke();
+                    c.fillStyle = '#1d2147'; rr(c, rx - 42, ry - 36, 84, 50, 16); c.fill();
+                    c.strokeStyle = '#7ee8fa'; c.fillStyle = '#7ee8fa'; c.lineWidth = 4; c.lineCap = 'round';
+                    if (robo.happy > 0) { [-16, 16].forEach(dx => { c.beginPath(); c.arc(rx + dx, ry - 8, 8, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }); }
+                    else if (robo.think > 0) { [-18, 0, 18].forEach((dx, i) => { ell(c, rx + dx, ry - 11 + Math.sin(g.now * 14 + i) * 3, 4, 4); c.fill(); }); }
+                    else { const bl = Math.sin(g.now * 1.7) > 0.96 ? 1.5 : 7; [-16, 16].forEach(dx => { ell(c, rx + dx, ry - 11, 6, bl); c.fill(); }); }
+                    c.fillStyle = '#7b5cff'; rr(c, rx - 30, ry + 22, 60, 10, 5); c.fill();
+                    txt(c, 'KI-AGENT', rx, ry + 58, 11, '#5b5f80');
+                    // Ergebnisse, die der Roboter „ausspuckt“
+                    for (const o of outputs) {
+                        const k = ease(o.t);
+                        c.save(); c.globalAlpha = 1 - Math.max(0, o.t - 0.8) / 0.4;
+                        c.translate(o.x + 10 + k * 60, o.y - 70 - k * 50); c.rotate(-0.2 + k * 0.2);
+                        c.fillStyle = '#fff'; rr(c, -42, -28, 84, 56, 10); c.fill();
+                        c.strokeStyle = '#16a34a'; c.lineWidth = 3; c.stroke();
+                        txt(c, '✓', -22, 0, 22, '#16a34a'); c.fillStyle = '#c9cde0';
+                        [-12, 0, 12].forEach(y => c.fillRect(-6, y - 2, 36 - Math.abs(y), 4));
+                        c.restore();
                     }
-                    // Theke
-                    c.fillStyle = '#8a5a33'; rr(c, 0, H - 120, W, 22, 4); c.fill();
-                    c.fillStyle = '#b07d4f'; c.fillRect(0, H - 100, W, 100);
-                    slots.forEach((s, i) => {
-                        const x = slotX(i), y = SLOT_Y - s.bump * 6;
-                        c.fillStyle = s.flash > 0 ? '#d9f7e8' : s.flash < 0 ? '#ffe1e1' : '#fff';
-                        c.save(); c.shadowColor = 'rgba(0,0,0,0.18)'; c.shadowBlur = 10; c.shadowOffsetY = 4;
-                        rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 16); c.fill(); c.restore();
-                        emo(c, s.p[0], x - 46, y, 32);
-                        txt(c, s.p[1], x - 22, y + 1, 14, '#1b2a4a', 'left', 700);
-                        txt(c, String(i + 1), x + SLOT_W / 2 - 12, y - SLOT_H / 2 + 12, 10, 'rgba(27,42,74,0.35)');
+                    // Prompt-Leiste mit vier Plätzen
+                    c.fillStyle = '#ffffff'; rr(c, SLOT_X0 - 14, SLOT_Y - 58, 4 * (SLOT_W + SLOT_GAP) - SLOT_GAP + 28, 104, 20); c.fill();
+                    c.strokeStyle = '#e1dcff'; c.lineWidth = 2; c.stroke();
+                    txt(c, 'DEIN PROMPT', SLOT_X0, SLOT_Y - 40, 11, '#7b5cff', 'left', 800);
+                    PIECES.forEach((p, i) => {
+                        const x = slotX(i), y = SLOT_Y + 6;
+                        const isNext = i === filled && g.state === 'play';
+                        if (i < filled) {
+                            c.fillStyle = p.col; rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 12); c.fill();
+                            emo(c, p.ic, x, y - 8, 20); txt(c, p.name, x, y + 15, 11, '#fff');
+                        } else {
+                            const pulse = isNext ? 0.5 + Math.sin(g.now * 8) * 0.5 : 0;
+                            c.fillStyle = isNext ? p.col + '33' : '#f4f2fb'; rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 12); c.fill();
+                            c.setLineDash([6, 5]); c.strokeStyle = p.col; c.lineWidth = isNext ? 3 + pulse * 2 : 2; c.globalAlpha = isNext ? 1 : 0.45;
+                            c.stroke(); c.setLineDash([]);
+                            emo(c, p.ic, x, y - 8, 20); txt(c, p.name, x, y + 15, 11, p.col);
+                            c.globalAlpha = 1;
+                        }
                     });
-                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Passendes Produkt antippen!', W / 2, 80, 18, '#0b5f57', 'center', 800); c.globalAlpha = 1; }
+                    // Fließband
+                    c.fillStyle = '#3b3f5c'; rr(c, -10, BELT_Y - 10, W + 20, 56, 12); c.fill();
+                    c.fillStyle = '#4b5072';
+                    for (let x = -(belt % 34); x < W + 34; x += 34) c.fillRect(x, BELT_Y - 6, 16, 48);
+                    c.fillStyle = '#2b2e45'; for (let x = 20; x < W; x += 70) { ell(c, x, BELT_Y + 52, 12, 12); c.fill(); }
+                    for (const it of items) {
+                        const sx = it.shake > 0 ? Math.sin(it.shake * 60) * 5 : 0;
+                        card(c, it.kind, it.x + sx, it.y + Math.sin(g.now * 4 + it.wob) * 1.5);
+                    }
+                    for (const f of flying) {
+                        const k = ease(f.t);
+                        card(c, f.kind, CV.lerp(f.x, f.tx, k), CV.lerp(f.y, f.ty, k) - Math.sin(k * Math.PI) * 60, 1 - k * 0.2, 1 - k * 0.6);
+                    }
+                    if (g.state === 'play' && g.t < 2.6) { c.globalAlpha = 1 - g.t / 2.6; txt(c, 'Tippen Sie den Baustein an, der oben leuchtet!', W / 2, 392, 16, '#4b3fb0', 'center', 800); c.globalAlpha = 1; }
                 },
                 down(p) {
-                    slots.forEach((s, i) => { if (Math.abs(p.x - slotX(i)) < SLOT_W / 2 + 6 && Math.abs(p.y - SLOT_Y) < SLOT_H / 2 + 10) choose(i); });
-                },
-                key(k, down) {
-                    const i = { '1': 0, '2': 1, '3': 2, a: 0, s: 1, d: 2, ArrowLeft: 0, ArrowDown: 1, ArrowRight: 2 }[k.length === 1 ? k.toLowerCase() : k];
-                    if (i != null) { if (down) choose(i); return true; }
+                    for (let i = items.length - 1; i >= 0; i--) {
+                        const it = items[i];
+                        if (Math.abs(p.x - it.x) < PW / 2 + 6 && Math.abs(p.y - it.y) < PH / 2 + 12) { tap(it); return; }
+                    }
                 }
             };
         }
