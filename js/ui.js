@@ -569,7 +569,7 @@
                 </div>
             </article>
             <footer class="cv-foot no-print">
-                <div><strong>Lust auf die spielerische Version?</strong>7 Kapitel, 7 Minispiele – in ca. 4 Minuten.</div>
+                <div><strong>Lust auf die spielerische Version?</strong>7 kurze Kapitel – in ca. 3 Minuten.</div>
                 <button class="btn primary" data-act="play">▶ Welt erkunden</button>
             </footer>`;
         const sheet = CV.$('#cv-sheet');

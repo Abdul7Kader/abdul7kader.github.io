@@ -377,8 +377,8 @@
 
     // ================================================================== 1) Ankunft: Stempel-Jet
     M.arrival = arcade('arrival', {
-        name: 'Stempel-Jet', icon: '✈️', color: '#3a86ff', time: 20, stars: [8, 22, 40],
-        goal: 'Fliegen Sie um die Welt und sammeln Sie Länder-Stempel. Den Gewitterwolken ausweichen – der goldene Reisepass bringt Extrapunkte!',
+        name: 'Stempel-Jet', icon: '✈️', color: '#3a86ff', time: 15, stars: [6, 16, 30],
+        goal: 'Gedrückt halten = steigen, loslassen = sinken. Sammeln Sie Länder-Stempel ein!',
         controls: ['hold', 'space', 'tap'],
         result: (g) => `${g.hits} Stempel im Pass! Ich selbst war schon in ${D().countries.length} Ländern – neue Kulturen machen mich offen und anpassungsfähig.`,
         make(g) {
@@ -522,12 +522,12 @@
         { de: 'Team', ar: 'فريق', en: 'Team', fr: 'Équipe' },
         { de: 'Lernen', ar: 'تعلّم', en: 'Learn', fr: 'Apprendre' },
         { de: 'Welt', ar: 'عالم', en: 'World', fr: 'Monde' },
-        { de: 'Code', ar: 'برمجة', en: 'Code', fr: 'Code' }
+        { de: 'Familie', ar: 'عائلة', en: 'Family', fr: 'Famille' }
     ];
     const LANG = { ar: ['AR', '#2a9d8f'], en: ['EN', '#3a86ff'], fr: ['FR', '#e63946'], de: ['DE', '#f4a300'] };
     M.language = arcade('language', {
-        name: 'Wort-Ninja', icon: '🥷', color: '#7b5cff', time: 20, stars: [10, 26, 45],
-        goal: 'Wörter auf Arabisch, Englisch, Französisch und Deutsch fliegen hoch – zerschneiden Sie sie mit einem Wisch! Nur die Bugs 🐞 nicht treffen.',
+        name: 'Wort-Ninja', icon: '🥷', color: '#7b5cff', time: 15, stars: [8, 20, 34],
+        goal: 'Wischen Sie durch die fliegenden Wörter in vier Sprachen. Nur die Bomben 💣 nicht treffen!',
         controls: ['swipe', 'hold'],
         result: (g) => `${g.hits} Wörter zerlegt! Arabisch, Deutsch (C1), Englisch und Französisch – zwischen ${D().languages.length} Sprachen wechsle ich jeden Tag.`,
         make(g) {
@@ -549,7 +549,7 @@
             function sliceAt(it, dir) {
                 it.dead = true;
                 if (it.bomb) {
-                    g.miss(it.x, it.y - 34, 'Bug erwischt!'); g.flash('#fff', 0.7); g.shake(18); g.hitstop(90); g.sfx('boom');
+                    g.miss(it.x, it.y - 34, 'Bumm!'); g.flash('#fff', 0.7); g.shake(18); g.hitstop(90); g.sfx('boom');
                     g.burst(it.x, it.y, 40, ['#ff8a3d', '#ffd166', '#333', '#ff5f6d'], 380, { size: 7 });
                     stun = 0.45; trail = [];
                     return;
@@ -612,13 +612,15 @@
                         c.save(); c.translate(it.x, it.y); c.rotate(it.rot);
                         if (clipSide) { c.beginPath(); c.rect(clipSide < 0 ? -it.w : 0, -it.h * 2, it.w, it.h * 4); c.clip(); }
                         if (it.bomb) {
-                            c.fillStyle = 'rgba(255,80,80,0.25)'; ell(c, 0, 0, 34, 34); c.fill();
-                            c.fillStyle = '#c1121f'; ell(c, 0, 4, 22, 19); c.fill();
-                            c.fillStyle = '#1b1b1b'; ell(c, 0, -14, 11, 9); c.fill();
-                            c.fillRect(-1, -12, 2, 34);
-                            c.fillStyle = '#1b1b1b'; [[-9, 0], [9, 0], [-8, 12], [8, 12]].forEach(([x, y]) => { ell(c, x, y, 4, 4); c.fill(); });
-                            c.strokeStyle = '#1b1b1b'; c.lineWidth = 2;
-                            [-1, 1].forEach(s => { [-4, 6, 16].forEach(y => { c.beginPath(); c.moveTo(s * 20, y); c.lineTo(s * 30, y - 4 + Math.sin(g.now * 20 + y) * 3); c.stroke(); }); c.beginPath(); c.moveTo(s * 4, -20); c.lineTo(s * 10, -30); c.stroke(); });
+                            c.fillStyle = 'rgba(255,90,90,0.22)'; ell(c, 0, 0, 34, 34); c.fill();
+                            c.fillStyle = '#1f2433'; ell(c, 0, 4, 21, 21); c.fill();
+                            c.fillStyle = 'rgba(255,255,255,0.35)'; ell(c, -7, -4, 6, 5); c.fill();
+                            c.fillStyle = '#4b5263'; rr(c, -6, -22, 12, 9, 2); c.fill();
+                            c.strokeStyle = '#a0763c'; c.lineWidth = 3; c.lineCap = 'round';
+                            c.beginPath(); c.moveTo(0, -22); c.quadraticCurveTo(6, -32, 14, -30); c.stroke();
+                            const sp = 5 + Math.sin(g.now * 30) * 2;
+                            c.fillStyle = '#ffd166'; starPath(c, 15, -31, sp, sp * 0.4, 6, g.now * 8); c.fill();
+                            c.fillStyle = '#ff6b35'; ell(c, 15, -31, 2.5, 2.5); c.fill();
                         } else {
                             const [tag, col] = LANG[it.lang];
                             c.fillStyle = 'rgba(0,0,0,0.25)'; rr(c, -it.w / 2 + 2, -it.h / 2 + 5, it.w, it.h, it.h / 2); c.fill();
@@ -661,8 +663,8 @@
 
     // ================================================================== 3) Campus: Abi-Sprint
     M.school = arcade('school', {
-        name: 'Abi-Sprint', icon: '🎓', color: '#ff8a3d', time: 22, stars: [12, 32, 60],
-        goal: 'Abitur neben dem Job: Springen Sie über Bücherstapel, Deadlines und Prüfungen und sammeln Sie Geistesblitze 💡. Doppelsprung erlaubt!',
+        name: 'Abi-Sprint', icon: '🎓', color: '#ff8a3d', time: 15, stars: [8, 22, 42],
+        goal: 'Tippen = springen. Hüpfen Sie über die Bücherstapel und sammeln Sie Glühbirnen ein!',
         controls: ['click', 'space', 'tap'],
         result: () => {
             const abi = (D().academic || []).find(e => /reife|abitur/i.test(e.title));
@@ -822,8 +824,8 @@
 
     // ================================================================== 4) Business: Hotline-Held
     M.career = arcade('career', {
-        name: 'Hotline-Held', icon: '📞', color: '#2ec4b6', time: 20, stars: [12, 30, 50],
-        goal: 'Überall klingelt es! Nehmen Sie Anrufe an, bevor die Kunden auflegen – je schneller, desto mehr Punkte. Aber Vorsicht vor Werbeanrufen 📢!',
+        name: 'Hotline-Held', icon: '📞', color: '#2ec4b6', time: 15, stars: [8, 20, 36],
+        goal: 'Klicken Sie auf die klingelnden Telefone, bevor die Kunden auflegen!',
         controls: ['click', 'tap', 'keys'],
         result: () => {
             const cc = (D().experienceDesc || []).find(e => /call|kunden|service/i.test(e.role + e.company));
@@ -940,164 +942,95 @@
         }
     });
 
-    // ================================================================== 5) Tech-Lab: Bug-Breakout
-    const CODE = [
-        'public class Solver {', '  private final List<Task> tasks;', '  // TODO: schneller machen', '  public Result run(Input in) {',
-        '    if (in == null) return Result.EMPTY;', '    for (Task t : tasks) {', '      t.validate();', '      log.info("ok: " + t.id());',
-        '    }', '    return optimize(in);', '  }', '  @Test void shouldDeploy() {', '    assertTrue(build.passes());', '  }', '}',
-        'SELECT name FROM skills WHERE level > 3;', 'git commit -m "fix: bug squashed"', 'const done = bugs.length === 0;'
-    ];
+    // ================================================================== 5) Tech-Lab: Ideen-Regen (Fangspiel)
     M.lab = arcade('lab', {
-        name: 'Bug-Breakout', icon: '🐛', color: '#22c55e', time: 30, stars: [12, 32, 55],
-        goal: 'Im Code krabbeln Bugs! Lenken Sie das Deploy-Paddle, schießen Sie alle Bugs ab und fangen Sie ☕ (Multiball) und 🔧 (breites Paddle).',
-        controls: ['mouse', 'arrows', 'tap'],
+        name: 'Ideen-Regen', icon: '💡', color: '#16a34a', time: 15, stars: [8, 20, 34],
+        goal: 'Bewegen Sie den Korb und fangen Sie die fallenden Ideen. Den grauen Regenwolken ausweichen!',
+        controls: ['mouse', 'tap', 'arrows'],
         result: () => {
             const r = D().currentRole;
-            return `Release bereit! ${r ? `Als ${r.role} bei ${r.company} ` : 'In der Softwareentwicklung '}gehört systematisches Debugging zu meinem Alltag – ich bleibe dran, bis es läuft.`;
+            return `Gute Ideen auffangen und umsetzen – ${r ? `das mache ich als ${r.role.replace(/\s*\(.*\)/, '')} bei ${r.company}` : 'das mache ich jeden Tag'}, gemeinsam im Team.`;
         },
         make(g) {
-            const pad = { x: W / 2, y: H - 30, w: 100, tw: 100, wideT: 0, squash: 0 };
-            let balls = [], bugs = [], drops = [], launchT = 0, keyL = false, keyR = false, usePtr = false, endT = 0, cleared = false;
-            const cols = 8, rows = 4, bw = 58, bh = 26, gap = 9;
-            const ox = (W - (cols * bw + (cols - 1) * gap)) / 2 + bw / 2, oy = 84;
-            const ROWC = ['#ff5f6d', '#ff8a3d', '#ffd166', '#2ec4b6'];
-            for (let r = 0; r < rows; r++) for (let cI = 0; cI < cols; cI++) bugs.push({ x: ox + cI * (bw + gap), y: oy + r * (bh + gap), hp: r === 0 ? 2 : 1, row: r, ph: Math.random() * TAU, fall: null });
-            function newBall() { balls.push({ x: pad.x, y: pad.y - 16, vx: 0, vy: 0, stuck: true, r: 8, tr: [] }); launchT = 0.8; }
-            function launch(b) { const a = -Math.PI / 2 + rnd(-0.45, 0.45); b.vx = Math.cos(a) * 390; b.vy = Math.sin(a) * 390; b.stuck = false; g.sfx('pop'); }
-            newBall();
-            const alive = () => bugs.filter(b => !b.fall);
+            const bk = { x: W / 2, tx: W / 2, y: H - 58, w: 96, wob: 0, squash: 0 };
+            let items = [], spawnT = 0.4, keyL = false, keyR = false;
+            const GOOD = [['💡', 1, 0.72], ['⭐', 2, 0.92], ['🏆', 5, 1]];
+            function spawn() {
+                const bad = g.t > 1 && Math.random() < 0.2;
+                let kind = null;
+                if (!bad) { const r = Math.random(); kind = GOOD.find(k => r < k[2]); }
+                items.push({ x: rnd(40, W - 40), y: -30, vy: rnd(150, 190) + g.t * 9, bad, ic: kind && kind[0], pts: kind && kind[1], rot: rnd(-0.4, 0.4), ph: Math.random() * TAU });
+            }
             return {
                 update(dt) {
                     const live = g.state === 'play';
-                    pad.wideT = Math.max(0, pad.wideT - dt);
-                    pad.tw = pad.wideT > 0 ? 158 : 100; pad.w = CV.lerp(pad.w, pad.tw, dt * 10);
-                    pad.squash = Math.max(0, pad.squash - dt * 4);
                     if (live) {
-                        if (keyL || keyR) { usePtr = false; pad.x += ((keyR ? 1 : 0) - (keyL ? 1 : 0)) * 620 * dt; }
-                        else if (usePtr) pad.x = CV.lerp(pad.x, g.ptr.x, Math.min(1, dt * 22));
-                    } else pad.x = W / 2 + Math.sin(g.now * 1.5) * 120;
-                    pad.x = CV.clamp(pad.x, pad.w / 2 + 6, W - pad.w / 2 - 6);
-                    for (const bug of bugs) {
-                        bug.ph += dt * 8;
-                        if (bug.fall) { bug.fall.vy += 900 * dt; bug.x += bug.fall.vx * dt; bug.y += bug.fall.vy * dt; bug.fall.r += 6 * dt; }
-                    }
-                    bugs = bugs.filter(b => !b.fall || b.y < H + 60);
-                    for (const b of balls) {
-                        if (b.stuck) {
-                            b.x = pad.x; b.y = pad.y - 16;
-                            if (live) { launchT -= dt; if (launchT <= 0) launch(b); }
-                            continue;
-                        }
-                        b.tr.push({ x: b.x, y: b.y }); if (b.tr.length > 8) b.tr.shift();
-                        const N = 3;
-                        for (let s = 0; s < N; s++) {
-                            b.x += b.vx * dt / N; b.y += b.vy * dt / N;
-                            if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx); }
-                            if (b.x > W - b.r) { b.x = W - b.r; b.vx = -Math.abs(b.vx); }
-                            if (b.y < 62 + b.r) { b.y = 62 + b.r; b.vy = Math.abs(b.vy); }
-                            if (b.vy > 0 && b.y + b.r >= pad.y - 7 && b.y - b.r < pad.y + 8 && Math.abs(b.x - pad.x) < pad.w / 2 + b.r) {
-                                const rel = CV.clamp((b.x - pad.x) / (pad.w / 2), -1, 1), sp = Math.hypot(b.vx, b.vy);
-                                const a = rel * 1.05;
-                                b.vx = Math.sin(a) * sp; b.vy = -Math.cos(a) * sp; b.y = pad.y - 7 - b.r;
-                                pad.squash = 1; g.sfx('click');
+                        if (keyL || keyR) bk.tx = bk.x + ((keyR ? 1 : 0) - (keyL ? 1 : 0)) * 60;
+                        spawnT -= dt;
+                        if (spawnT <= 0) { spawn(); spawnT = Math.max(0.3, 0.6 - g.t * 0.02); }
+                    } else bk.tx = W / 2 + Math.sin(g.now * 1.3) * 140;
+                    bk.tx = CV.clamp(bk.tx, bk.w / 2 + 8, W - bk.w / 2 - 8);
+                    const prev = bk.x;
+                    bk.x = CV.lerp(bk.x, bk.tx, Math.min(1, dt * 16));
+                    bk.lean = CV.clamp((bk.x - prev) * 0.02, -0.25, 0.25);
+                    bk.wob = Math.max(0, bk.wob - dt); bk.squash = Math.max(0, bk.squash - dt * 5);
+                    for (const it of items) {
+                        it.y += it.vy * dt; it.ph += dt * 3;
+                        if (!live || it.done) continue;
+                        if (it.y > bk.y - 24 && it.y < bk.y + 10 && Math.abs(it.x - bk.x) < bk.w / 2 + 6) {
+                            it.done = true;
+                            if (it.bad) {
+                                bk.wob = 0.5; g.miss(bk.x, bk.y - 50, 'Regen!');
+                                g.burst(it.x, it.y, 18, ['#9ad1ff', '#cfe8ff', '#7aa7d6'], 220, { size: 4, grav: 600 });
+                            } else {
+                                bk.squash = 1;
+                                g.hit(it.pts, it.x, it.y - 30, it.pts >= 5 ? 'Volltreffer!' : '', it.pts > 1 ? '#ffd166' : '#fff');
+                                g.sfx(it.pts >= 5 ? 'bonus' : 'coin');
+                                g.burst(it.x, it.y, it.pts >= 5 ? 26 : 10, ['#ffd166', '#fff', '#b9fbc0'], 200, { shape: 'star', size: 5, grav: 150 });
                             }
-                            for (const bug of bugs) {
-                                if (bug.fall) continue;
-                                const dx = b.x - bug.x, dy = b.y - bug.y;
-                                const ox2 = bw / 2 + b.r - Math.abs(dx), oy2 = bh / 2 + b.r - Math.abs(dy);
-                                if (ox2 > 0 && oy2 > 0) {
-                                    if (ox2 < oy2) { b.vx = Math.sign(dx || 1) * Math.abs(b.vx); b.x += Math.sign(dx || 1) * ox2; }
-                                    else { b.vy = Math.sign(dy || 1) * Math.abs(b.vy); b.y += Math.sign(dy || 1) * oy2; }
-                                    bug.hp--;
-                                    if (bug.hp <= 0) {
-                                        bug.fall = { vx: rnd(-90, 90), vy: -160, r: 0 };
-                                        g.hit(1, bug.x, bug.y - 14, '', '#b9fbc0');
-                                        g.burst(bug.x, bug.y, 14, ['#b9fbc0', ROWC[bug.row], '#fff'], 220, { size: 5 });
-                                        g.hitstop(22); g.shake(3); g.sfx('splat');
-                                        const sp = Math.hypot(b.vx, b.vy), nsp = Math.min(600, sp * 1.02);
-                                        b.vx *= nsp / sp; b.vy *= nsp / sp;
-                                        if (Math.random() < 0.14) drops.push({ x: bug.x, y: bug.y, kind: Math.random() < 0.55 ? 'coffee' : 'wide' });
-                                    } else { g.sfx('click'); g.burst(bug.x, bug.y, 6, ['#cfd8e3', '#fff'], 120, { size: 3 }); }
-                                    break;
-                                }
-                            }
-                        }
+                        } else if (!it.bad && it.y > H + 20) { it.done = true; if (g.combo > 0) g.miss(it.x, H - 20, '', true); }
                     }
-                    const before = balls.length;
-                    balls = balls.filter(b => b.y < H + 30);
-                    if (before && !balls.length) {
-                        if (live) g.miss(pad.x, H - 70, 'Bug entkommen!');
-                        newBall();
-                    }
-                    for (const d of drops) {
-                        d.y += 170 * dt;
-                        if (live && !d.got && d.y > pad.y - 16 && d.y < pad.y + 10 && Math.abs(d.x - pad.x) < pad.w / 2 + 14) {
-                            d.got = true; g.sfx('bonus'); g.ring(d.x, d.y, '#fff', 36);
-                            if (d.kind === 'coffee') {
-                                const src = balls.find(b => !b.stuck) || balls[0];
-                                if (src) [-0.5, 0.5].forEach(a => { const sp = 400, base = Math.atan2(-Math.abs(src.vy) || -1, src.vx); balls.push({ x: src.x, y: src.y, vx: Math.cos(base + a) * sp, vy: Math.sin(base + a) * sp, stuck: false, r: 8, tr: [] }); });
-                                g.add(2, d.x, d.y - 30, 'Kaffee! Multiball', '#ffd6a5');
-                            } else { pad.wideT = 7; g.add(2, d.x, d.y - 30, 'Breites Paddle', '#b8f2e6'); }
-                        }
-                    }
-                    drops = drops.filter(d => !d.got && d.y < H + 20);
-                    if (live && !cleared && !alive().length) {
-                        cleared = true; endT = 1.1;
-                        const bonus = 10 + Math.ceil(g.left);
-                        g.add(bonus, W / 2, H / 2, 'Release fertig!', '#ffd166'); g.flash('#b9fbc0', 0.4); g.sfx('fanfare');
-                        g.burst(W / 2, H / 2, 60, ['#b9fbc0', '#ffd166', '#2ec4b6', '#fff'], 420, { shape: 'sq', life: 1.3 });
-                    }
-                    if (endT > 0) { endT -= dt; if (endT <= 0) g.end(); }
+                    items = items.filter(it => !it.done && it.y < H + 40);
                 },
                 draw(c) {
-                    c.fillStyle = '#0f1724'; c.fillRect(0, 0, W, H);
-                    c.fillStyle = '#141f31'; c.fillRect(0, 0, 34, H);
-                    c.font = `600 12px ui-monospace, Menlo, Consolas, monospace`; c.textAlign = 'left'; c.textBaseline = 'middle';
-                    CODE.forEach((l, i) => {
-                        const y = 70 + i * 19;
-                        if (y > H - 10) return;
-                        c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillText(String(i + 1).padStart(2, ' '), 8, y);
-                        c.fillStyle = /^\s*\/\//.test(l) ? 'rgba(120,200,120,0.16)' : /class|public|private|return|for|if|const/.test(l) ? 'rgba(255,121,198,0.15)' : 'rgba(180,200,255,0.13)';
-                        c.fillText(l, 44, y);
-                    });
-                    for (const bug of bugs) {
-                        c.save(); c.translate(bug.x, bug.y);
-                        if (bug.fall) { c.rotate(bug.fall.r); c.scale(1, -1); c.globalAlpha = 0.85; }
-                        const col = ROWC[bug.row], wig = Math.sin(bug.ph) * 3;
-                        c.strokeStyle = '#0b1220'; c.lineWidth = 2.2;
-                        [-1, 1].forEach(s => [-7, 0, 7].forEach((lx, j) => { c.beginPath(); c.moveTo(lx, 0); c.lineTo(lx + (j - 1) * 3 + (j % 2 ? wig : -wig), s * 15); c.stroke(); }));
-                        c.fillStyle = col; ell(c, 3, 0, 20, 11); c.fill();
-                        c.fillStyle = 'rgba(0,0,0,0.25)'; c.fillRect(2, -11, 2, 22);
-                        c.fillStyle = '#0b1220'; ell(c, -19, 0, 7, 7); c.fill();
-                        c.fillStyle = '#fff'; ell(c, -21, -2.5, 1.8, 1.8); c.fill(); ell(c, -21, 2.5, 1.8, 1.8); c.fill();
-                        c.fillStyle = 'rgba(0,0,0,0.25)'; ell(c, 10, -4, 3, 3); c.fill(); ell(c, 10, 5, 3, 3); c.fill(); ell(c, -2, 4, 2.5, 2.5); c.fill();
-                        if (bug.hp > 1) { c.strokeStyle = '#cfd8e3'; c.lineWidth = 2.5; ell(c, 3, 0, 22, 13); c.stroke(); }
-                        c.restore(); c.globalAlpha = 1;
+                    const sky = c.createLinearGradient(0, 0, 0, H);
+                    sky.addColorStop(0, '#8fd3ff'); sky.addColorStop(1, '#e6f7ff');
+                    c.fillStyle = sky; c.fillRect(0, 0, W, H);
+                    c.fillStyle = 'rgba(255,236,170,0.45)'; ell(c, 90, 80, 50, 50); c.fill();
+                    c.fillStyle = '#ffe28a'; ell(c, 90, 80, 30, 30); c.fill();
+                    c.fillStyle = '#a7dc8b'; ell(c, 140, H + 30, 260, 90); c.fill(); ell(c, 480, H + 40, 280, 100); c.fill();
+                    c.fillStyle = '#7cc46b'; c.fillRect(0, H - 26, W, 26);
+                    for (const it of items) {
+                        const sw = Math.sin(it.ph) * 4;
+                        if (it.bad) {
+                            c.fillStyle = '#8a94a6';
+                            ell(c, it.x + sw, it.y, 30, 15); c.fill(); ell(c, it.x - 10 + sw, it.y - 10, 17, 13); c.fill(); ell(c, it.x + 11 + sw, it.y - 12, 19, 15); c.fill();
+                            c.strokeStyle = '#6aa8e8'; c.lineWidth = 2.5; c.lineCap = 'round';
+                            for (let i = -1; i <= 1; i++) { const yy = it.y + 20 + ((g.now * 60 + i * 7) % 12); c.beginPath(); c.moveTo(it.x + i * 12 + sw, yy); c.lineTo(it.x + i * 12 - 3 + sw, yy + 7); c.stroke(); }
+                        } else {
+                            c.fillStyle = it.pts >= 5 ? 'rgba(255,209,102,0.5)' : 'rgba(255,255,255,0.55)'; ell(c, it.x + sw, it.y, 22, 22); c.fill();
+                            c.save(); c.translate(it.x + sw, it.y); c.rotate(it.rot + Math.sin(it.ph) * 0.15); emo(c, it.ic, 0, 0, it.pts >= 5 ? 32 : 28); c.restore();
+                        }
                     }
-                    for (const d of drops) {
-                        c.fillStyle = d.kind === 'coffee' ? 'rgba(255,214,165,0.3)' : 'rgba(184,242,230,0.3)'; ell(c, d.x, d.y, 18, 18); c.fill();
-                        emo(c, d.kind === 'coffee' ? '☕' : '🔧', d.x, d.y, 22);
-                    }
-                    for (const b of balls) {
-                        b.tr.forEach((t, i) => { c.fillStyle = `rgba(126,232,250,${(i + 1) / b.tr.length * 0.35})`; ell(c, t.x, t.y, b.r * (i + 1) / b.tr.length, b.r * (i + 1) / b.tr.length); c.fill(); });
-                        c.fillStyle = 'rgba(126,232,250,0.3)'; ell(c, b.x, b.y, b.r + 6, b.r + 6); c.fill();
-                        c.fillStyle = '#fff'; ell(c, b.x, b.y, b.r, b.r); c.fill();
-                    }
-                    const sq = 1 - pad.squash * 0.25;
-                    c.save(); c.translate(pad.x, pad.y); c.scale(1 + pad.squash * 0.08, sq);
-                    const pg = c.createLinearGradient(0, -8, 0, 8); pg.addColorStop(0, '#5eead4'); pg.addColorStop(1, '#14b8a6');
-                    c.fillStyle = 'rgba(94,234,212,0.25)'; rr(c, -pad.w / 2 - 4, -11, pad.w + 8, 22, 11); c.fill();
-                    c.fillStyle = pg; rr(c, -pad.w / 2, -7, pad.w, 14, 7); c.fill();
-                    txt(c, 'DEPLOY', 0, 0.5, 9, '#073b37');
+                    // Korb
+                    c.save(); c.translate(bk.x, bk.y);
+                    c.rotate(bk.lean + (bk.wob > 0 ? Math.sin(bk.wob * 40) * 0.12 : 0));
+                    c.scale(1 + bk.squash * 0.08, 1 - bk.squash * 0.1);
+                    c.fillStyle = 'rgba(0,0,0,0.12)'; ell(c, 0, 34, bk.w / 2, 6); c.fill();
+                    c.fillStyle = '#c98b4f';
+                    c.beginPath(); c.moveTo(-bk.w / 2, -8); c.lineTo(bk.w / 2, -8); c.lineTo(bk.w / 2 - 12, 30); c.lineTo(-bk.w / 2 + 12, 30); c.closePath(); c.fill();
+                    c.strokeStyle = '#a86f3a'; c.lineWidth = 2;
+                    for (let y = 2; y < 30; y += 9) { c.beginPath(); c.moveTo(-bk.w / 2 + 4 + y * 0.3, y); c.lineTo(bk.w / 2 - 4 - y * 0.3, y); c.stroke(); }
+                    for (let x = -bk.w / 2 + 16; x < bk.w / 2 - 8; x += 14) { c.beginPath(); c.moveTo(x, -8); c.lineTo(x * 0.8, 30); c.stroke(); }
+                    c.fillStyle = '#8a5a2b'; rr(c, -bk.w / 2 - 4, -14, bk.w + 8, 10, 5); c.fill();
                     c.restore();
-                    if (balls.some(b => b.stuck) && g.state === 'play') txt(c, 'Klick = Start', pad.x, pad.y - 40, 13, 'rgba(255,255,255,0.75)');
+                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Korb mit Maus oder Finger bewegen', W / 2, 90, 17, '#1b2a4a', 'center', 800); c.globalAlpha = 1; }
                 },
-                down(p) { usePtr = true; g.ptr.x = p.x; balls.forEach(b => b.stuck && launch(b)); },
-                move() { usePtr = true; },
+                down(p) { bk.tx = p.x; },
+                move(p) { bk.tx = p.x; },
                 key(k, down) {
                     if (k === 'ArrowLeft' || k === 'a' || k === 'A') { keyL = down; return true; }
                     if (k === 'ArrowRight' || k === 'd' || k === 'D') { keyR = down; return true; }
-                    if ((k === ' ' || k === 'ArrowUp') && down) { balls.forEach(b => b.stuck && launch(b)); return true; }
                 }
             };
         }
@@ -1105,19 +1038,18 @@
 
     // ================================================================== 6) Projekte: Projekt-Stapler
     M.projects = arcade('projects', {
-        name: 'Projekt-Stapler', icon: '🏗️', color: '#f59e0b', time: 0, stars: [6, 16, 28],
-        goal: 'Stapeln Sie meine Projekte und Skills zum Wolkenkratzer! Je genauer Sie absetzen, desto weniger wird abgeschnitten – „Perfekt!“ gibt Bonus. Sie haben 3 Versuche.',
+        name: 'Projekt-Stapler', icon: '🏗️', color: '#f59e0b', time: 0, stars: [4, 10, 18],
+        goal: 'Tippen, um den Block abzusetzen. Je genauer Sie stapeln, desto höher wird der Turm!',
         controls: ['click', 'space', 'tap'],
-        hud: (g) => `🏗️ ${g.level || 0} / 15   ${'❤'.repeat(3 - (g.fails || 0))}${'♡'.repeat(g.fails || 0)}`,
-        result: (g) => `${g.level || 0} Etagen! Vom Onlineshop über RestIQ bis zum eigenen Buch – ich setze Ideen gern selbst um, Stein für Stein.`,
+        hud: (g) => `🏗️ ${g.level || 0} / 10   ${'❤'.repeat(3 - (g.fails || 0))}${'♡'.repeat(g.fails || 0)}`,
+        result: (g) => `${g.level || 0} ${g.level === 1 ? 'Etage' : 'Etagen'}! Vom Onlineshop über RestIQ bis zum eigenen Buch – ich setze Ideen gern selbst um, Stein für Stein.`,
         make(g) {
-            const tok = D().skillTokens || [];
             const proj = (data().projects || []).map(p => p.title);
+            const soft = CV.shuffle((data().strengths || []).map(s2 => s2.title).concat(['Teamgeist', 'Zuverlässigkeit', 'Lernbereitschaft', 'Neugier', 'Ausdauer', 'Organisation', 'Kreativität', 'Verantwortung']));
             const labels = [];
-            const sk = CV.shuffle(tok);
-            proj.forEach((p, i) => { labels.push(p); if (sk[i * 2]) labels.push(sk[i * 2]); if (sk[i * 2 + 1]) labels.push(sk[i * 2 + 1]); });
-            sk.slice(proj.length * 2).forEach(s => labels.push(s));
-            const BH = 30, DEP = 10, MAX = 15;
+            proj.forEach((p, i) => { labels.push(p); if (soft[i]) labels.push(soft[i]); });
+            soft.slice(proj.length).forEach(t => labels.push(t));
+            const BH = 30, DEP = 10, MAX = 10;
             const base = { x: W / 2 - 115, w: 230, label: 'FH Dortmund · Informatik', hue: 210, land: 0 };
             const stack = [base];
             let cur = null, dir = 1, speed = 180, cam = 0, falling = [], perfectRun = 0, over = false, endT = 0;
@@ -1237,8 +1169,8 @@
 
     // ================================================================== 7) See: SUP-Slalom
     M.lake = arcade('lake', {
-        name: 'SUP-Slalom', icon: '🏄', color: '#06b6d4', time: 20, stars: [10, 26, 45],
-        goal: 'Paddeln Sie den Fluss hinunter: Felsen und Baumstämmen ausweichen, Sterne und die goldene Ente einsammeln. Über Rampen springen Sie alles!',
+        name: 'SUP-Slalom', icon: '🏄', color: '#06b6d4', time: 15, stars: [7, 18, 32],
+        goal: 'Links oder rechts tippen, um den Felsen auszuweichen. Sterne einsammeln!',
         controls: ['arrows', 'tap'],
         result: () => 'Schwimmen, Fitness und Stand-Up-Paddling sind mein Ausgleich. Ausdauer zahlt sich aus – im Sport wie im Job.',
         make(g) {
