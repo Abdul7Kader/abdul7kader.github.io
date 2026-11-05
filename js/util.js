@@ -36,14 +36,25 @@
         return a;
     };
 
+    // Spielstand (Kapitel, Sterne, Bestwerte, Firmenname) lebt nur im Arbeitsspeicher:
+    // Jedes Neuladen startet ein frisches Spiel. Nur die Ton-Einstellungen bleiben im Browser gespeichert.
+    const KEEP = ['sfx', 'music'];
+    const mem = new Map();
+    try {
+        Object.keys(localStorage).forEach(k => {
+            if (k.startsWith('cvworld:') && !KEEP.includes(k.slice(8))) localStorage.removeItem(k);
+        });
+    } catch (e) { /* privat */ }
     CV.store = {
         get(key, fallback) {
+            if (!KEEP.includes(key)) return mem.has(key) ? mem.get(key) : fallback;
             try {
                 const v = localStorage.getItem('cvworld:' + key);
                 return v == null ? fallback : JSON.parse(v);
             } catch (e) { return fallback; }
         },
         set(key, value) {
+            if (!KEEP.includes(key)) { mem.set(key, value); return; }
             try { localStorage.setItem('cvworld:' + key, JSON.stringify(value)); } catch (e) { /* privat */ }
         }
     };
