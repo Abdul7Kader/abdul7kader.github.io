@@ -34,7 +34,7 @@
 
     const CTRL = {
         hold: ['🖱️', 'Gedrückt halten'], click: ['🖱️', 'Klicken'], tap: ['👆', 'Tippen'], swipe: ['👆', 'Wischen'],
-        space: ['⌨️', 'Leertaste'], arrows: ['⌨️', '← →'], mouse: ['🖱️', 'Maus bewegen'], keys: ['⌨️', 'Tasten 1–6']
+        space: ['⌨️', 'Leertaste'], arrows: ['⌨️', '← →'], mouse: ['🖱️', 'Maus bewegen'], keys: ['⌨️', 'Tasten 1–3']
     };
 
     // ------------------------------------------------------------------ Engine
@@ -823,118 +823,123 @@
         }
     });
 
-    // ================================================================== 4) Business: Hotline-Held
+    // ================================================================== 4) Business: Kunden-Theke
+    // Kunden kommen an die Theke und zeigen, was sie brauchen – das passende Produkt antippen.
+    const PRODUCTS = [['📱', 'Smartphone'], ['🎧', 'Kopfhörer'], ['⌚', 'Smartwatch'], ['💻', 'Laptop'], ['📺', 'Fernseher'], ['🔌', 'Ladekabel'], ['📷', 'Kamera'], ['🎮', 'Konsole']];
+    const LOOKS = [
+        { skin: '#f1c7a5', hair: '#6b4423', top: '#3a86ff' }, { skin: '#c68863', hair: '#1f1a17', top: '#ff7a3d' },
+        { skin: '#8d5a3b', hair: '#111', top: '#2ec4b6' }, { skin: '#f4d2b8', hair: '#d9a441', top: '#8338ec' },
+        { skin: '#e0ac69', hair: '#3b2a20', top: '#e63946' }, { skin: '#ffdcc2', hair: '#9aa0a6', top: '#16a34a' }
+    ];
     M.career = arcade('career', {
-        name: 'Hotline-Held', icon: '📞', color: '#2ec4b6', time: 15, stars: [8, 20, 36],
-        goal: 'Klicken Sie auf die klingelnden Telefone, bevor die Kunden auflegen!',
+        name: 'Kunden-Theke', icon: '🛍️', color: '#0fa89a', time: 15, stars: [8, 20, 34],
+        goal: 'Kunden kommen an die Theke und zeigen, was sie suchen. Tippen Sie schnell auf das passende Produkt!',
         controls: ['click', 'tap', 'keys'],
-        result: () => 'Kunden glücklich gemacht! Im Kundenservice für die Telekom und für Samsung habe ich gelernt, auch unter Druck freundlich und lösungsorientiert zu bleiben.',
+        result: () => 'Zuhören, verstehen, die passende Lösung anbieten – genau das habe ich in der Beratung für die Telekom und Samsung jeden Tag gemacht.',
         make(g) {
-            const desks = [];
-            for (let r = 0; r < 2; r++) for (let col = 0; col < 3; col++) desks.push({ i: r * 3 + col, x: 105 + col * 195, y: 190 + r * 150, state: 'idle', t: 0, dur: 2, kind: 'normal', anim: 0 });
-            let spawnT = 0.5;
-            const KEYMAP = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, q: 0, w: 1, e: 2, a: 3, s: 4, d: 5 };
-            function ring() {
-                const active = desks.filter(d => d.state === 'ring').length;
-                const maxA = Math.min(5, 2 + Math.floor(g.t / 5));
-                if (active >= maxA) return;
-                const free = desks.filter(d => d.state === 'idle');
-                if (!free.length) return;
-                const d = pick(free);
-                const r = Math.random();
-                d.kind = g.t > 3 && r < 0.15 ? 'spam' : r < 0.27 ? 'vip' : 'normal';
-                d.state = 'ring'; d.t = 0; d.dur = Math.max(1.35, 2.5 - g.t * 0.05);
-                g.sfx('ring');
+            const SLOT_Y = H - 64, SLOT_W = 150, SLOT_H = 84, GAP = 22;
+            const slotX = (i) => W / 2 + (i - 1) * (SLOT_W + GAP);
+            let cust = null, leaving = [], slots = [], waitT = 0.2, served = 0;
+            function nextCustomer() {
+                const want = pick(PRODUCTS);
+                const others = CV.shuffle(PRODUCTS.filter(p => p !== want)).slice(0, 2);
+                slots = CV.shuffle([want, ...others]).map(p => ({ p, bump: 0, flash: 0 }));
+                const vip = served > 1 && Math.random() < 0.16;
+                cust = { want, vip, look: pick(LOOKS), x: -80, tx: W / 2, t: 0, dur: Math.max(1.7, 3.3 - g.t * 0.1), mood: 'wait', bob: Math.random() * TAU };
             }
-            function answer(d) {
-                if (!d || d.state !== 'ring') return;
-                if (d.kind === 'spam') {
-                    d.state = 'angry'; d.t = 0; d.face = '📢';
-                    g.miss(d.x, d.y - 80, 'Werbeanruf!');
-                    return;
+            function choose(i) {
+                if (!cust || cust.mood !== 'wait' || cust.x < cust.tx - 30) return;
+                const s = slots[i]; if (!s) return;
+                s.bump = 1;
+                if (s.p === cust.want) {
+                    const fast = cust.t < cust.dur * 0.45;
+                    const pts = (cust.vip ? 3 : 1) + (fast ? 1 : 0);
+                    g.hit(pts, cust.x, 150, cust.vip ? 'VIP zufrieden!' : fast ? 'Super schnell!' : 'Danke!', cust.vip ? '#ffd166' : '#b8f2e6');
+                    g.burst(cust.x, 190, 16, ['#ffd166', '#2ec4b6', '#fff', '#ff8a3d'], 240, { shape: 'sq', size: 6 });
+                    g.sfx(cust.vip ? 'bonus' : 'good');
+                    cust.mood = 'happy'; s.flash = 1; served++;
+                    leaving.push(cust); cust = null; waitT = 0.25;
+                } else {
+                    s.flash = -1;
+                    cust.t += cust.dur * 0.35;
+                    g.miss(cust.x, 150, 'Falsches Produkt');
                 }
-                const fast = d.t < d.dur * 0.4;
-                const pts = (d.kind === 'vip' ? 3 : 1) + (fast ? 1 : 0);
-                g.hit(pts, d.x, d.y - 86, d.kind === 'vip' ? 'VIP!' : fast ? 'Blitzschnell!' : '', d.kind === 'vip' ? '#ffd166' : '#b8f2e6');
-                g.burst(d.x, d.y - 40, 14, ['#2ec4b6', '#ffd166', '#fff', '#ff8a3d'], 220, { shape: 'sq', size: 6 });
-                g.sfx('good');
-                d.state = 'talk'; d.t = 0; d.anim = 1;
+            }
+            function person(c, p) {
+                const x = p.x, y = 300 + Math.sin(g.now * 6 + p.bob) * (p.mood === 'wait' ? 1 : 3);
+                c.fillStyle = 'rgba(0,0,0,0.12)'; ell(c, x, 340, 36, 8); c.fill();
+                c.fillStyle = p.look.top; rr(c, x - 34, y - 40, 68, 80, 26); c.fill();
+                c.fillStyle = p.look.skin; ell(c, x, y - 72, 30, 32); c.fill();
+                c.fillStyle = p.look.hair; c.beginPath(); c.arc(x, y - 78, 31, Math.PI * 1.05, Math.PI * 1.95); c.closePath(); c.fill();
+                if (p.vip) { c.fillStyle = '#ffc53d'; c.beginPath(); c.moveTo(x - 20, y - 104); c.lineTo(x - 22, y - 122); c.lineTo(x - 10, y - 112); c.lineTo(x, y - 126); c.lineTo(x + 10, y - 112); c.lineTo(x + 22, y - 122); c.lineTo(x + 20, y - 104); c.closePath(); c.fill(); }
+                c.fillStyle = '#1b2a4a'; ell(c, x - 10, y - 74, 3, 3.5); c.fill(); ell(c, x + 10, y - 74, 3, 3.5); c.fill();
+                c.strokeStyle = '#1b2a4a'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath();
+                const frac = p.mood === 'wait' ? 1 - p.t / p.dur : 1;
+                if (p.mood === 'happy') c.arc(x, y - 62, 10, 0.15 * Math.PI, 0.85 * Math.PI);
+                else if (p.mood === 'angry' || frac < 0.3) c.arc(x, y - 50, 9, 1.2 * Math.PI, 1.8 * Math.PI);
+                else { c.moveTo(x - 7, y - 58); c.lineTo(x + 7, y - 58); }
+                c.stroke();
+                if (p.mood === 'happy') { c.fillStyle = '#ff7a3d'; rr(c, x + 30, y - 6, 30, 34, 6); c.fill(); c.strokeStyle = '#c2410c'; c.lineWidth = 2.5; c.beginPath(); c.arc(x + 45, y - 6, 8, Math.PI, 0); c.stroke(); }
             }
             return {
                 update(dt) {
-                    if (g.state === 'play') {
-                        spawnT -= dt;
-                        if (spawnT <= 0) { ring(); spawnT = Math.max(0.38, 0.9 - g.t * 0.028); }
+                    const live = g.state === 'play';
+                    if (live && !cust) { waitT -= dt; if (waitT <= 0) nextCustomer(); }
+                    if (cust) {
+                        cust.x = CV.lerp(cust.x, cust.tx, Math.min(1, dt * 9));
+                        if (live && cust.x > cust.tx - 30) cust.t += dt;
+                        if (cust.t >= cust.dur) {
+                            cust.mood = 'angry'; g.miss(cust.x, 150, 'Kunde gegangen', true); g.sfx('bad'); g.shake(4);
+                            leaving.push(cust); cust = null; waitT = 0.3;
+                        }
                     }
-                    for (const d of desks) {
-                        d.t += dt; d.anim = Math.max(0, d.anim - dt * 3);
-                        if (d.state === 'ring' && d.t >= d.dur) {
-                            if (d.kind === 'spam') { d.state = 'idle'; g.add(1, d.x, d.y - 80, 'Spam ignoriert ✓', '#b8f2e6'); }
-                            else { d.state = 'angry'; d.t = 0; d.face = '😠'; g.miss(d.x, d.y - 80, 'aufgelegt', true); g.sfx('bad'); g.shake(4); }
-                        } else if ((d.state === 'talk' && d.t > 0.7) || (d.state === 'angry' && d.t > 0.8)) { d.state = 'idle'; d.t = 0; }
-                    }
+                    for (const p of leaving) p.x += (p.mood === 'happy' ? 520 : -520) * dt;
+                    leaving = leaving.filter(p => p.x > -120 && p.x < W + 120);
+                    for (const s of slots) { s.bump = Math.max(0, s.bump - dt * 5); s.flash = s.flash > 0 ? Math.max(0, s.flash - dt * 3) : Math.min(0, s.flash + dt * 3); }
                 },
                 draw(c) {
                     const wall = c.createLinearGradient(0, 0, 0, H);
-                    wall.addColorStop(0, '#e9f2ff'); wall.addColorStop(1, '#d4e4f7');
+                    wall.addColorStop(0, '#e8f6f3'); wall.addColorStop(1, '#d2ece6');
                     c.fillStyle = wall; c.fillRect(0, 0, W, H);
-                    // Fensterband mit Skyline
-                    c.fillStyle = '#9fd3ff'; rr(c, 20, 62, W - 40, 56, 10); c.fill();
-                    c.fillStyle = '#7fb6e6';
-                    for (let x = 30; x < W - 40; x += 46) { const h = 18 + ((x * 7) % 30); c.fillRect(x, 118 - h, 30, h); }
-                    c.strokeStyle = '#fff'; c.lineWidth = 4;
-                    for (let x = 20 + (W - 40) / 4; x < W - 30; x += (W - 40) / 4) { c.beginPath(); c.moveTo(x, 62); c.lineTo(x, 118); c.stroke(); }
-                    c.fillStyle = '#c7b299'; c.fillRect(0, H - 40, W, 40);
-                    for (const d of desks) {
-                        const ringing = d.state === 'ring';
-                        const frac = ringing ? 1 - d.t / d.dur : 0;
-                        // Tisch
-                        c.fillStyle = 'rgba(0,0,0,0.08)'; ell(c, d.x, d.y + 40, 82, 10); c.fill();
-                        c.fillStyle = '#b07d4f'; rr(c, d.x - 80, d.y + 6, 160, 20, 6); c.fill();
-                        c.fillStyle = '#8a5a33'; c.fillRect(d.x - 72, d.y + 26, 8, 16); c.fillRect(d.x + 64, d.y + 26, 8, 16);
-                        // Monitor
-                        c.fillStyle = '#26324a'; rr(c, d.x + 12, d.y - 40, 58, 40, 5); c.fill();
-                        c.fillStyle = ringing ? '#ffd6a5' : d.state === 'talk' ? '#b8f2e6' : '#5a7bb5'; rr(c, d.x + 16, d.y - 36, 50, 30, 3); c.fill();
-                        c.fillStyle = '#26324a'; c.fillRect(d.x + 38, d.y, 6, 6);
-                        // Telefon
-                        const shx = ringing ? Math.sin(d.t * 55) * 3 : 0;
-                        const lift = d.state === 'talk' ? -14 * (1 - d.anim * 0.3) : 0;
-                        const vip = d.kind === 'vip' && d.state !== 'idle', spam = d.kind === 'spam' && ringing;
-                        c.fillStyle = vip ? '#ffb703' : spam ? '#7d8597' : '#ff5f6d';
-                        rr(c, d.x - 52 + shx, d.y - 12, 44, 20, 6); c.fill();
-                        c.fillStyle = vip ? '#ffd166' : spam ? '#9aa1ad' : '#ff8a95';
-                        rr(c, d.x - 56 + shx, d.y - 22 + lift, 52, 12, 6); c.fill();
-                        txt(c, String(d.i + 1), d.x - 66, d.y + 16, 11, 'rgba(27,42,74,0.4)');
-                        if (ringing) {
-                            c.strokeStyle = spam ? 'rgba(125,133,151,0.7)' : 'rgba(255,95,109,0.7)'; c.lineWidth = 3;
-                            for (let i = 0; i < 2; i++) { const r = 18 + ((d.t * 40 + i * 12) % 24); c.globalAlpha = 1 - (r - 18) / 24; c.beginPath(); c.arc(d.x - 30 + shx, d.y - 16, r, -2.6, -0.5); c.stroke(); }
-                            c.globalAlpha = 1;
-                        }
-                        // Kundenblase mit Geduldsring
-                        if (ringing || d.state === 'talk' || d.state === 'angry') {
-                            const by = d.y - 82 - (d.state === 'talk' ? d.anim * 6 : 0);
-                            c.fillStyle = '#fff'; ell(c, d.x - 30, by, 26, 26); c.fill();
-                            c.beginPath(); c.moveTo(d.x - 36, by + 22); c.lineTo(d.x - 28, by + 36); c.lineTo(d.x - 22, by + 22); c.fill();
-                            if (ringing && !spam) {
-                                c.strokeStyle = frac > 0.5 ? '#2ec4b6' : frac > 0.25 ? '#ffb703' : '#ff5f6d'; c.lineWidth = 5;
-                                c.beginPath(); c.arc(d.x - 30, by, 26, -Math.PI / 2, -Math.PI / 2 + TAU * frac); c.stroke();
-                            }
-                            const face = d.state === 'talk' ? '😊' : d.state === 'angry' ? d.face : spam ? '📢' : vip ? '🤩' : frac > 0.5 ? '🙂' : frac > 0.25 ? '😐' : '😟';
-                            emo(c, face, d.x - 30, by + 1, 26);
-                            if (spam) { c.fillStyle = '#7d8597'; rr(c, d.x - 2, by - 30, 66, 18, 9); c.fill(); txt(c, 'WERBUNG', d.x + 31, by - 21, 10, '#fff'); }
-                            if (vip && ringing) { c.fillStyle = '#ffb703'; rr(c, d.x + 2, by - 30, 40, 18, 9); c.fill(); txt(c, 'VIP', d.x + 22, by - 21, 11, '#fff'); }
-                        }
+                    // Regale mit Produkten
+                    c.fillStyle = '#c9a77c';
+                    [115, 185].forEach(y => { c.fillRect(24, y, 150, 8); c.fillRect(W - 174, y, 150, 8); });
+                    [[50, 107, '📱'], [100, 107, '🎧'], [148, 107, '⌚'], [50, 177, '📷'], [100, 177, '🔌'], [148, 177, '🎮'],
+                     [W - 150, 107, '💻'], [W - 100, 107, '📺'], [W - 50, 107, '🎧'], [W - 150, 177, '⌚'], [W - 100, 177, '📱'], [W - 50, 177, '📷']]
+                        .forEach(([x, y, e]) => { c.globalAlpha = 0.85; emo(c, e, x, y - 14, 24); c.globalAlpha = 1; });
+                    c.fillStyle = '#0fa89a'; rr(c, W / 2 - 90, 18, 180, 34, 10); c.fill();
+                    txt(c, 'SERVICE & BERATUNG', W / 2, 35, 13, '#fff');
+                    for (const p of leaving) person(c, p);
+                    if (cust) {
+                        person(c, cust);
+                        // Wunsch-Blase mit Geduldsring
+                        const bx = cust.x + 70, by = 150, frac = 1 - cust.t / cust.dur;
+                        c.fillStyle = '#fff'; ell(c, bx, by, 38, 38); c.fill();
+                        c.beginPath(); c.moveTo(bx - 26, by + 22); c.lineTo(bx - 44, by + 46); c.lineTo(bx - 10, by + 32); c.fill();
+                        c.strokeStyle = frac > 0.5 ? '#2ec4b6' : frac > 0.25 ? '#ffb703' : '#ff5f6d'; c.lineWidth = 6; c.lineCap = 'round';
+                        c.beginPath(); c.arc(bx, by, 38, -Math.PI / 2, -Math.PI / 2 + TAU * Math.max(0, frac)); c.stroke();
+                        emo(c, cust.want[0], bx, by + 2, 36);
                     }
-                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Klingelnde Telefone anklicken!', W / 2, 140, 18, '#1b2a4a', 'center', 800); c.globalAlpha = 1; }
+                    // Theke
+                    c.fillStyle = '#8a5a33'; rr(c, 0, H - 120, W, 22, 4); c.fill();
+                    c.fillStyle = '#b07d4f'; c.fillRect(0, H - 100, W, 100);
+                    slots.forEach((s, i) => {
+                        const x = slotX(i), y = SLOT_Y - s.bump * 6;
+                        c.fillStyle = s.flash > 0 ? '#d9f7e8' : s.flash < 0 ? '#ffe1e1' : '#fff';
+                        c.save(); c.shadowColor = 'rgba(0,0,0,0.18)'; c.shadowBlur = 10; c.shadowOffsetY = 4;
+                        rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 16); c.fill(); c.restore();
+                        emo(c, s.p[0], x - 46, y, 32);
+                        txt(c, s.p[1], x - 22, y + 1, 14, '#1b2a4a', 'left', 700);
+                        txt(c, String(i + 1), x + SLOT_W / 2 - 12, y - SLOT_H / 2 + 12, 10, 'rgba(27,42,74,0.35)');
+                    });
+                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Passendes Produkt antippen!', W / 2, 80, 18, '#0b5f57', 'center', 800); c.globalAlpha = 1; }
                 },
                 down(p) {
-                    let best = null, bd = 1e9;
-                    for (const d of desks) { const dd = Math.hypot(p.x - d.x, (p.y - d.y + 30) * 1.2); if (dd < bd) { bd = dd; best = d; } }
-                    if (best && bd < 110) answer(best);
+                    slots.forEach((s, i) => { if (Math.abs(p.x - slotX(i)) < SLOT_W / 2 + 6 && Math.abs(p.y - SLOT_Y) < SLOT_H / 2 + 10) choose(i); });
                 },
                 key(k, down) {
-                    const i = KEYMAP[String(k).toLowerCase()];
-                    if (i != null) { if (down) answer(desks[i]); return true; }
+                    const i = { '1': 0, '2': 1, '3': 2, a: 0, s: 1, d: 2, ArrowLeft: 0, ArrowDown: 1, ArrowRight: 2 }[k.length === 1 ? k.toLowerCase() : k];
+                    if (i != null) { if (down) choose(i); return true; }
                 }
             };
         }
