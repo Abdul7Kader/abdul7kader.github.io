@@ -364,7 +364,7 @@
     // ------------------------------------------------------------------ Finale: „Ihr Unternehmen“
     // Namensaufkleber auf dem T-Shirt (jubelbild-nah.jpg, 838 × 944). Der eingegebene Firmenname
     // wird wie mit einem Marker auf den Aufkleber geschrieben; Falten und Licht des Shirts liegen darüber.
-    const STICKER = { cx: 390, cy: 620, w: 272, h: 138, rot: -0.035, band: 0.3, r: 11 };
+    const STICKER = { cx: 400, cy: 668, w: 292, h: 140, rot: -0.035, band: 0.3, r: 11 };
     const MARKER = '"Permanent Marker", "Segoe Print", "Comic Sans MS", cursive';
     function stickerShape(c, S) { c.beginPath(); if (c.roundRect) c.roundRect(-S.w / 2, -S.h / 2, S.w, S.h, S.r); else c.rect(-S.w / 2, -S.h / 2, S.w, S.h); }
     function stickerText(t, name, S) {
