@@ -1237,6 +1237,7 @@
         window.addEventListener('resize', resize);
         buildWorld();
         ground = buildGround();
+        World.ground = ground;
         buildGrid();
         setupInput();
         cam.x = clampCam(W / 2 - viewW() / 2, 0).x; cam.y = clampCam(0, H / 2 - viewH() / 2).y;
@@ -1246,6 +1247,16 @@
         World.attract = false;
         World.paused = false;
     };
+    World.view = () => ({ x: cam.x, y: cam.y, w: viewW(), h: viewH() });
+    World.walkToPoint = function (x, y) {
+        if (World.paused) return;
+        const s = stationAt(x, y);
+        if (s) { World.walkToStation(s.id); return; }
+        markFirstMove();
+        const path = findPath(player.x, player.y, x, y);
+        if (path) { player.path = path; player.pendingStation = null; spawnRing(x, y); }
+    };
+    World.tokenList = () => tokens.map(t => ({ x: t.x, y: t.y, got: t.got }));
     World.tokenCount = () => tokens.length;
     World.tokensGot = () => tokens.filter(t => t.got).map(t => t.label);
     World.debug = { findPath, blocked, cam, get zoom() { return zoom; } };

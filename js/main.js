@@ -1,4 +1,4 @@
-// Spielzustand und Start.
+// Spielzustand, Startbildschirm, Tastenkürzel und Verdrahtung der Oberfläche.
 document.addEventListener('DOMContentLoaded', () => {
     const CV = window.CV;
     const $ = CV.$;
@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     CV.derived = CV.derive(CV.data);
     const d = CV.data, x = CV.derived;
     const ORDER = ['arrival', 'language', 'school', 'career', 'lab', 'projects', 'lake', 'finale'];
+    const st = d.stations || {};
 
     const G = CV.game = {
         order: ORDER,
@@ -22,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.visited.add(id);
             CV.store.set('visited', Array.from(this.visited));
             CV.UI.updateHud();
+            if (id !== 'finale') {
+                const s = st[id] || {};
+                CV.UI.achieve(s.badgeIcon || '⭐', 'Stärke freigeschaltet', CV.esc(s.badge || s.title || ''), 2800);
+            }
             if (!wasAll && this.allVisited() && id !== 'finale') this.allDone = true;
         },
         setFirm(name) {
@@ -32,34 +37,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.started) return;
             this.started = true;
             $('#start').classList.add('hidden');
-            ['#hud', '#tokens'].forEach(s => $(s).classList.remove('hidden'));
+            ['#hud', '#dock', '#minimap'].forEach(s => $(s).classList.remove('hidden'));
             CV.UI.updateHud();
             CV.World.begin();
             CV.audio.unlock();
             CV.audio.play('whoosh');
             const hint = $('#controls-hint');
-            hint.textContent = CV.isTouch ? 'Ziehen zum Laufen · Tippen, um hinzulaufen' : 'WASD / Pfeiltasten – oder einfach irgendwohin klicken';
+            hint.innerHTML = CV.isTouch
+                ? 'Ziehen zum Laufen · Tippen, um hinzulaufen'
+                : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> laufen · Klick = hinlaufen · <kbd>Strg K</kbd> Suche';
             hint.classList.remove('hidden');
             const returning = this.visited.size > 0;
             setTimeout(() => {
                 CV.World.sayRobot(returning
-                    ? `Willkommen zurück! ${this.visited.size} Station${this.visited.size === 1 ? '' : 'en'} kennen Sie schon. Weiter geht’s! 🤖`
-                    : `Hi, ich bin Bit 🤖 – ${x.firstName}s Assistent. Folgen Sie einfach dem orangen Pfeil!`, 5200);
+                    ? `Willkommen zurück! ${Math.min(7, this.visited.size)} Kapitel kennen Sie schon. Weiter geht’s! 🤖`
+                    : `Hi, ich bin Bit 🤖 – ${x.firstName}s Assistent. Folgen Sie dem orangen Pfeil – oder ${window.innerWidth < 640 ? 'unten' : 'oben links'} auf „Nächstes Ziel“ ${CV.isTouch ? 'tippen' : 'klicken'}!`, 5600);
             }, 700);
-            if (!returning) setTimeout(() => CV.World.say(CV.World.player, 'Kommen Sie mit – hier beginnt mein Weg! 👋', 3800), 6200);
+            if (!returning) setTimeout(() => CV.World.say(CV.World.player, 'Kommen Sie mit – hier beginnt mein Weg! 👋', 3800), 6600);
             idleReset();
         },
         onStationClosed(id) {
             if (this.allDone) {
                 this.allDone = false;
                 setTimeout(() => {
-                    CV.UI.toast('🏆 <b>Alle Stationen entdeckt!</b> Das Finale wartet auf dem Hügel.', 4200, 'gold');
+                    CV.UI.achieve('🏆', 'Alle Kapitel entdeckt', 'Das Finale wartet auf dem Hügel!', 4200, 'gold');
                     CV.World.sayRobot('Wow, alles entdeckt! Kommen Sie mit zum Finale auf dem Hügel 🏆', 5000);
                 }, 400);
             } else if (id && id !== 'finale') {
                 const next = this.nextId();
-                const s = next && CV.World.stations.find(st => st.id === next);
-                if (s) setTimeout(() => CV.World.sayRobot(`Nächster Halt: ${s.emoji} ${s.title}`, 3000), 300);
+                const s = next && CV.World.stations.find(s2 => s2.id === next);
+                if (s) setTimeout(() => CV.World.sayRobot(`Nächster Halt: ${s.emoji} ${(st[next] && st[next].title) || s.title}`, 3000), 300);
             }
             idleReset();
         }
@@ -69,19 +76,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const photo = d.profileImage || '';
     ['#start-photo', '#hud-photo'].forEach(s => { if (photo) $(s).src = photo; });
     $('#hud-name').textContent = d.name || '';
-    $('#start-title').textContent = `Hallo, ich bin ${x.firstName}!`;
+    $('#start-title').innerHTML = `Hallo, ich bin <span class="hl">${CV.esc(x.firstName)}</span>.`;
     $('#start-role').textContent = d.title || '';
     $('#start-tagline').textContent = d.tagline || d.intro || '';
     const who = CV.param('name');
-    $('#start-greeting').textContent = who && G.firm ? `Hallo ${who} von ${G.firm}! 👋` : G.firm ? `Willkommen, Team ${G.firm}! 👋` : who ? `Hallo ${who}! 👋` : 'Schön, dass Sie da sind!';
+    $('#start-greeting').textContent = who && G.firm ? `👋 Hallo ${who} von ${G.firm}!` : G.firm ? `👋 Willkommen, Team ${G.firm}!` : who ? `👋 Hallo ${who}!` : '👋 Schön, dass Sie da sind';
+    $('#pc-name').textContent = d.name || '';
+    $('#pc-class').textContent = x.currentRole ? `${x.currentRole.role} · ${x.currentRole.company}` : (d.title || '');
+    $('#pc-status').textContent = d.availability ? d.availability.replace(/^Offen für /i, 'offen für ') : 'verfügbar';
     const stats = [];
-    if (x.roleSinceYear && x.currentRole) stats.push([`seit ${x.roleSinceYear}`, `${x.currentRole.role.replace(/\s*\(.*\)/, '')} bei ${x.currentRole.company}`]);
-    if (x.languages.length) stats.push([String(x.languages.length), 'Sprachen, Deutsch C1']);
+    if (x.roleSinceYear && x.currentRole) stats.push([String(x.roleSinceYear), `bei ${x.currentRole.company.replace(/\s+(SE|GmbH|AG)$/i, '')}`]);
+    if (x.languages.length) stats.push([String(x.languages.length), 'Sprachen']);
     if (x.countries.length) stats.push([String(x.countries.length), 'Länder bereist']);
     $('#start-stats').innerHTML = stats.slice(0, 3).map(([v, l]) => `<div class="stat"><b>${CV.esc(v)}</b><span>${CV.esc(l)}</span></div>`).join('');
-    const seen = G.visited.size;
-    $('#start-foot').textContent = seen ? `Willkommen zurück – Sie haben bereits ${Math.min(seen, 7)} von 7 Stationen entdeckt.` : 'Ohne Installation · funktioniert mit Maus, Tastatur und Touch';
-    if (seen) $('#start-play span').textContent = '▶ Weiter erkunden';
+    const seen = G.order.slice(0, 7).filter(id => G.visited.has(id)).length;
+    $('#start-chapters').innerHTML = ORDER.slice(0, 7).map(id => `<span class="${G.visited.has(id) ? 'got' : ''}" title="${CV.esc((st[id] || {}).badge || '')}">${CV.esc((st[id] || {}).badgeIcon || '⭐')}</span>`).join('');
+    $('#start-foot').textContent = seen ? `Willkommen zurück – Sie haben bereits ${seen} von 7 Kapiteln entdeckt.` : 'Ohne Installation · Maus, Tastatur oder Touch · kein Game Over';
+    if (seen) $('#start-play .cta-txt b').textContent = 'Weiter spielen';
+
+    // Spielerkarte folgt der Maus (3D-Neigung)
+    const card = $('.pcard-in');
+    if (!CV.isTouch && !CV.reducedMotion) {
+        $('#start').addEventListener('pointermove', (e) => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+            card.style.setProperty('--ry', `${CV.clamp((px - 0.5) * 14, -10, 10)}deg`);
+            card.style.setProperty('--rx', `${CV.clamp((0.5 - py) * 12, -9, 9)}deg`);
+            card.style.setProperty('--mx', `${CV.clamp(px * 100, 0, 100)}%`);
+            card.style.setProperty('--my', `${CV.clamp(py * 100, 0, 100)}%`);
+        });
+        $('#start').addEventListener('pointerleave', () => { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
+    }
 
     // ------------------------------------------------------------- Welt
     CV.World.init($('#world'));
@@ -97,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = $('#tokens'); t.classList.remove('bump'); void t.offsetWidth; t.classList.add('bump');
         if (got.length === max) {
             setTimeout(() => {
-                CV.UI.toast(`⭐ <b>Alle ${max} Skill-Sterne gesammelt!</b> Sie haben ein Auge fürs Detail.`, 4200, 'gold');
+                CV.UI.achieve('⭐', 'Sammler', `Alle ${max} Skill-Sterne gefunden!`, 4200, 'gold');
                 CV.World.confettiOnPlayer(120);
                 CV.audio.play('fanfare');
             }, 300);
@@ -105,13 +130,25 @@ document.addEventListener('DOMContentLoaded', () => {
         idleReset();
     };
 
+    // Minimap (ca. 12 fps reichen)
+    let mmLast = 0;
+    (function mm(ts) {
+        if (ts - mmLast > 80 && G.started && !CV.World.paused) { mmLast = ts; CV.UI.drawMinimap(); }
+        requestAnimationFrame(mm);
+    })(0);
+    $('#minimap').addEventListener('click', (e) => CV.UI.minimapClick(e));
+
     // ------------------------------------------------------------- Buttons
-    $('#start-play').onclick = () => { CV.audio.unlock(); CV.audio.play('click'); G.start(); };
-    $('#start-cv').onclick = () => { CV.audio.unlock(); CV.audio.play('click'); $('#start').classList.add('hidden'); CV.UI.openCv('start'); };
+    const playNow = () => { CV.audio.unlock(); CV.audio.play('click'); G.start(); };
+    const cvNow = () => { CV.audio.unlock(); CV.audio.play('click'); $('#start').classList.add('hidden'); CV.UI.openCv('start'); };
+    $('#start-play').onclick = playNow;
+    $('#start-cv').onclick = cvNow;
     $('#btn-cv').onclick = () => { CV.audio.play('click'); CV.UI.openCv('world'); };
     $('#btn-map').onclick = () => { CV.audio.play('click'); CV.UI.openJourney(); };
+    $('#btn-search').onclick = () => CV.UI.openPalette();
     $('#hud-profile').onclick = () => { CV.audio.play('click'); CV.UI.openJourney(); };
-    $('#objective').onclick = () => { CV.audio.play('click'); const n = G.nextId(); if (n) CV.World.walkToStation(n); };
+    const goNext = () => { const n = G.nextId(); if (n) { CV.audio.play('click'); CV.World.walkToStation(n); } };
+    $('#objective').onclick = goNext;
     $('#station-close').onclick = () => CV.UI.closeStation();
     CV.$$('[data-close]').forEach(b => b.onclick = () => CV.UI.hideOverlay(b.dataset.close));
     const snd = $('#btn-sound'), mus = $('#btn-music');
@@ -132,17 +169,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
 
     // Klick außerhalb des Panels schließt Overlays
-    ['station', 'journey'].forEach(id => {
+    ['station', 'journey', 'palette'].forEach(id => {
         $('#' + id).addEventListener('pointerdown', (e) => {
             if (e.target.id === id) id === 'station' ? CV.UI.closeStation() : CV.UI.hideOverlay(id);
         });
     });
+
+    // ------------------------------------------------------------- Tastenkürzel
     window.addEventListener('keydown', (e) => {
-        if (e.key !== 'Escape') return;
+        const typing = e.target && /input|textarea/i.test(e.target.tagName);
         const open = CV.UI.anyOverlay();
-        if (open === 'station') CV.UI.closeStation();
-        else if (open === 'cv') CV.UI.closeCv();
-        else if (open) CV.UI.hideOverlay(open);
+        if (e.key === 'Escape') {
+            if (open === 'station') CV.UI.closeStation();
+            else if (open === 'cv') CV.UI.closeCv();
+            else if (open) CV.UI.hideOverlay(open);
+            return;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (open === 'palette') CV.UI.hideOverlay('palette');
+            else if (!open && G.started) CV.UI.openPalette();
+            return;
+        }
+        if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+        const startOpen = !$('#start').classList.contains('hidden');
+        if (startOpen && !open) {
+            if (e.key === 'Enter' && !(e.target && e.target.closest && e.target.closest('button'))) { e.preventDefault(); playNow(); }
+            else if (e.key.toLowerCase() === 'l') cvNow();
+            return;
+        }
+        if (open || !G.started) return;
+        const k = e.key.toLowerCase();
+        if (k === '/') { e.preventDefault(); CV.UI.openPalette(); }
+        else if (k === 'm') { CV.audio.play('click'); CV.UI.openJourney(); }
+        else if (k === 'l') { CV.audio.play('click'); CV.UI.openCv('world'); }
+        else if (k === 'g') goNext();
     });
 
     // Sanfte Hilfe, wenn länger nichts passiert
@@ -152,12 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
         idleTimer = setTimeout(() => {
             if (!G.started || CV.World.paused) return idleReset();
             const n = G.nextId();
-            if (n) CV.World.sayRobot('Tipp: Oben auf „Nächstes Ziel“ klicken – dann laufe ich automatisch hin.', 5000);
+            if (n) CV.World.sayRobot(CV.isTouch ? 'Tipp: Auf „Nächstes Ziel“ tippen – dann laufe ich automatisch hin.' : 'Tipp: Links oben auf „Nächstes Ziel“ klicken (oder G drücken) – dann laufe ich automatisch hin.', 5200);
             idleReset();
         }, 22000);
     }
     ['keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, idleReset, { passive: true }));
 
     // Direktlinks: ?cv=1 oder #lebenslauf öffnet direkt die Kompaktansicht
-    if (CV.param('cv') || /lebenslauf|cv/i.test(location.hash)) $('#start-cv').click();
+    if (CV.param('cv') || /lebenslauf|cv/i.test(location.hash)) cvNow();
+    else setTimeout(() => $('#start-play').focus({ preventScroll: true }), 300);
 });

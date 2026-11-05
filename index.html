@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Abdul Kader Sabouni – Interaktiver Lebenslauf</title>
-    <meta name="description" content="Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als kleine, begehbare Spielwelt – oder kompakt in 30 Sekunden.">
+    <meta name="description" content="Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als begehbare Spielwelt mit sieben Minispielen – oder kompakt in 30 Sekunden.">
     <meta property="og:title" content="Abdul Kader Sabouni – Interaktiver Lebenslauf">
-    <meta property="og:description" content="Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – als begehbare Spielwelt.">
+    <meta property="og:description" content="Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – als begehbare Spielwelt mit sieben Minispielen.">
     <meta property="og:image" content="profilbild.jpg">
-    <meta name="theme-color" content="#1b2a4a">
+    <meta name="theme-color" content="#0d1530">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -25,30 +25,39 @@
 
     <!-- HUD -->
     <header id="hud" class="hidden">
-        <button id="hud-profile" class="glass" title="Meine Stationen anzeigen">
-            <img id="hud-photo" alt="">
-            <span class="hud-id">
-                <strong id="hud-name"></strong>
-                <span id="hud-progress-label">0 / 7 Stationen</span>
-                <span class="progress"><span id="hud-progress-bar"></span></span>
-            </span>
-        </button>
-        <div id="hud-badges" class="glass" title="Gesammelte Stärken"></div>
-        <div class="hud-actions">
-            <button id="btn-cv" class="glass pill strong" title="Lebenslauf kompakt">⚡ <span class="lbl">Lebenslauf kompakt</span></button>
-            <button id="btn-map" class="glass icon" title="Stationen &amp; Schnellreise">🗺️</button>
-            <button id="btn-sound" class="glass icon" title="Soundeffekte an/aus">🔊</button>
-            <button id="btn-music" class="glass icon off" title="Musik an/aus">♪</button>
+        <div class="hud-left">
+            <button id="hud-profile" class="glass" title="Kapitelübersicht (M)">
+                <span class="ring" id="hud-ring"><img id="hud-photo" alt=""></span>
+                <span class="hud-id">
+                    <strong id="hud-name"></strong>
+                    <span id="hud-progress-label">Kapitel 0 / 7</span>
+                </span>
+            </button>
+            <button id="objective" class="glass quest hidden" title="Automatisch hinlaufen (Enter)">
+                <span class="q-kicker"><i></i>Nächstes Ziel</span>
+                <span class="q-title" id="objective-text"></span>
+                <span class="q-go">Hinlaufen <kbd>G</kbd></span>
+            </button>
+        </div>
+        <div class="hud-right">
+            <button id="btn-search" class="glass hbtn search" title="Suchen &amp; springen (Strg+K)"><span class="ic">🔎</span><span class="lbl">Suchen</span><kbd class="lbl">Strg K</kbd></button>
+            <button id="btn-cv" class="hbtn dark" title="Lebenslauf kompakt (L)"><span class="ic">📄</span><span class="lbl">Lebenslauf</span></button>
+            <button id="btn-map" class="glass hbtn icon" title="Kapitelübersicht (M)">🗺️</button>
+            <button id="btn-sound" class="glass hbtn icon" title="Soundeffekte an/aus">🔊</button>
+            <button id="btn-music" class="glass hbtn icon off" title="Musik an/aus">♪</button>
         </div>
     </header>
 
-    <button id="objective" class="glass hidden" title="Automatisch hinlaufen">
-        <span class="obj-kicker">Nächstes Ziel</span>
-        <span id="objective-text"></span>
-        <span class="obj-go">Hinlaufen →</span>
-    </button>
+    <!-- Minimap -->
+    <aside id="minimap" class="glass hidden" title="Karte – klicken zum Hinlaufen">
+        <canvas id="minimap-cnv" width="220" height="152"></canvas>
+    </aside>
 
-    <div id="tokens" class="glass hidden" title="Gesammelte Skill-Sterne">⭐ <span id="tokens-val">0</span>/<span id="tokens-max">0</span></div>
+    <!-- Dock unten links: Sterne & Stärken -->
+    <div id="dock" class="glass hidden">
+        <div id="tokens" title="Gesammelte Skill-Sterne"><span class="tk-ic">⭐</span><b id="tokens-val">0</b><span>/<span id="tokens-max">0</span></span></div>
+        <div id="hud-badges" title="Entdeckte Stärken"></div>
+    </div>
 
     <div id="controls-hint" class="hidden"></div>
 
@@ -58,57 +67,76 @@
     <div id="toasts" aria-live="polite"></div>
 
     <!-- Startbildschirm -->
-    <section id="start" class="overlay">
-        <div class="start-card">
-            <div class="start-photo-wrap">
-                <img id="start-photo" alt="Foto von Abdul Kader Sabouni">
-                <span class="wave">👋</span>
+    <section id="start" class="overlay start">
+        <div class="start-wrap">
+            <div class="start-copy">
+                <p id="start-greeting" class="eyebrow"></p>
+                <h1 id="start-title"></h1>
+                <p id="start-role" class="role"></p>
+                <p id="start-tagline" class="tagline"></p>
+                <div class="start-buttons">
+                    <button id="start-play" class="cta-btn primary">
+                        <span class="cta-ic">▶</span>
+                        <span class="cta-txt"><b>Spiel starten</b><small>7 Kapitel · 7 Minispiele · ca. 4 Min.</small></span>
+                        <kbd>Enter</kbd>
+                    </button>
+                    <button id="start-cv" class="cta-btn ghost">
+                        <span class="cta-ic">⚡</span>
+                        <span class="cta-txt"><b>Lebenslauf in 30 Sek.</b><small>klassisch · als PDF speicherbar</small></span>
+                        <kbd>L</kbd>
+                    </button>
+                </div>
+                <p class="start-foot" id="start-foot"></p>
             </div>
-            <p id="start-greeting" class="kicker"></p>
-            <h1 id="start-title"></h1>
-            <p id="start-role" class="role"></p>
-            <p id="start-tagline" class="tagline"></p>
-            <div id="start-stats" class="stats"></div>
-            <div class="start-buttons">
-                <button id="start-play" class="btn primary big">
-                    <span>▶ Welt erkunden</span><small>ca. 3 Minuten · spielerisch</small>
-                </button>
-                <button id="start-cv" class="btn ghost big">
-                    <span>⚡ Lebenslauf kompakt</span><small>30 Sekunden · klassisch</small>
-                </button>
+            <div class="pcard" id="pcard" aria-hidden="true">
+                <div class="pcard-in">
+                    <div class="pc-top"><span class="pc-badge">Spieler 1</span><span class="pc-status"><i></i><span id="pc-status"></span></span></div>
+                    <div class="pc-photo"><img id="start-photo" alt=""><span class="wave">👋</span></div>
+                    <div class="pc-name"><strong id="pc-name"></strong><span id="pc-class"></span></div>
+                    <div class="pc-stats" id="start-stats"></div>
+                    <div class="pc-chapters" id="start-chapters"></div>
+                    <span class="pc-shine"></span>
+                </div>
             </div>
-            <p class="start-foot" id="start-foot"></p>
         </div>
     </section>
 
     <!-- Stations-Dialog (Story, Minispiel, Infos) -->
     <section id="station" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="station-title">
-        <div class="panel">
-            <button class="close" id="station-close" aria-label="Schließen">✕</button>
-            <header class="panel-head">
-                <span id="station-emoji" class="panel-emoji"></span>
-                <div>
-                    <span id="station-era" class="kicker"></span>
-                    <h2 id="station-title"></h2>
-                </div>
+        <div class="panel station-panel">
+            <header class="sp-hero">
+                <button class="close" id="station-close" aria-label="Schließen">✕</button>
+                <div class="sp-meta"><span id="station-chapter"></span><span id="station-era"></span></div>
+                <div class="sp-title"><span id="station-emoji" class="sp-emoji"></span><h2 id="station-title"></h2></div>
+                <div class="sp-steps" id="station-steps"></div>
             </header>
             <div id="station-body"></div>
         </div>
     </section>
 
-    <!-- Reise-/Stationsliste -->
-    <section id="journey" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Stationen">
+    <!-- Kapitelübersicht -->
+    <section id="journey" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Kapitelübersicht">
         <div class="panel narrow">
             <button class="close" data-close="journey" aria-label="Schließen">✕</button>
-            <header class="panel-head">
-                <span class="panel-emoji">🗺️</span>
-                <div>
-                    <span class="kicker">Mein Weg in 8 Stationen</span>
-                    <h2>Schnellreise</h2>
-                </div>
+            <header class="plain-head">
+                <span class="kicker">Mein Weg in 8 Stationen</span>
+                <h2>Kapitelübersicht</h2>
+                <p class="muted" id="journey-sub"></p>
             </header>
-            <p class="muted">Klicken Sie auf eine Station – ich laufe automatisch hin.</p>
             <ol id="journey-list"></ol>
+        </div>
+    </section>
+
+    <!-- Befehlspalette -->
+    <section id="palette" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Suchen und springen">
+        <div class="palette">
+            <label class="pal-input">
+                <span aria-hidden="true">🔎</span>
+                <input id="pal-q" type="text" autocomplete="off" spellcheck="false" placeholder="Wonach suchen Sie? z. B. Java, PSI, Englisch …">
+                <kbd>Esc</kbd>
+            </label>
+            <ul id="pal-list" role="listbox"></ul>
+            <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> auswählen</span><span><kbd>↵</kbd> öffnen</span><span><kbd>M</kbd> Karte · <kbd>L</kbd> Lebenslauf</span></div>
         </div>
     </section>
 

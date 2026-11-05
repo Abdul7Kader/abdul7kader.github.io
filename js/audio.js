@@ -53,6 +53,19 @@
         badge: (t) => {
             [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * 0.09, 0.22, { type: 'triangle', vol: 0.09 }));
         },
+        bonus: (t) => { [784, 988, 1175, 1568].forEach((f, i) => tone(f, t + i * 0.05, 0.12, { type: 'square', vol: 0.035 })); },
+        combo: (t) => { tone(659, t, 0.08, { type: 'triangle', vol: 0.09 }); tone(988, t + 0.06, 0.08, { type: 'triangle', vol: 0.09 }); tone(1319, t + 0.12, 0.18, { type: 'triangle', vol: 0.09 }); },
+        count: (t) => tone(440, t, 0.12, { type: 'square', vol: 0.04 }),
+        go: (t) => tone(880, t, 0.3, { type: 'square', vol: 0.05 }),
+        tick: (t) => tone(1046, t, 0.05, { type: 'square', vol: 0.03 }),
+        slice: (t) => tone(1400, t, 0.09, { type: 'sawtooth', vol: 0.025, to: 500 }),
+        boom: (t) => { tone(160, t, 0.4, { type: 'sawtooth', vol: 0.07, to: 40 }); tone(90, t, 0.5, { type: 'square', vol: 0.05, to: 30 }); },
+        jump: (t) => tone(330, t, 0.14, { type: 'square', vol: 0.035, to: 700 }),
+        perfect: (t) => { tone(1047, t, 0.1, { type: 'triangle', vol: 0.1 }); tone(1568, t + 0.07, 0.2, { type: 'triangle', vol: 0.09 }); },
+        thud: (t) => tone(140, t, 0.12, { type: 'triangle', vol: 0.12, to: 70 }),
+        star0: (t) => tone(784, t, 0.18, { type: 'triangle', vol: 0.1 }),
+        star1: (t) => tone(988, t, 0.18, { type: 'triangle', vol: 0.1 }),
+        star2: (t) => { tone(1175, t, 0.3, { type: 'triangle', vol: 0.1 }); tone(1568, t + 0.08, 0.35, { type: 'triangle', vol: 0.06 }); },
         fanfare: (t) => {
             const seq = [523, 659, 784, 659, 784, 1047];
             seq.forEach((f, i) => tone(f, t + i * 0.12, i === seq.length - 1 ? 0.6 : 0.16, { type: 'triangle', vol: 0.1 }));

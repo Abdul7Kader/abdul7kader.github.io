@@ -1,4 +1,4 @@
-// Oberfläche: HUD, Stations-Dialoge, Minispiel-Rahmen, kompakter Lebenslauf, Finale.
+// Oberfläche: HUD, Minimap, Stations-Dialoge, Minispiel-Rahmen, Befehlspalette, kompakter Lebenslauf, Finale.
 (function () {
     const CV = window.CV;
     const esc = CV.esc;
@@ -7,59 +7,153 @@
     let currentStation = null;
     let cvReturnTo = 'world';
 
-    // ------------------------------------------------------------------ Toasts
+    // Farbwelt je Station (Verlauf im Kopf des Dialogs, Akzente im Inhalt)
+    const THEME = {
+        arrival: ['#3a86ff', '#22b8e6'],
+        language: ['#7b5cff', '#c05cff'],
+        school: ['#ff7a3d', '#ffb02e'],
+        career: ['#0fa89a', '#21c7a8'],
+        lab: ['#16a34a', '#0ea5a4'],
+        projects: ['#f59e0b', '#f0532f'],
+        lake: ['#0891b2', '#3a86ff'],
+        finale: ['#f59e0b', '#ef4462']
+    };
+    UI.theme = (id) => THEME[id] || THEME.finale;
+    const setTheme = (el, id) => { const [a, b] = UI.theme(id); el.style.setProperty('--c1', a); el.style.setProperty('--c2', b); };
+    const starsOf = (id) => CV.store.get('stars:' + id, 0);
+    const starStr = (n, max = 3) => '★'.repeat(n) + '<span class="off">' + '★'.repeat(max - n) + '</span>';
+
+    // ------------------------------------------------------------------ Toasts & Erfolge
     UI.toast = function (html, ms = 2600, cls = '') {
         const el = document.createElement('div');
-        el.className = 'toast ' + cls;
+        el.className = 'toast plain ' + cls;
         el.innerHTML = html;
-        CV.$('#toasts').appendChild(el);
-        requestAnimationFrame(() => el.classList.add('show'));
-        setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, ms);
+        show(el, ms);
     };
+    UI.achieve = function (icon, kicker, title, ms = 3200, cls = '') {
+        const el = document.createElement('div');
+        el.className = 'toast ' + cls;
+        el.innerHTML = `<span class="t-ic">${icon}</span><span><small>${esc(kicker)}</small><strong>${title}</strong></span>`;
+        show(el, ms);
+    };
+    function show(el, ms) {
+        const box = CV.$('#toasts');
+        while (box.children.length > 2) box.firstChild.remove();
+        box.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('show'));
+        setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 450); }, ms);
+    }
 
     // ------------------------------------------------------------------ HUD
+    let lastBadges = null;
     UI.updateHud = function () {
         const G = CV.game, n = G.order.length - 1;
         const done = G.order.slice(0, n).filter(id => G.visited.has(id)).length;
-        CV.$('#hud-progress-label').textContent = `${done} / ${n} Stationen entdeckt`;
-        CV.$('#hud-progress-bar').style.width = (done / n * 100) + '%';
+        CV.$('#hud-progress-label').textContent = done === n ? 'Alle Kapitel entdeckt 🏆' : `Kapitel ${done} / ${n} entdeckt`;
+        CV.$('#hud-ring').style.setProperty('--p', Math.round(done / n * 100));
         const st = CV.data.stations || {};
+        const gotNow = G.order.slice(0, n).filter(id => G.visited.has(id));
         CV.$('#hud-badges').innerHTML = G.order.slice(0, n).map(id => {
             const s = st[id] || {}, got = G.visited.has(id);
-            return `<span class="hb ${got ? 'got' : ''}" title="${esc(s.badge || '')}${got ? '' : ' (noch offen)'}">${esc(s.badgeIcon || '⭐')}</span>`;
+            const fresh = got && lastBadges && !lastBadges.includes(id);
+            return `<span class="hb ${got ? 'got' : ''} ${fresh ? 'fresh' : ''}" title="${esc(s.badge || '')}${got ? '' : ' (noch offen)'}">${esc(s.badgeIcon || '⭐')}</span>`;
         }).join('');
+        lastBadges = gotNow;
         const next = G.nextId();
         const obj = CV.$('#objective');
-        if (next && !obj.dataset.hidden) {
+        if (next && G.started) {
             const s = CV.World.stations.find(x => x.id === next);
-            CV.$('#objective-text').textContent = `${s.emoji} ${s.title}`;
+            CV.$('#objective-text').textContent = `${s.emoji} ${(st[next] && st[next].title) || s.title}`;
+            obj.style.borderLeftColor = UI.theme(next)[0];
             obj.classList.remove('hidden');
         } else obj.classList.add('hidden');
     };
 
+    // ------------------------------------------------------------------ Minimap
+    let mmBase = null;
+    UI.drawMinimap = function () {
+        const cnv = CV.$('#minimap-cnv');
+        if (!cnv || CV.$('#minimap').classList.contains('hidden') || !CV.World.player) return;
+        const Wd = CV.World.W, Hd = CV.World.H;
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        const cw = cnv.clientWidth || 220, ch = cnv.clientHeight || 152;
+        if (cnv.width !== Math.round(cw * dpr)) { cnv.width = Math.round(cw * dpr); cnv.height = Math.round(ch * dpr); mmBase = null; }
+        const c = cnv.getContext('2d');
+        const sx = cnv.width / Wd, sy = cnv.height / Hd;
+        if (!mmBase && CV.World.ground) {
+            mmBase = document.createElement('canvas');
+            mmBase.width = cnv.width; mmBase.height = cnv.height;
+            const b = mmBase.getContext('2d');
+            b.imageSmoothingQuality = 'high';
+            b.drawImage(CV.World.ground, 0, 0, mmBase.width, mmBase.height);
+            b.fillStyle = 'rgba(255,255,255,0.12)'; b.fillRect(0, 0, mmBase.width, mmBase.height);
+        }
+        if (mmBase) c.drawImage(mmBase, 0, 0);
+        const G = CV.game, next = G.nextId(), t = performance.now() / 1000;
+        for (const s of CV.World.stations) {
+            const x = (s.x + s.w / 2) * sx, y = (s.base - s.height / 2) * sy;
+            const r = 9 * dpr;
+            const got = G.visited.has(s.id);
+            if (s.id === next) {
+                c.strokeStyle = UI.theme(s.id)[0]; c.lineWidth = 2 * dpr; c.globalAlpha = 1 - (t % 1.2) / 1.2;
+                c.beginPath(); c.arc(x, y, r + ((t % 1.2) / 1.2) * 10 * dpr, 0, Math.PI * 2); c.stroke(); c.globalAlpha = 1;
+            }
+            c.fillStyle = got ? '#fff' : UI.theme(s.id)[0];
+            c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+            c.strokeStyle = got ? '#16a34a' : '#fff'; c.lineWidth = 1.6 * dpr; c.stroke();
+            c.font = `${11 * dpr}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+            c.textAlign = 'center'; c.textBaseline = 'middle';
+            c.fillText(got ? '✅' : s.emoji, x, y + 0.5 * dpr);
+        }
+        const v = CV.World.view();
+        c.strokeStyle = 'rgba(11,18,40,0.55)'; c.lineWidth = 1.5 * dpr;
+        c.strokeRect(Math.max(1, v.x * sx), Math.max(1, v.y * sy), Math.min(cnv.width - 2, v.w * sx), Math.min(cnv.height - 2, v.h * sy));
+        const p = CV.World.player;
+        c.fillStyle = 'rgba(255,122,61,0.35)'; c.beginPath(); c.arc(p.x * sx, p.y * sy, (6 + Math.sin(t * 5) * 2) * dpr, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#ff7a3d'; c.strokeStyle = '#fff'; c.lineWidth = 2 * dpr;
+        c.beginPath(); c.arc(p.x * sx, p.y * sy, 4.5 * dpr, 0, Math.PI * 2); c.fill(); c.stroke();
+    };
+    UI.minimapClick = function (e) {
+        const cnv = CV.$('#minimap-cnv'), r = cnv.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width * CV.World.W, y = (e.clientY - r.top) / r.height * CV.World.H;
+        let best = null, bd = 1e9;
+        for (const s of CV.World.stations) { const d = Math.hypot(s.x + s.w / 2 - x, s.base - s.height / 2 - y); if (d < bd) { bd = d; best = s; } }
+        CV.audio.play('click');
+        if (best && bd < 190) CV.World.walkToStation(best.id);
+        else CV.World.walkToPoint(x, y);
+    };
+
     // ------------------------------------------------------------------ Overlays
+    const OVERLAYS = ['station', 'journey', 'cv', 'palette'];
     function showOverlay(id) { CV.$('#' + id).classList.remove('hidden'); CV.World.paused = true; }
     function hideOverlay(id) {
         CV.$('#' + id).classList.add('hidden');
-        const anyOpen = ['station', 'journey', 'cv', 'start'].some(o => !CV.$('#' + o).classList.contains('hidden'));
+        const anyOpen = OVERLAYS.concat('start').some(o => !CV.$('#' + o).classList.contains('hidden'));
         if (!anyOpen && CV.game.started) CV.World.paused = false;
     }
     UI.hideOverlay = hideOverlay;
-    UI.anyOverlay = () => ['station', 'journey', 'cv'].find(o => !CV.$('#' + o).classList.contains('hidden'));
+    UI.anyOverlay = () => OVERLAYS.find(o => !CV.$('#' + o).classList.contains('hidden'));
 
     // ------------------------------------------------------------------ Station
-    UI.openStation = function (id) {
+    UI.openStation = function (id, opts = {}) {
+        if (cleanupGame) { cleanupGame(); cleanupGame = null; }
         currentStation = id;
         const def = CV.World.stations.find(s => s.id === id);
         const st = (CV.data.stations || {})[id] || {};
+        const G = CV.game, idx = G.order.indexOf(id), n = G.order.length - 1;
+        const panel = CV.$('#station .panel');
+        setTheme(panel, id);
+        panel.classList.remove('playing');
         CV.$('#station-emoji').textContent = def.emoji;
         CV.$('#station-era').textContent = st.era || '';
+        CV.$('#station-chapter').textContent = id === 'finale' ? 'Finale' : `Kapitel ${idx + 1} / ${n}`;
         CV.$('#station-title').textContent = st.title || def.title;
+        CV.$('#station-steps').innerHTML = G.order.slice(0, n).map(o => `<i class="${o === id ? 'cur' : G.visited.has(o) ? 'done' : ''}"></i>`).join('');
         CV.$('#station').dataset.station = id;
         showOverlay('station');
         CV.audio.play('open');
         if (id === 'finale') return renderFinale();
-        if (CV.game.visited.has(id)) renderInfo(id, null);
+        if (G.visited.has(id) || opts.info) renderInfo(id, null);
         else renderStory(id);
     };
 
@@ -67,49 +161,64 @@
         if (cleanupGame) { cleanupGame(); cleanupGame = null; }
         hideOverlay('station');
         CV.$('#station-body').innerHTML = '';
+        CV.$('#station .panel').classList.remove('playing');
         CV.game.onStationClosed && CV.game.onStationClosed(currentStation);
         currentStation = null;
     }
     UI.closeStation = closeStation;
 
+    function gameCard(id) {
+        const mg = CV.Minigames[id];
+        if (!mg) return '';
+        const best = CV.store.get('best:' + id, 0), stars = starsOf(id);
+        return `
+            <div class="game-card">
+                <div class="gc-icon">${mg.icon}</div>
+                <div class="gc-txt">
+                    <span class="kicker">Minispiel · ${mg.time ? `${mg.time} Sek.` : 'ohne Zeitlimit'}</span>
+                    <strong>${esc(mg.name)}</strong>
+                    <p>${esc(mg.goal)}</p>
+                    ${best ? `<span class="gc-best">Bestwert ${best} · ${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span>` : ''}
+                </div>
+                <button class="btn primary" data-act="play">▶ Spielen</button>
+            </div>`;
+    }
+
     function renderStory(id) {
         const st = (CV.data.stations || {})[id] || {};
-        const mg = CV.Minigames[id];
         const body = CV.$('#station-body');
         body.innerHTML = `
             <div class="story">
                 <img class="story-photo" src="${esc(CV.data.profileImage)}" alt="">
-                <div class="story-bubble"><span class="story-name">${esc(CV.derived.firstName)}</span><p class="type"></p></div>
+                <div class="story-bubble"><span class="story-name">${esc(CV.derived.firstName)} erzählt</span><p class="type"></p></div>
             </div>
-            <div class="choice">
-                ${mg ? `<button class="btn primary" data-act="play"><span>🎮 Minispiel: ${esc(mg.name)}</span><small>ca. 15 Sekunden</small></button>` : ''}
-                <button class="btn ghost" data-act="info"><span>📄 Direkt zu den Fakten</span><small>ohne Spiel</small></button>
-            </div>`;
+            ${gameCard(id)}
+            <div class="skipline"><button class="linkbtn" data-act="info">Ohne Spiel direkt zu den Fakten →</button></div>`;
         typeText(body.querySelector('.type'), st.story || '');
         body.querySelector('[data-act="info"]').onclick = () => { CV.audio.play('click'); renderInfo(id, null); };
         const p = body.querySelector('[data-act="play"]');
-        if (p) p.onclick = () => { CV.audio.play('click'); renderGame(id); };
+        if (p) { p.onclick = () => { CV.audio.play('click'); renderGame(id); }; setTimeout(() => p.isConnected && p.focus({ preventScroll: true }), 50); }
     }
 
     function typeText(el, text) {
-        if (CV.reducedMotion) { el.textContent = text; return; }
+        if (CV.reducedMotion) { el.textContent = text; el.classList.add('doneT'); return; }
         let i = 0;
         el.textContent = '';
         const tick = () => {
             if (!el.isConnected) return;
             i = Math.min(text.length, i + 2);
             el.textContent = text.slice(0, i);
-            if (i < text.length) setTimeout(tick, 16);
+            if (i < text.length) setTimeout(tick, 16); else el.classList.add('doneT');
         };
-        el.parentElement.addEventListener('click', () => { i = text.length; el.textContent = text; }, { once: true });
+        el.parentElement.addEventListener('click', () => { i = text.length; el.textContent = text; el.classList.add('doneT'); }, { once: true });
         tick();
     }
 
     function renderGame(id) {
         const mg = CV.Minigames[id];
         const body = CV.$('#station-body');
+        CV.$('#station .panel').classList.add('playing');
         body.innerHTML = `
-            <p class="mg-how">${esc(mg.how)}</p>
             <div class="mg-stage"></div>
             <div class="mg-foot"><button class="linkbtn" data-act="skip">Überspringen → direkt zu den Fakten</button></div>`;
         const stage = body.querySelector('.mg-stage');
@@ -117,6 +226,8 @@
             if (cleanupGame) { cleanupGame(); cleanupGame = null; }
             renderInfo(id, null);
         };
+        CV.$('#station .panel').scrollTop = 0;
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
         let finished = false;
         cleanupGame = mg.mount(stage, (result) => {
             if (finished) return;
@@ -130,15 +241,19 @@
         const st = (CV.data.stations || {})[id] || {};
         const firstTime = !CV.game.visited.has(id);
         CV.game.markVisited(id);
+        CV.$('#station .panel').classList.remove('playing');
+        CV.$$('#station-steps i').forEach((el, i) => { if (CV.game.order[i] === id) el.className = 'cur'; });
         const G = CV.game;
         const nextId = G.nextId();
         const next = nextId && CV.World.stations.find(s => s.id === nextId);
+        const nextTitle = next && ((CV.data.stations || {})[nextId] || {}).title || (next && next.title);
         const body = CV.$('#station-body');
+        const stars = result ? result.stars : 0;
         const badge = (firstTime || result) ? `
-            <div class="badge-earned ${firstTime ? 'new' : ''}">
+            <div class="achv ${firstTime ? 'new' : ''}">
                 <span class="b-icon">${esc(st.badgeIcon || '⭐')}</span>
                 <div>
-                    <small>${firstTime ? 'Stärke entdeckt' : 'Ergebnis'}</small>
+                    <small>${firstTime ? 'Stärke freigeschaltet' : 'Ergebnis'}${result ? `<span class="a-stars">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span>` : ''}</small>
                     <strong>${esc(st.badge || '')}</strong>
                     ${result ? `<p>${esc(result.text)}</p>` : ''}
                 </div>
@@ -147,29 +262,31 @@
             ${badge}
             <div class="info">${(CONTENT[id] || (() => ''))()}</div>
             <footer class="panel-foot">
-                ${CV.Minigames[id] ? '<button class="btn ghost small" data-act="replay">🎮 Minispiel</button>' : ''}
-                <button class="btn primary" data-act="next">${next ? `Weiter: ${esc(next.emoji)} ${esc(next.title)} →` : 'Zurück zur Welt'}</button>
+                ${CV.Minigames[id] ? `<button class="btn ghost small" data-act="replay">${CV.Minigames[id].icon} ${result ? 'Nochmal spielen' : 'Minispiel spielen'}</button>` : ''}
+                <span class="spacer"></span>
+                <button class="btn primary" data-act="next">${next ? `Weiter: ${esc(next.emoji)} ${esc(nextTitle)} →` : 'Zurück zur Welt'}</button>
             </footer>`;
         if (firstTime) {
             CV.audio.play('badge');
             CV.World.confettiOnPlayer(60);
         }
         const rp = body.querySelector('[data-act="replay"]');
-        if (rp) rp.onclick = () => renderGame(id);
-        body.querySelector('[data-act="next"]').onclick = () => {
+        if (rp) rp.onclick = () => { CV.audio.play('click'); renderGame(id); };
+        const nb = body.querySelector('[data-act="next"]');
+        nb.onclick = () => {
             CV.audio.play('click');
             closeStation();
             if (nextId) setTimeout(() => CV.World.walkToStation(nextId), 250);
         };
         animateBars(body);
-        body.scrollTop = 0;
         CV.$('#station .panel').scrollTop = 0;
+        setTimeout(() => nb.isConnected && nb.focus({ preventScroll: true }), 60);
     }
 
     function animateBars(root) {
         requestAnimationFrame(() => setTimeout(() => {
             root.querySelectorAll('[data-pct]').forEach(el => { el.style.width = el.dataset.pct + '%'; });
-        }, 60));
+        }, 80));
     }
 
     // ------------------------------------------------------------------ Inhalte je Station
@@ -235,6 +352,7 @@
         const n = G.order.length - 1;
         const done = G.order.slice(0, n).filter(id => G.visited.has(id)).length;
         const all = done === n;
+        const totalStars = G.order.slice(0, n).reduce((a, id) => a + starsOf(id), 0);
         G.markVisited('finale');
         const c = d.contact || {};
         const body = CV.$('#station-body');
@@ -245,14 +363,14 @@
                     <img src="${esc(d.congratsImage || d.profileImage)}" alt="">
                     <span class="trophy">🏆</span>
                 </div>
-                <h3 class="finale-title">${all ? 'Sie haben meinen ganzen Weg erkundet!' : `${done} von ${n} Stationen erkundet`}</h3>
+                <h3 class="finale-title">${all ? 'Sie haben meinen ganzen Weg erkundet!' : `${done} von ${n} Kapiteln erkundet`}</h3>
                 <p class="finale-text">${esc((st.finale && st.finale.story) || '')}</p>
                 <div class="cert">
-                    <span class="kicker">Ihre Erkenntnisse über ${esc(CV.derived.firstName)}</span>
+                    <div class="cert-head"><span class="kicker">Ihre Erkenntnisse über ${esc(CV.derived.firstName)}</span><span class="total">⭐ ${totalStars} / ${n * 3} Sterne in Minispielen</span></div>
                     <ul class="cert-list">
                         ${G.order.slice(0, n).map(id => {
-                            const s = st[id] || {}, got = G.visited.has(id);
-                            return `<li class="${got ? 'got' : 'open'}" data-id="${id}"><b>${esc(s.badgeIcon || '⭐')}</b><span><strong>${esc(s.badge || '')}</strong><small>${got ? esc(s.title || '') : 'noch nicht entdeckt – hier klicken'}</small></span></li>`;
+                            const s = st[id] || {}, got = G.visited.has(id), sN = starsOf(id);
+                            return `<li class="${got ? 'got' : 'open'}" data-id="${id}"><b>${esc(s.badgeIcon || '⭐')}</b><span><strong>${esc(s.badge || '')}</strong><small>${got ? esc(s.title || '') : 'noch offen – hier klicken'}</small>${sN ? `<span class="st">${'★'.repeat(sN)}</span>` : ''}</span></li>`;
                         }).join('')}
                     </ul>
                 </div>
@@ -278,14 +396,20 @@
         body.querySelectorAll('.cert-list li.open').forEach(li => li.onclick = () => { closeStation(); setTimeout(() => CV.World.walkToStation(li.dataset.id), 200); });
     }
 
-    // ------------------------------------------------------------------ Schnellreise
+    // ------------------------------------------------------------------ Kapitelübersicht
     UI.openJourney = function () {
         const G = CV.game, st = CV.data.stations || {};
-        const next = G.nextId();
-        CV.$('#journey-list').innerHTML = G.order.map((id, i) => {
+        const next = G.nextId(), n = G.order.length - 1;
+        const done = G.order.slice(0, n).filter(id => G.visited.has(id)).length;
+        const totalStars = G.order.slice(0, n).reduce((a, id) => a + starsOf(id), 0);
+        CV.$('#journey-sub').textContent = `${done} von ${n} Kapiteln entdeckt · ⭐ ${totalStars} / ${n * 3} Sterne · Klick = hinlaufen`;
+        CV.$('#journey-list').innerHTML = G.order.map((id) => {
             const s = CV.World.stations.find(x => x.id === id), meta = st[id] || {};
-            const status = G.visited.has(id) ? '<span class="js done">✓ entdeckt</span>' : id === next ? '<span class="js next">nächstes Ziel</span>' : '<span class="js">offen</span>';
-            return `<li><button data-id="${id}"><span class="jn">${i + 1}</span><span class="je">${s.emoji}</span><span class="jt"><strong>${esc(s.title)}</strong><small>${esc(meta.era || '')}</small></span>${status}</button></li>`;
+            const mg = CV.Minigames[id];
+            const status = G.visited.has(id)
+                ? `<span class="js done">✓ entdeckt${mg ? `<span class="st">${starStr(starsOf(id))}</span>` : ''}</span>`
+                : id === next ? '<span class="js next"><span class="pill">nächstes Ziel</span></span>' : `<span class="js">offen${mg ? `<small>${esc(mg.icon)} ${esc(mg.name)}</small>` : ''}</span>`;
+            return `<li class="${id === next ? 'is-next' : ''}"><button data-id="${id}"><span class="je">${s.emoji}</span><span class="jt"><strong>${esc(meta.title || s.title)}</strong><small>${esc(meta.era || '')}${meta.badge ? ' · ' + esc(meta.badge) : ''}</small></span>${status}</button></li>`;
         }).join('');
         CV.$$('#journey-list button').forEach(b => b.onclick = () => {
             CV.audio.play('click');
@@ -294,6 +418,91 @@
         });
         showOverlay('journey');
     };
+
+    // ------------------------------------------------------------------ Befehlspalette (Strg+K)
+    let palItems = [], palSel = 0, palView = [];
+    function buildIndex() {
+        const d = CV.data, x = CV.derived, st = d.stations || {}, items = [];
+        const stTitle = (id) => (st[id] && st[id].title) || id;
+        const goto = (id) => () => { hideOverlay('palette'); setTimeout(() => CV.World.walkToStation(id), 120); };
+        const info = (id) => () => { hideOverlay('palette'); CV.World.teleportTo(id); setTimeout(() => UI.openStation(id, { info: true }), 60); };
+        const emojiOf = (id) => (CV.World.stations.find(s => s.id === id) || {}).emoji || '📍';
+        const c = d.contact || {};
+        items.push({ g: 'Aktionen', ic: '📄', t: 'Lebenslauf kompakt öffnen', s: 'Alle Fakten auf einer Seite', k: 'L', q: 'lebenslauf cv kompakt resume', run: () => { hideOverlay('palette'); UI.openCv('world'); } });
+        items.push({ g: 'Aktionen', ic: '🖨️', t: 'Als PDF speichern', s: 'Druckansicht des Lebenslaufs', q: 'pdf drucken print download', run: () => { hideOverlay('palette'); UI.openCv('world'); setTimeout(() => window.print(), 400); } });
+        items.push({ g: 'Aktionen', ic: '🗺️', t: 'Kapitelübersicht', s: 'Alle Stationen & Sterne', k: 'M', q: 'karte map übersicht kapitel fortschritt', run: () => { hideOverlay('palette'); UI.openJourney(); } });
+        const next = CV.game.nextId();
+        if (next) items.push({ g: 'Aktionen', ic: '🎯', t: `Zum nächsten Ziel: ${stTitle(next)}`, s: 'Automatisch hinlaufen', k: 'G', q: 'weiter nächstes ziel', run: goto(next) });
+        items.push({ g: 'Aktionen', ic: CV.audio.state.sfx ? '🔇' : '🔊', t: CV.audio.state.sfx ? 'Ton ausschalten' : 'Ton einschalten', s: 'Soundeffekte', q: 'ton sound audio leise mute', run: () => { CV.$('#btn-sound').click(); hideOverlay('palette'); } });
+        if (c.email) items.push({ g: 'Aktionen', ic: '✉️', t: 'E-Mail schreiben', s: c.email, q: 'kontakt mail email', run: () => { location.href = 'mailto:' + c.email; } });
+        if (c.github) items.push({ g: 'Aktionen', ic: '🐙', t: 'GitHub öffnen', s: c.github.replace(/^https?:\/\//, ''), q: 'github code repo', run: () => window.open(c.github, '_blank', 'noopener') });
+        CV.game.order.forEach((id, i) => {
+            const s = st[id] || {};
+            items.push({ g: 'Kapitel', ic: emojiOf(id), t: `${i < 7 ? (i + 1) + '. ' : ''}${stTitle(id)}`, s: [s.era, s.badge].filter(Boolean).join(' · '), q: `${stTitle(id)} ${s.badge || ''} ${s.story || ''}`, run: goto(id) });
+        });
+        x.skillTokens.forEach(tk => items.push({ g: 'Inhalte', ic: CV.skillIcon(tk), t: tk, s: `Kenntnis · ${stTitle('lab')}`, q: tk, run: info('lab') }));
+        x.experienceDesc.forEach(e => items.push({ g: 'Inhalte', ic: '💼', t: e.role, s: `${e.company} · ${e.date}`, q: `${e.role} ${e.company} beruf job arbeit`, run: info('career') }));
+        x.academic.forEach(e => items.push({ g: 'Inhalte', ic: '🎓', t: e.title, s: `${e.detail} · ${e.date}`, q: `${e.title} ${e.detail} studium schule ausbildung`, run: info('school') }));
+        x.languages.forEach(l => items.push({ g: 'Inhalte', ic: '🗣️', t: l.name, s: `Sprache · ${l.level}`, q: `${l.name} ${l.level} sprache`, run: info('language') }));
+        (d.projects || []).forEach(p => items.push({ g: 'Inhalte', ic: '🚀', t: p.title, s: `${p.tech} · Projekt`, q: `${p.title} ${p.tech} ${p.detail} projekt`, run: info('projects') }));
+        (d.hobbies || []).forEach(h => items.push({ g: 'Inhalte', ic: '🏄', t: String(h).replace(/^\S+\s+/, ''), s: 'Hobby', q: `${h} hobby freizeit sport`, run: info('lake') }));
+        x.countries.forEach(cn => items.push({ g: 'Inhalte', ic: CV.flag(cn) || '🌍', t: cn, s: 'Bereistes Land', q: `${cn} land reise`, run: info('arrival') }));
+        return items;
+    }
+    const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    function hl(text, q) {
+        if (!q) return esc(text);
+        const i = norm(text).indexOf(norm(q));
+        if (i < 0) return esc(text);
+        return esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length));
+    }
+    function renderPalette() {
+        const q = CV.$('#pal-q').value.trim();
+        const nq = norm(q);
+        if (!nq) palView = palItems.filter(it => it.g !== 'Inhalte');
+        else {
+            palView = palItems.map(it => {
+                const t = norm(it.t), all = norm(it.t + ' ' + it.s + ' ' + it.q);
+                const score = t.startsWith(nq) ? 3 : t.includes(nq) ? 2 : all.includes(nq) ? 1 : 0;
+                return [score ? score + (it.g === 'Inhalte' ? 0.5 : 0) : 0, it];
+            }).filter(a => a[0] > 0).sort((a, b) => b[0] - a[0]).slice(0, 14).map(a => a[1]);
+        }
+        palSel = Math.min(palSel, Math.max(0, palView.length - 1));
+        const list = CV.$('#pal-list');
+        if (!palView.length) { list.innerHTML = `<li class="pal-empty">Nichts gefunden für „${esc(q)}“ – versuchen Sie z. B. „Java“ oder „PSI“.</li>`; return; }
+        let lastG = '';
+        list.innerHTML = palView.map((it, i) => {
+            const head = it.g !== lastG ? `<li class="pal-group">${esc(it.g)}</li>` : '';
+            lastG = it.g;
+            return `${head}<li class="pal-item ${i === palSel ? 'sel' : ''}" data-i="${i}" role="option"><span class="pi-ic">${esc(it.ic)}</span><span class="pi-t"><strong>${hl(it.t, q)}</strong><small>${esc(it.s || '')}</small></span>${it.k ? `<kbd>${esc(it.k)}</kbd>` : '<span class="pi-k">↵</span>'}</li>`;
+        }).join('');
+        const sel = list.querySelector('.pal-item.sel');
+        if (sel) sel.scrollIntoView({ block: 'nearest' });
+    }
+    UI.openPalette = function () {
+        palItems = buildIndex(); palSel = 0;
+        const inp = CV.$('#pal-q');
+        inp.value = '';
+        renderPalette();
+        showOverlay('palette');
+        CV.audio.play('click');
+        setTimeout(() => inp.focus(), 30);
+    };
+    function palRun(i) { const it = palView[i]; if (it) { CV.audio.play('click'); it.run(); } }
+    document.addEventListener('DOMContentLoaded', () => {
+        const inp = CV.$('#pal-q');
+        inp.addEventListener('input', () => { palSel = 0; renderPalette(); });
+        inp.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') { e.preventDefault(); palSel = Math.min(palView.length - 1, palSel + 1); renderPalette(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); palSel = Math.max(0, palSel - 1); renderPalette(); }
+            else if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); palRun(palSel); }
+        });
+        CV.$('#pal-list').addEventListener('click', (e) => { const li = e.target.closest('.pal-item'); if (li) palRun(+li.dataset.i); });
+        CV.$('#pal-list').addEventListener('mousemove', (e) => {
+            const li = e.target.closest('.pal-item');
+            if (li && +li.dataset.i !== palSel) { palSel = +li.dataset.i; CV.$$('#pal-list .pal-item').forEach(x => x.classList.toggle('sel', x === li)); }
+        });
+    });
 
     // ------------------------------------------------------------------ Kompakter Lebenslauf
     UI.openCv = function (returnTo) {
@@ -322,41 +531,46 @@
         CV.$('#cv-sheet').innerHTML = `
             <div class="cv-toolbar no-print">
                 <button class="btn ghost small" data-act="back">← ${cvReturnTo === 'start' ? 'Zurück' : 'Zurück zur Welt'}</button>
-                <button class="btn primary small" data-act="print">📄 Als PDF speichern</button>
-            </div>
-            <header class="cv-head">
-                <img src="${esc(d.profileImage)}" alt="Foto von ${esc(d.name)}">
-                <div>
-                    <h1>${esc(d.name)}</h1>
-                    <p class="cv-title">${esc(d.title)}</p>
-                    ${d.availability ? `<p class="cv-avail"><i></i>${esc(d.availability)}</p>` : ''}
-                    <p class="cv-contact">${contact}</p>
+                <div class="tb-r">
+                    ${c.email ? `<a class="btn ghost small" href="mailto:${esc(c.email)}">✉️ Kontakt</a>` : ''}
+                    <button class="btn dark small" data-act="print">📄 Als PDF speichern</button>
                 </div>
-            </header>
-            ${(d.strengths || []).length ? `<section class="cv-strengths">${d.strengths.map(s => `<div><b>${esc(s.icon || '★')}</b><strong>${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join('')}</section>` : ''}
-            <div class="cv-grid">
-                <div>
-                    <h2>Berufserfahrung</h2>
-                    ${tl(x.experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current }))}
-                    <h2>Ausbildung</h2>
-                    ${tl(x.educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current }))}
-                    <h2>Eigene Projekte</h2>
-                    <ul class="cv-projects">${(d.projects || []).map(p => `<li><strong>${esc(p.title)}</strong> <em>${esc(p.tech)}</em><span>${esc(p.detail)}</span></li>`).join('')}</ul>
-                </div>
-                <aside>
-                    <h2>Kenntnisse</h2>
-                    ${x.skills.map(s => `<h4>${esc(s.name)}</h4><p class="cv-chips">${String(s.level).split(',').map(t => `<span>${esc(t.trim())}</span>`).join('')}</p>`).join('')}
-                    <h2>Sprachen</h2>
-                    ${x.languages.map(l => `<div class="cv-lang"><div><strong>${esc(l.name)}</strong><span>${esc(l.level)}</span></div><div class="bar"><i data-pct="${CV.levelPct(l.level)}"></i></div></div>`).join('')}
-                    <h2>Interessen</h2>
-                    <ul class="cv-plain">${(d.hobbies || []).map(h => `<li>${esc(h)}</li>`).join('')}</ul>
-                    <h2>Reisen</h2>
-                    <p class="cv-travel"><strong>${x.countries.length} Länder</strong> – ${x.countries.map(n => esc(n)).join(', ')}</p>
-                </aside>
             </div>
+            <article class="cv-page">
+                <header class="cv-head">
+                    <img src="${esc(d.profileImage)}" alt="Foto von ${esc(d.name)}">
+                    <div>
+                        <h1>${esc(d.name)}</h1>
+                        <p class="cv-title">${esc(d.title)}</p>
+                        ${d.availability ? `<p class="cv-avail"><i></i>${esc(d.availability)}</p>` : ''}
+                        <p class="cv-contact">${contact}</p>
+                    </div>
+                </header>
+                ${(d.strengths || []).length ? `<section class="cv-strengths">${d.strengths.map(s => `<div><b>${esc(s.icon || '★')}</b><strong>${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join('')}</section>` : ''}
+                <div class="cv-grid">
+                    <div>
+                        <h2>Berufserfahrung</h2>
+                        ${tl(x.experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current }))}
+                        <h2>Ausbildung</h2>
+                        ${tl(x.educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current }))}
+                        <h2>Eigene Projekte</h2>
+                        <ul class="cv-projects">${(d.projects || []).map(p => `<li><strong>${esc(p.title)}</strong> <em>${esc(p.tech)}</em><span>${esc(p.detail)}</span></li>`).join('')}</ul>
+                    </div>
+                    <aside>
+                        <h2>Kenntnisse</h2>
+                        ${x.skills.map(s => `<h4>${esc(s.name)}</h4><p class="cv-chips">${String(s.level).split(',').map(t => `<span>${esc(t.trim())}</span>`).join('')}</p>`).join('')}
+                        <h2>Sprachen</h2>
+                        ${x.languages.map(l => `<div class="cv-lang"><div><strong>${esc(l.name)}</strong><span>${esc(l.level)}</span></div><div class="bar"><i data-pct="${CV.levelPct(l.level)}"></i></div></div>`).join('')}
+                        <h2>Interessen</h2>
+                        <ul class="cv-plain">${(d.hobbies || []).map(h => `<li>${esc(h)}</li>`).join('')}</ul>
+                        <h2>Reisen</h2>
+                        <p class="cv-travel"><strong>${x.countries.length} Länder</strong> – ${x.countries.map(n => esc(n)).join(', ')}</p>
+                    </aside>
+                </div>
+            </article>
             <footer class="cv-foot no-print">
-                <span>Lust auf die spielerische Version?</span>
-                <button class="btn primary small" data-act="play">▶ Welt erkunden</button>
+                <div><strong>Lust auf die spielerische Version?</strong>7 Kapitel, 7 Minispiele – in ca. 4 Minuten.</div>
+                <button class="btn primary" data-act="play">▶ Welt erkunden</button>
             </footer>`;
         const sheet = CV.$('#cv-sheet');
         sheet.querySelector('[data-act="back"]').onclick = () => UI.closeCv();
