@@ -82,10 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const who = CV.param('name');
     $('#start-greeting').textContent = who && G.firm ? `👋 Hallo ${who} von ${G.firm}!` : G.firm ? `👋 Willkommen, Team ${G.firm}!` : who ? `👋 Hallo ${who}!` : '👋 Schön, dass Sie da sind';
     $('#pc-name').textContent = d.name || '';
-    $('#pc-class').textContent = x.currentRole ? `${x.currentRole.role} · ${x.currentRole.company}` : (d.title || '');
+    $('#pc-class').textContent = x.currentRole ? `${x.currentRole.role} · ${x.currentRole.companyShort}` : (d.title || '');
     $('#pc-status').textContent = d.availability ? d.availability.replace(/^Offen für /i, 'offen für ') : 'verfügbar';
     const stats = [];
-    if (x.roleSinceYear && x.currentRole) stats.push([String(x.roleSinceYear), `bei ${x.currentRole.company.replace(/\s+(SE|GmbH|AG)$/i, '')}`]);
+    if (x.roleSinceYear && x.currentRole) stats.push([String(x.roleSinceYear), `bei ${x.currentRole.companyShort.replace(/\s+(SE|GmbH|AG)$/i, '')}`]);
     if (x.languages.length) stats.push([String(x.languages.length), 'Sprachen']);
     if (x.countries.length) stats.push([String(x.countries.length), 'Länder bereist']);
     $('#start-stats').innerHTML = stats.slice(0, 3).map(([v, l]) => `<div class="stat"><b>${CV.esc(v)}</b><span>${CV.esc(l)}</span></div>`).join('');
@@ -111,6 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------------------------- Welt
     CV.World.init($('#world'));
     CV.World.onEnterStation = (id) => CV.UI.openStation(id);
+    // Erster Besuch: automatisch hinein. Danach nur noch per „Betreten“ (Knopf, E/Enter oder Klick aufs Gebäude).
+    const missing = () => ORDER.slice(0, 7).filter(id => !G.visited.has(id)).length;
+    CV.World.isLocked = (id) => id === 'finale' && !G.allVisited();
+    CV.World.canAutoEnter = (id) => !G.visited.has(id) && !CV.World.isLocked(id);
+    let lockSaid = 0;
+    CV.World.onLocked = () => {
+        const n = missing();
+        if (performance.now() - lockSaid < 2500) return;
+        lockSaid = performance.now();
+        CV.audio.play('bad');
+        CV.World.sayRobot(`🔒 Das letzte Kapitel öffnet sich erst, wenn Sie alle 7 Gebäude besucht haben – noch ${n} offen.`, 4200);
+    };
     CV.World.onFirstMove = () => setTimeout(() => $('#controls-hint').classList.add('hidden'), 2500);
     const tokMax = CV.World.tokenCount();
     $('#tokens-max').textContent = tokMax;
@@ -162,11 +174,20 @@ document.addEventListener('DOMContentLoaded', () => {
     mus.onclick = () => { CV.audio.setMusic(!CV.audio.state.music); syncAudioBtns(); };
 
     const action = $('#action-btn');
-    action.onclick = () => { if (CV.World.nearStation) CV.World.enter(CV.World.nearStation); };
+    action.onclick = () => { if (CV.World.nearStation) { CV.audio.play('click'); CV.World.enter(CV.World.nearStation); } };
+    let lastAct = '';
     setInterval(() => {
-        const show = CV.isTouch && G.started && !CV.World.paused && CV.World.nearStation;
+        const s = CV.World.nearStation;
+        const show = G.started && !CV.World.paused && s;
         action.classList.toggle('hidden', !show);
-    }, 200);
+        if (!show) { lastAct = ''; return; }
+        $('#controls-hint').classList.add('hidden');
+        const locked = CV.World.isLocked(s.id);
+        const html = locked ? `🔒 <span>Noch ${missing()} Kapitel offen</span>`
+            : `<span class="ab-ic">${s.emoji}</span><span><small>Betreten</small>${CV.esc((st[s.id] && st[s.id].title) || s.title)}</span>${CV.isTouch ? '' : '<kbd>E</kbd>'}`;
+        if (html !== lastAct) { action.innerHTML = html; lastAct = html; }
+        action.classList.toggle('locked', locked);
+    }, 150);
 
     // Klick außerhalb des Panels schließt Overlays
     ['station', 'journey', 'palette'].forEach(id => {

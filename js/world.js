@@ -257,7 +257,7 @@
             }
         });
 
-        player = { x: SPAWN.x, y: SPAWN.y, dir: 'up', walk: 0, moving: false, path: null, pendingStation: null, look: { skin: '#e2b08c', hair: '#3b2a20', jacket: '#1f2a44', pants: '#2b2f3a', shirt: '#fbfbfb', beard: '#4a3426', glasses: true }, speed: 235, stuck: 0 };
+        player = { x: SPAWN.x, y: SPAWN.y, dir: 'up', walk: 0, moving: false, path: null, pendingStation: null, look: { skin: '#e2b08c', hair: '#2e211a', jacket: '#1d2741', pants: '#262b38', shirt: '#fbfbfb', beard: '#3d2c22', glasses: true, hero: true }, speed: 235, stuck: 0 };
         robot = { x: SPAWN.x - 40, y: SPAWN.y + 10, talkUntil: 0, text: '' };
         World.player = player;
         World.robot = robot;
@@ -433,6 +433,7 @@
         player.path = null; player.pendingStation = null;
         for (const k in keys) keys[k] = false;
         suppressStation = s.id;
+        if (World.isLocked && World.isLocked(s.id)) { World.onLocked && World.onLocked(s.id); return; }
         World.onEnterStation && World.onEnterStation(s.id);
     };
 
@@ -529,7 +530,11 @@
             if (CV.dist(player.x, player.y, s.door.x, s.door.y) < 62) { nearStation = s; break; }
         }
         if (!nearStation) suppressStation = null;
-        else if (!World.paused && suppressStation !== nearStation.id && !player.path) World.enter(nearStation);
+        else if (!World.paused && suppressStation !== nearStation.id && !player.path) {
+            const auto = World.canAutoEnter ? World.canAutoEnter(nearStation.id) : true;
+            if (auto) World.enter(nearStation);
+            else if (World.isLocked && World.isLocked(nearStation.id)) { suppressStation = nearStation.id; World.onLocked && World.onLocked(nearStation.id); }
+        }
         World.nearStation = nearStation;
 
         // Sterne einsammeln
@@ -668,6 +673,15 @@
             c.fillStyle = L.shirt;
             c.beginPath(); c.moveTo(x - 5 + side * 2, yb - 37); c.lineTo(x + 5 + side * 2, yb - 37); c.lineTo(x + side * 2, yb - 26); c.closePath(); c.fill();
         }
+        // Revers und Hemdkragen (Spielfigur)
+        if (L.hero && o.dir !== 'up') {
+            c.fillStyle = '#2c3a5e';
+            c.beginPath(); c.moveTo(x - 6 + side * 2, yb - 37); c.lineTo(x - 1 + side * 2, yb - 26); c.lineTo(x - 9 + side * 2, yb - 31); c.closePath(); c.fill();
+            c.beginPath(); c.moveTo(x + 6 + side * 2, yb - 37); c.lineTo(x + 1 + side * 2, yb - 26); c.lineTo(x + 9 + side * 2, yb - 31); c.closePath(); c.fill();
+            c.fillStyle = '#ffffff';
+            c.beginPath(); c.moveTo(x - 5 + side * 2, yb - 38); c.lineTo(x + side * 2, yb - 34); c.lineTo(x - 2 + side * 2, yb - 39); c.closePath(); c.fill();
+            c.beginPath(); c.moveTo(x + 5 + side * 2, yb - 38); c.lineTo(x + side * 2, yb - 34); c.lineTo(x + 2 + side * 2, yb - 39); c.closePath(); c.fill();
+        }
         // Kopf
         const hx = x + side * 1.5, hy = yb - 50;
         c.fillStyle = L.skin;
@@ -679,6 +693,10 @@
             c.beginPath(); c.arc(hx, hy - 1, 14, Math.PI * 1.02, Math.PI * 1.98); c.closePath(); c.fill();
             rr(c, hx - 14, hy - 6, 4, 7, 2); c.fill();
             rr(c, hx + 10, hy - 6, 4, 7, 2); c.fill();
+            if (L.hero) { // Haare mit Volumen, seitlich gekämmt
+                c.beginPath(); c.ellipse(hx + 2 + side * 2, hy - 12, 12, 6, -0.15, 0, TAU); c.fill();
+                c.fillStyle = 'rgba(255,255,255,0.12)'; c.beginPath(); c.ellipse(hx + 4 + side * 2, hy - 14, 6, 2, -0.2, 0, TAU); c.fill();
+            }
         }
         if (o.dir !== 'up') {
             const fx = hx + side * 4;
@@ -687,6 +705,11 @@
                 c.globalAlpha = 0.85;
                 c.beginPath(); c.arc(fx, hy - 1, 12.6, 0.12 * Math.PI, 0.88 * Math.PI); c.lineTo(fx - 9, hy + 3); c.quadraticCurveTo(fx, hy + 1, fx + 9, hy + 3); c.closePath(); c.fill();
                 c.globalAlpha = 1;
+            }
+            if (L.hero) { // Augenbrauen
+                c.strokeStyle = L.hair; c.lineWidth = 1.8; c.lineCap = 'round';
+                if (side === 0) { c.beginPath(); c.moveTo(fx - 7, hy - 7); c.lineTo(fx - 2.5, hy - 7.5); c.moveTo(fx + 2.5, hy - 7.5); c.lineTo(fx + 7, hy - 7); c.stroke(); }
+                else { c.beginPath(); c.moveTo(fx + side * 2 - 3, hy - 7.5); c.lineTo(fx + side * 2 + 3, hy - 7.5); c.stroke(); }
             }
             // Augen
             c.fillStyle = '#1c1c1c';
@@ -1132,11 +1155,22 @@
 
         // Tiefensortierte Objekte
         const list = [];
-        for (const s of World.stations) list.push({ y: s.base, d: () => DRAW[s.style](c, s), x0: s.x - 60, x1: s.x + s.w + 60 });
+        for (const s of World.stations) {
+            const top = s.base - s.height - s.depth - (s.style === 'career' ? 110 : s.style === 'school' ? 140 : 60);
+            const hides = player.y < s.base + 4 && player.y > top && player.x > s.x - 24 && player.x < s.x + s.w + 24;
+            if (hides) s.fade = Math.min(1, (s.fade || 0) + 0.12); else s.fade = Math.max(0, (s.fade || 0) - 0.08);
+            const a = 1 - (s.fade || 0) * 0.62;
+            list.push({ y: s.base, d: () => { if (a < 1) { c.save(); c.globalAlpha = a; DRAW[s.style](c, s); c.restore(); } else DRAW[s.style](c, s); }, x0: s.x - 60, x1: s.x + s.w + 60 });
+        }
         for (const t of trees) if (t.x > vx0 && t.x < vx1 && t.y > vy0 && t.y < vy1) list.push({ y: t.y, d: () => drawTree(c, t) });
         for (const p of props) if (p.x > vx0 - 100 && p.x < vx1 + 100 && p.y > vy0 && p.y < vy1) list.push({ y: p.y, d: () => drawProp(c, p) });
         for (const n of npcs) if (n.x > vx0 && n.x < vx1) list.push({ y: n.y, d: () => drawPerson(c, n.x, n.y, n) });
-        list.push({ y: player.y, d: () => drawPerson(c, player.x, player.y, player) });
+        list.push({ y: player.y, d: () => {
+            const pr = (time * 0.9) % 1;
+            c.strokeStyle = `rgba(255,138,61,${0.55 * (1 - pr)})`; c.lineWidth = 2.5;
+            ellipse(c, player.x, player.y, 16 + pr * 16, (16 + pr * 16) * 0.42); c.stroke();
+            drawPerson(c, player.x, player.y, player);
+        } });
         list.push({ y: robot.y, d: () => drawRobot(c, robot.x, robot.y) });
         list.sort((a, b) => a.y - b.y);
         for (const it of list) { if (it.x0 !== undefined && (it.x1 < vx0 || it.x0 > vx1)) continue; it.d(); }
@@ -1180,13 +1214,14 @@
             const visited = CV.game && CV.game.visited && CV.game.visited.has(s.id);
             const isNext = next && next.id === s.id;
             const topY = s.base - s.height - s.depth - (s.style === 'career' ? 100 : s.style === 'airport' ? 30 : s.style === 'school' ? 136 : s.style === 'construction' ? 60 : s.style === 'language' ? 76 : 34) - (isNext ? Math.abs(Math.sin(time * 3)) * 8 : 0);
-            const label = `${s.emoji} ${s.title}${visited ? '  ✓' : ''}`;
+            const locked = World.isLocked && World.isLocked(s.id);
+            const label = locked ? `🔒 ${s.title}` : `${s.emoji} ${s.title}${visited ? '  ✓' : ''}`;
             c.font = `700 ${fs}px Outfit, system-ui, sans-serif`;
             const tw = c.measureText(label).width + fs * 1.4, th = fs * 2;
             const lx = s.x + s.w / 2;
             c.save();
             if (isNext || hoverStation === s) { c.shadowColor = 'rgba(255,160,40,0.9)'; c.shadowBlur = 18; }
-            c.fillStyle = visited ? 'rgba(34,139,94,0.94)' : isNext ? 'rgba(255,138,61,0.96)' : 'rgba(27,42,74,0.9)';
+            c.fillStyle = locked ? 'rgba(90,98,120,0.92)' : visited ? 'rgba(34,139,94,0.94)' : isNext ? 'rgba(255,138,61,0.96)' : 'rgba(27,42,74,0.9)';
             rr(c, lx - tw / 2, topY - th / 2, tw, th, th / 2); c.fill();
             c.restore();
             signText(c, label, lx, topY + 1, fs, '#fff', 700);
@@ -1195,7 +1230,8 @@
         // Interaktionshinweis
         if (nearStation && !World.paused) {
             const s = nearStation, y = s.door.y - 90 + Math.sin(time * 5) * 4;
-            const txt = CV.isTouch ? 'Tippen zum Eintreten' : 'E · Eintreten';
+            const lockedNow = World.isLocked && World.isLocked(s.id);
+            const txt = lockedNow ? '🔒 Noch gesperrt' : CV.isTouch ? '„Betreten“ antippen' : 'E / Enter · Betreten';
             c.font = `800 ${fs}px Outfit, system-ui, sans-serif`;
             const tw = c.measureText(txt).width + fs * 1.6;
             c.fillStyle = '#ffffff'; rr(c, s.door.x - tw / 2, y - fs, tw, fs * 2, 8); c.fill();

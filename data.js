@@ -5,10 +5,11 @@
 const resumeData = {
     "name": "Abdul Kader Sabouni",
     "firstName": "Abdul",
-    "title": "Softwareentwickler · Informatikstudent",
+    "title": "Informatikstudent · Softwareentwicklung mit KI-Agenten",
     "location": "Dortmund",
-    "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – erleben Sie meinen Weg als kleine, begehbare Welt.",
+    "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen KI-Projekten – erleben Sie meinen Weg als kleine, begehbare Welt.",
     "availability": "Offen für neue Herausforderungen",
+    "summary": "Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen entsteht Software mit KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein.",
     "contact": {
         "email": "",
         "phone": "",
@@ -18,32 +19,47 @@ const resumeData = {
     "intro": "Willkommen in meiner Welt! Laufen Sie mit WASD/Pfeiltasten oder per Klick. Jedes Gebäude ist eine Station meines Lebenslaufs.",
     "strengths": [
         {
-            "icon": "📈",
-            "title": "Steile Lernkurve",
-            "text": "Neustart 2014 – heute Deutsch auf C1-Niveau, Abitur und Informatikstudium."
+            "icon": "🤖",
+            "title": "Softwareentwicklung mit KI",
+            "text": "Eigene Software mit Claude Code und OpenAI Codex – vom Prompt bis zur geprüften Auslieferung."
         },
         {
             "icon": "💻",
-            "title": "Praxis in der Softwareentwicklung",
-            "text": "Seit 11/2023 Werkstudent in der Softwareentwicklung bei PSI Software SE."
+            "title": "Praxis seit 2023",
+            "text": "Werkstudent bei PSI: Java, SQL und ein Lagerverwaltungssystem für Logistik-Kunden."
         },
         {
             "icon": "🤝",
             "title": "Kommunikation & Kundenfokus",
-            "text": "Kundenservice für Samsung & Telekom, vier Sprachen."
+            "text": "Kundenservice und Vertrieb für Telekom und Samsung, Kundentermine bei PSI."
         },
         {
-            "icon": "🚀",
-            "title": "Eigeninitiative",
-            "text": "Eigener Onlineshop, eigene Produktideen und ein Buch in Arbeit."
+            "icon": "📈",
+            "title": "Steile Lernkurve",
+            "text": "Neustart 2014 – heute Deutsch auf C2-Niveau, Abitur und Informatikstudium."
+        }
+    ],
+    "aiSkills": [
+        {
+            "name": "Prompt Engineering",
+            "text": "Strukturierte Prompts (Rolle, Kontext, Beispiele, Ausgabeformat), Few-Shot-Prompting, Zerlegung komplexer Aufgaben, iterative Optimierung"
+        },
+        {
+            "name": "Agentic Coding",
+            "text": "Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging mit KI-Agenten; Review und Test des generierten Codes"
+        },
+        {
+            "name": "KI-Modelle",
+            "text": "Claude (Anthropic), GPT/ChatGPT (OpenAI)"
         }
     ],
     "facts": [
-        "Wussten Sie schon? Abdul hat sein Abitur parallel zum Job bei adesso SE gemacht.",
-        "Seit 11/2023 entwickelt Abdul Software bei PSI Software SE.",
+        "Wussten Sie schon? Abdul hat sein Abitur parallel zum Job bei adesso gemacht.",
+        "Seit 11/2023 entwickelt Abdul bei PSI ein Lagerverwaltungssystem für Logistik-Kunden weiter.",
         "Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen.",
-        "Informatikstudium und Werkstudentenjob gleichzeitig? Zeitmanagement ist für Abdul Alltag.",
-        "Kundenservice für Samsung und Telekom – da lernt man, auch unter Druck freundlich zu bleiben.",
+        "Abdul hat ein eigenes Unternehmen: Er entwickelt Software mit KI-Agenten wie Claude Code.",
+        "Kundenservice für Samsung und die Telekom – da lernt man, auch unter Druck freundlich zu bleiben.",
+        "Im Verein KUMULI besucht Abdul Kinder in der Kinderklinik und macht Musik mit ihnen.",
         "Abdul hat schon über 20 Länder bereist."
     ],
     "stations": {
@@ -59,60 +75,83 @@ const resumeData = {
             "era": "2015 – 2016",
             "badge": "Sprachtalent",
             "badgeIcon": "🗣️",
-            "story": "Sprache war mein erster Schlüssel: Integrationskurs, dann B1 – heute spreche ich Deutsch auf C1-Niveau, dazu Arabisch, Englisch und Französisch."
+            "story": "Sprache war mein erster Schlüssel: Integrationskurs, dann B1 – heute spreche ich Deutsch verhandlungssicher (C2), dazu Arabisch, Englisch und Französisch."
         },
         "school": {
             "title": "Campus",
             "era": "2016 – heute",
             "badge": "Wissensdurst",
             "badgeIcon": "🎓",
-            "story": "Abitur am Westfalen-Kolleg – parallel zu meinem Job bei adesso. Seit 2021 studiere ich Informatik an der FH Dortmund."
+            "story": "Abitur am Westfalen-Kolleg – parallel zu meinem Job bei adesso. Seit 2021 studiere ich Praktische Informatik an der FH Dortmund, Abschluss voraussichtlich 2027."
         },
         "career": {
             "title": "Business-Viertel",
-            "era": "2015 – heute",
+            "era": "2017 – heute",
             "badge": "Kundenfokus",
             "badgeIcon": "🤝",
-            "story": "Von der Kasse über Corporate Accounting bei adesso bis zum Kundenservice für Samsung & Telekom: Ich arbeite zuverlässig – auch wenn es hektisch wird."
+            "story": "Von adesso über den Kundenservice für Samsung und die Telekom bis zu Kundenterminen bei PSI: Ich höre zu, finde Lösungen und bleibe freundlich – auch wenn es hektisch wird."
         },
         "lab": {
             "title": "Tech-Lab",
             "era": "seit 11.2023",
             "badge": "Problemlöser",
             "badgeIcon": "🧠",
-            "story": "Bei PSI Software SE entwickle ich als Werkstudent Software in einem professionellen Team. Hier wird aus Theorie Praxis."
+            "story": "Seit November 2023 entwickle ich bei PSI ein Lagerverwaltungssystem für Logistik-Kunden weiter. Und mit KI-Agenten wie Claude Code baue ich eigene Software."
         },
         "projects": {
             "title": "Projekt-Baustelle",
-            "era": "laufend",
+            "era": "2026 – heute",
             "badge": "Macher",
             "badgeIcon": "🚀",
-            "story": "Ideen setze ich gern selbst um: vom eigenen Onlineshop über die Plattform-Idee RestIQ bis zu meinem eigenen Buch."
+            "story": "2026 habe ich mein eigenes Unternehmen gegründet: Software, entwickelt mit KI-Agenten – zum Beispiel eine Werkzeugverleih-Software für einen Kunden. Dazu kommen Projekte aus dem Studium."
         },
         "lake": {
-            "title": "See & Sport",
+            "title": "Freizeit & Ehrenamt",
             "era": "Freizeit",
-            "badge": "Ausdauer",
-            "badgeIcon": "🏊",
-            "story": "Ausgleich finde ich beim Schwimmen, im Fitnessstudio und auf dem SUP-Board. Ausdauer zahlt sich aus – im Sport wie im Job."
+            "badge": "Engagement",
+            "badgeIcon": "💛",
+            "story": "Ausgleich finde ich beim Schwimmen, im Fitnessstudio und auf dem SUP-Board. Und ich engagiere mich ehrenamtlich – zum Beispiel mit Musik für Kinder in der Kinderklinik."
         },
         "finale": {
-            "title": "Nächstes Kapitel",
-            "era": "Zukunft",
+            "title": "Ihr Unternehmen",
+            "era": "Nächstes Kapitel",
             "story": "Danke, dass Sie sich die Zeit für meinen Weg genommen haben. Das nächste Kapitel würde ich gern mit Ihrem Team schreiben."
         }
     },
     "hobbies": [
-        "🏊 Fitness & Schwimmen",
-        "🏄 Wassersportarten (SUP und Paddelboot)",
-        "🌍 Reisen, neue Kulturen & Essen",
-        "💻 Programmieren & Tech"
+        "🤖 Entwicklung von KI-Tools",
+        "🏋️ Fitness",
+        "🏊 Schwimmen",
+        "🏄 Stand-up-Paddling",
+        "🌍 Reisen"
+    ],
+    "volunteer": [
+        {
+            "date": "seit 2024",
+            "title": "Studentenverein KUMULI",
+            "detail": "Besuche in der Kinderklinik des Klinikums Dortmund mit musikalischen Aktivitäten für Kinder."
+        },
+        {
+            "date": "mehrjährig",
+            "title": "Weitere ehrenamtliche Tätigkeiten",
+            "detail": "Begegnungscafé für Geflüchtete und Einheimische: mehrjährige Verantwortung für Kasse und Finanzen. Deutschunterricht in Flüchtlingsunterkünften; Caritas „Warm durch die Nacht“; Seniorencafé im Bruder-Jordan-Haus."
+        }
+    ],
+    "extras": [
+        {
+            "name": "Führerschein",
+            "text": "Klasse B"
+        }
     ],
     "education": [
         {
             "date": "09.2021 - Aktuell",
-            "title": "Informatik",
-            "detail": "FH Dortmund"
+            "title": "Bachelor of Science Praktische Informatik",
+            "detail": "Fachhochschule Dortmund · voraussichtlicher Abschluss: 08/2027",
+            "bullets": [
+                "Schwerpunkte: Programmierung, Softwaretechnik, Algorithmen und Datenstrukturen, Datenbanken, Betriebssysteme, Rechnernetze, Informationssicherheit.",
+                "Projektarbeiten: IT-Service-Management mit BMC Helix ITSM (Incidents, Service und Change Requests); Scrum-basierte Website für Kinderaktivitäten der Stadt Herne; eigenständige Java-Verwaltungsanwendung."
+            ]
         },
         {
             "date": "08.2016 - 12.2019",
@@ -154,84 +193,146 @@ const resumeData = {
     ],
     "skills": [
         {
-            "name": "Programmiersprachen",
-            "level": "Java, C, C++, JS, CSS, SQL, HTML, R"
+            "name": "Programmierung",
+            "level": "Java, C, C++, JavaScript, R",
+            "note": "Java sehr gut · C, C++, JavaScript gut · R Grundkenntnisse"
         },
         {
-            "name": "Tools & Software",
-            "level": "MS Office, Linux, Figma, Jira, GitHub, Shopify"
+            "name": "Datenbanken",
+            "level": "SQL, Microsoft SQL Server, SQLite",
+            "note": "SQL, Microsoft SQL Server sehr gut · SQLite gut"
         },
         {
-            "name": "Fachkenntnisse",
-            "level": "IT-Support, Digital Design, Frontend-Design, ITSM"
+            "name": "Web",
+            "level": "HTML, CSS, React, Node.js, Express.js",
+            "note": "gut"
+        },
+        {
+            "name": "Tools",
+            "level": "Git, GitLab, GitHub, Jira, Claude Code, OpenAI Codex",
+            "note": "sehr gut"
+        },
+        {
+            "name": "Betriebssysteme",
+            "level": "Windows, Linux",
+            "note": "Windows sehr gut · Linux gut"
+        },
+        {
+            "name": "ITSM",
+            "level": "BMC Helix ITSM, ITIL",
+            "note": "BMC Helix ITSM gut · ITIL Grundkenntnisse"
         }
     ],
     "languages": [
+        {
+            "name": "Deutsch",
+            "level": "verhandlungssicher (C2)"
+        },
         {
             "name": "Arabisch",
             "level": "Muttersprache"
         },
         {
-            "name": "Deutsch",
-            "level": "C1 – in Wort und Schrift"
-        },
-        {
             "name": "Englisch",
-            "level": "B2 – in Wort und Schrift"
+            "level": "gute Kenntnisse (B2)"
         },
         {
             "name": "Französisch",
-            "level": "A2"
+            "level": "Grundkenntnisse (A2)"
         }
     ],
     "experience": [
         {
-            "date": "11.2023 - Aktuell",
-            "role": "Softwareentwickler (Werkstudent)",
-            "company": "PSI Software SE"
+            "date": "2026 - Aktuell",
+            "role": "Gründer – KI-gestützte Softwareentwicklung",
+            "company": "Eigenes Unternehmen, Dortmund (nebenberuflich)",
+            "bullets": [
+                "Konzeption und Entwicklung eigener Softwarelösungen mit KI-Agenten (Claude Code, OpenAI Codex) – von der Anforderung über Prompt-Design und Code-Generierung bis zu Test, Deployment und Support.",
+                "Entwicklung und schrittweise Optimierung von Prompts und Projektanweisungen, damit die KI-Agenten verlässliche und nachvollziehbare Ergebnisse liefern.",
+                "Kritische Prüfung KI-generierten Codes auf Korrektheit, Wartbarkeit und Sicherheit vor der Auslieferung.",
+                "Kundenprojekt Werkzeugverleih-Software: React, Node.js, Express.js, SQLite; inklusive Kundenabstimmung, Aufwandsschätzung und Angebot."
+            ]
         },
         {
-            "date": "01.2020 - 12.2021",
-            "role": "Call Center Agent",
-            "company": "Samsung, Telekom, Amevida Dortmund"
+            "date": "11.2023 - Aktuell",
+            "role": "Werkstudent Softwareentwicklung",
+            "company": "PSI SE, Dortmund",
+            "primary": true,
+            "bullets": [
+                "Wartung und kundenspezifische Weiterentwicklung des PSI Logistics Warehouse Management Systems (WMS) auf Basis von Jira-Tickets.",
+                "Umsetzung funktionaler Erweiterungen: Benutzeroberflächen, Geschäftslogik in Java und SQL-Abfragen auf Microsoft SQL Server.",
+                "Konfiguration und serverseitige Anbindung von Schnittstellen; automatisierte und manuelle Tests; Versionsverwaltung mit GitLab.",
+                "Teilnahme an Kundenterminen zur Aufnahme und Abstimmung fachlicher Anforderungen."
+            ]
+        },
+        {
+            "date": "01.2021 - 12.2021",
+            "role": "Kundenservice und Vertrieb – Telekom-Auftrag (Vollzeit)",
+            "company": "Amevida, Dortmund",
+            "bullets": [
+                "Beratung von Telekom-Kunden zu Tarifen, Verträgen und Produkten.",
+                "Bedarfsorientierter Verkauf von Tarifen und Zusatzoptionen (Up- und Cross-Selling)."
+            ]
+        },
+        {
+            "date": "01.2020 - 12.2020",
+            "role": "Kundenservice und technische Beratung – Samsung-Auftrag",
+            "company": "TELUS Digital, Dortmund",
+            "bullets": [
+                "Technische Beratung und Support zu Samsung-Geräten.",
+                "Strukturierte Fehleranalyse: Ermittlung der Fehlerursache und Erarbeitung passender Lösungen."
+            ]
         },
         {
             "date": "05.2017 - 04.2019",
-            "role": "Corporate Accounting & Tax",
-            "company": "Adesso SE, Dortmund"
-        },
-        {
-            "date": "03.2023 - 08.2023",
-            "role": "Gastronomie",
-            "company": "SKR Bochum"
-        },
-        {
-            "date": "06.2015 - 12.2015",
-            "role": "Kassierer",
-            "company": "McDonald's, Marburg-Biedenkopf"
+            "role": "Mitarbeit Reisekostenabrechnung",
+            "company": "adesso SE, Dortmund",
+            "bullets": [
+                "Operative Bearbeitung und Begleitung der Prozesse zur Reisekostenerstattung."
+            ]
         }
     ],
     "projects": [
         {
-            "title": "E-Commerce-Onlineshop",
-            "tech": "Online-Verkauf",
-            "detail": "Verkauf auf unterschiedlichen Plattformen (Amazon, eBay, Etsy, Shopify)."
+            "title": "Werkzeugverleih-Software",
+            "tag": "Kundenprojekt",
+            "tech": "React, Node.js, Express.js, SQLite",
+            "detail": "Kundenprojekt im eigenen Unternehmen – inklusive Kundenabstimmung, Aufwandsschätzung und Angebot."
         },
         {
-            "title": "RestIQ",
-            "tech": "Web-Plattform",
-            "detail": "Ein Mehrwert für Restaurants und Gäste (Coming soon!)."
+            "title": "Software mit KI-Agenten",
+            "tag": "Eigenes Unternehmen",
+            "tech": "Claude Code, OpenAI Codex",
+            "detail": "Eigene Softwarelösungen: von der Anforderung über Prompt-Design bis zu Test, Deployment und Support."
         },
         {
-            "title": "Ein eigenes Buch",
-            "tech": "Autor",
-            "detail": "Ich schreibe gerade ein Buch (Coming soon!)."
+            "title": "Kinderaktivitäten Herne",
+            "tag": "Studium",
+            "tech": "Scrum · Website",
+            "detail": "Hochschulprojekt: Scrum-basierte Website für Kinderaktivitäten der Stadt Herne."
         },
         {
-            "title": "Drive Pluz",
-            "tech": "Software & App",
-            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App (Nicht umgesetzt / offen)."
+            "title": "IT-Service-Management",
+            "tag": "Studium",
+            "tech": "BMC Helix ITSM",
+            "detail": "Hochschulprojekt: Incidents, Service und Change Requests mit BMC Helix ITSM."
+        },
+        {
+            "title": "Java-Verwaltungsanwendung",
+            "tag": "Studium",
+            "tech": "Java",
+            "detail": "Eigenständige Verwaltungsanwendung aus dem Studium."
         }
+    ],
+    "traits": [
+        "Teamgeist",
+        "Zuverlässigkeit",
+        "Lernbereitschaft",
+        "Kundenorientierung",
+        "Ausdauer",
+        "Verantwortung",
+        "Neugier",
+        "Eigeninitiative"
     ],
     "profileImage": "profilbild.jpg",
     "congratsImage": "jubelbild.jpg"

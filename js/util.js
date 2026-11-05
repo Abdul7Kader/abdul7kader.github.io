@@ -57,8 +57,8 @@
     // "11.2023 - Aktuell" -> { start: 202311, end: null, current: true }
     CV.parseRange = function (str) {
         const s = String(str || '');
-        const m = s.match(/(\d{1,2})\.(\d{4})/g) || [];
-        const toNum = (t) => { const [mm, yy] = t.split('.'); return +yy * 100 + +mm; };
+        const m = s.match(/(\d{1,2})[./](\d{4})|\b(\d{4})\b/g) || [];
+        const toNum = (t) => { const q = t.split(/[./]/); return q.length === 2 ? +q[1] * 100 + +q[0] : +q[0] * 100 + 1; };
         return {
             start: m[0] ? toNum(m[0]) : null,
             end: m[1] ? toNum(m[1]) : null,
@@ -108,7 +108,9 @@
         'java': '☕', 'c': '🔧', 'c++': '⚙️', 'js': '🟨', 'javascript': '🟨', 'css': '🎨', 'sql': '🗄️',
         'html': '🌐', 'r': '📊', 'ms office': '📎', 'linux': '🐧', 'figma': '✏️', 'jira': '📋',
         'github': '🐙', 'git': '🌿', 'shopify': '🛍️', 'it-support': '🛟', 'digital design': '🖌️',
-        'frontend-design': '🖥️', 'itsm': '🧾', 'python': '🐍', 'typescript': '🔷', 'react': '⚛️', 'docker': '🐳'
+        'frontend-design': '🖥️', 'itsm': '🧾', 'python': '🐍', 'typescript': '🔷', 'react': '⚛️', 'docker': '🐳',
+        'node.js': '🟩', 'express.js': '🚂', 'sqlite': '🪶', 'microsoft sql server': '🗄️', 'gitlab': '🦊', 'windows': '🪟',
+        'claude code': '🤖', 'openai codex': '🧠', 'bmc helix itsm': '🧾', 'itil': '📘'
     };
     CV.skillIcon = (name) => SKILL_ICONS[String(name).toLowerCase()] || '✨';
 
@@ -143,7 +145,8 @@
             if (a.range.current !== b.range.current) return a.range.current ? -1 : 1;
             return (b.range.start || 0) - (a.range.start || 0);
         });
-        d.currentRole = d.experienceDesc.find(e => e.range.current) || d.experienceDesc[0] || null;
+        d.currentRole = d.experienceDesc.find(e => e.primary) || d.experienceDesc.find(e => e.range.current) || d.experienceDesc[0] || null;
+        if (d.currentRole) d.currentRole.companyShort = String(d.currentRole.company || '').split(',')[0].trim();
 
         const edu = (data.education || []).map(e => Object.assign({}, e, { range: CV.parseRange(e.date) }));
         const isLang = (e) => /sprach|integration/i.test(e.title + ' ' + e.detail);

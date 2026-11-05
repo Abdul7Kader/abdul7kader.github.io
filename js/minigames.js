@@ -178,7 +178,8 @@
         }
         function finish() {
             g.state = 'over'; g.playing = false;
-            const stars = spec.stars.filter(th => g.score >= th).length;
+            const th = typeof spec.stars === 'function' ? spec.stars(g) : spec.stars;
+            const stars = th.filter(t => g.score >= t).length;
             const prev = best();
             const isBest = g.score > prev && g.score > 0;
             if (isBest) CV.store.set('best:' + id, g.score);
@@ -827,10 +828,7 @@
         name: 'Hotline-Held', icon: '📞', color: '#2ec4b6', time: 15, stars: [8, 20, 36],
         goal: 'Klicken Sie auf die klingelnden Telefone, bevor die Kunden auflegen!',
         controls: ['click', 'tap', 'keys'],
-        result: () => {
-            const cc = (D().experienceDesc || []).find(e => /call|kunden|service/i.test(e.role + e.company));
-            return `Kunden glücklich gemacht! ${cc ? `Bei ${cc.company.split(',').slice(0, 2).join(' &')} ` : 'Im Kundenservice '}habe ich gelernt, auch unter Druck freundlich und lösungsorientiert zu bleiben.`;
-        },
+        result: () => 'Kunden glücklich gemacht! Im Kundenservice für die Telekom und für Samsung habe ich gelernt, auch unter Druck freundlich und lösungsorientiert zu bleiben.',
         make(g) {
             const desks = [];
             for (let r = 0; r < 2; r++) for (let col = 0; col < 3; col++) desks.push({ i: r * 3 + col, x: 105 + col * 195, y: 190 + r * 150, state: 'idle', t: 0, dur: 2, kind: 'normal', anim: 0 });
@@ -1037,34 +1035,45 @@
     });
 
     // ================================================================== 6) Projekte: Projekt-Stapler
+    // Jeder Block ist ein Projekt, ein Skill oder eine Eigenschaft. Gestapelt wird, bis alle aufgetaucht sind.
+    const KIND = { p: ['Projekt', 28], s: ['Skill', 212], e: ['Eigenschaft', 150] };
+    function stackLabels() {
+        const d = data(), x = D();
+        const proj = (d.projects || []).map(p => ['p', p.title]);
+        const pref = ['Java', 'SQL', 'JavaScript', 'React', 'Node.js', 'Claude Code', 'Git', 'Jira'];
+        const toks = x.skillTokens || [];
+        const skills = pref.filter(t => toks.includes(t)).concat(toks.filter(t => !pref.includes(t))).slice(0, 7).map(t => ['s', t]);
+        const traits = (d.traits || []).slice(0, 6).map(t => ['e', t]);
+        const out = [], n = Math.max(proj.length, skills.length, traits.length);
+        for (let i = 0; i < n; i++) [proj[i], skills[i], traits[i]].forEach(v => v && out.push(v));
+        return out;
+    }
     M.projects = arcade('projects', {
-        name: 'Projekt-Stapler', icon: '🏗️', color: '#f59e0b', time: 0, stars: [4, 10, 18],
-        goal: 'Tippen, um den Block abzusetzen. Je genauer Sie stapeln, desto höher wird der Turm!',
+        name: 'Projekt-Stapler', icon: '🏗️', color: '#f59e0b', time: 0,
+        stars: () => { const n = stackLabels().length; return [Math.round(n * 0.8), Math.round(n * 1.25), Math.round(n * 1.8)]; },
+        goal: 'Tippen, um den Block abzusetzen. Stapeln Sie alle meine Projekte, Skills und Eigenschaften!',
         controls: ['click', 'space', 'tap'],
-        hud: (g) => `🏗️ ${g.level || 0} / 10   ${'❤'.repeat(3 - (g.fails || 0))}${'♡'.repeat(g.fails || 0)}`,
-        result: (g) => `${g.level || 0} ${g.level === 1 ? 'Etage' : 'Etagen'}! Vom Onlineshop über RestIQ bis zum eigenen Buch – ich setze Ideen gern selbst um, Stein für Stein.`,
+        hud: (g) => `🏗️ ${g.level || 0} / ${g.total || 0}`,
+        result: (g) => `${g.level || 0} Bausteine gestapelt! Projekte, Skills und Eigenschaften – so baue ich Stein für Stein an meinem Weg.`,
         make(g) {
-            const proj = (data().projects || []).map(p => p.title);
-            const soft = CV.shuffle((data().strengths || []).map(s2 => s2.title).concat(['Teamgeist', 'Zuverlässigkeit', 'Lernbereitschaft', 'Neugier', 'Ausdauer', 'Organisation', 'Kreativität', 'Verantwortung']));
-            const labels = [];
-            proj.forEach((p, i) => { labels.push(p); if (soft[i]) labels.push(soft[i]); });
-            soft.slice(proj.length).forEach(t => labels.push(t));
-            const BH = 30, DEP = 10, MAX = 10;
-            const base = { x: W / 2 - 115, w: 230, label: 'FH Dortmund · Informatik', hue: 210, land: 0 };
+            const labels = stackLabels();
+            const BH = 30, DEP = 10, MINW = 54;
+            const base = { x: W / 2 - 120, w: 240, label: 'FH Dortmund · Praktische Informatik', kind: 'base', hue: 222, land: 0 };
             const stack = [base];
-            let cur = null, dir = 1, speed = 180, cam = 0, falling = [], perfectRun = 0, over = false, endT = 0;
-            g.level = 0; g.fails = 0;
+            let cur = null, dir = 1, speed = 170, cam = 0, falling = [], perfectRun = 0, over = false, endT = 0, idx = 0;
+            g.level = 0; g.total = labels.length;
             const yOf = (i) => H - 56 - i * BH;
             function newBlock() {
                 const top = stack[stack.length - 1], i = stack.length;
+                const [kind, label] = labels[idx];
                 dir = i % 2 ? 1 : -1;
-                cur = { x: dir > 0 ? 40 - top.w * 0.5 : W - 40 - top.w * 0.5, w: top.w, label: labels[(i - 1) % Math.max(1, labels.length)] || 'Idee', hue: (210 + i * 24) % 360, land: 0 };
-                speed = Math.min(430, 180 + i * 17);
+                cur = { x: dir > 0 ? 30 - top.w * 0.5 : W - 30 - top.w * 0.5, w: top.w, label, kind, hue: KIND[kind][1] + (i % 3) * 8, land: 0 };
+                speed = Math.min(340, 170 + i * 9);
             }
             function drop() {
                 if (!cur || over) return;
                 const top = stack[stack.length - 1], dx = cur.x - top.x, i = stack.length, cy = yOf(i) + cam;
-                if (Math.abs(dx) <= 6) {
+                if (Math.abs(dx) <= 7) {
                     cur.x = top.x; perfectRun++;
                     if (perfectRun >= 3) { const grow = Math.min(14, 250 - cur.w); if (grow > 0) { cur.w += grow; cur.x -= grow / 2; } }
                     g.hit(2, cur.x + cur.w / 2, cy - 30, perfectRun >= 3 ? 'Perfekt! Wächst!' : 'Perfekt!', '#ffd166');
@@ -1073,43 +1082,54 @@
                 } else {
                     const overlap = top.w - Math.abs(dx);
                     if (overlap <= 0) {
+                        // Daneben: Block fällt, derselbe Baustein kommt noch einmal
                         falling.push(Object.assign({}, cur, { y: yOf(i), vy: 0, vx: dir * 80, rot: 0, vr: dir * 2 }));
-                        g.fails++; perfectRun = 0;
-                        g.miss(W / 2, cy - 40, g.fails >= 3 ? 'Daneben!' : `Daneben! Noch ${3 - g.fails}×`);
-                        cur = null;
-                        if (g.fails >= 3) { over = true; endT = 1.2; } else newBlock();
+                        perfectRun = 0;
+                        g.miss(W / 2, cy - 40, 'Daneben – nochmal!');
+                        cur = null; newBlock();
                         return;
                     }
                     const piece = dx > 0 ? { x: top.x + top.w, w: dx } : { x: cur.x, w: -dx };
                     falling.push(Object.assign({}, cur, piece, { y: yOf(i), vy: -60, vx: Math.sign(dx) * 90, rot: 0, vr: Math.sign(dx) * 3 }));
                     if (dx > 0) cur.w = overlap; else { cur.x = top.x; cur.w = overlap; }
+                    if (cur.w < MINW) { const c0 = cur.x + cur.w / 2; cur.w = MINW; cur.x = c0 - MINW / 2; }
                     perfectRun = 0; g.combo = 0;
                     g.add(1, cur.x + cur.w / 2, cy - 26);
                     g.sfx('thud');
                 }
                 cur.land = 1;
-                stack.push(cur); g.level = stack.length - 1;
+                stack.push(cur); g.level = stack.length - 1; idx++;
                 g.shake(3);
                 g.burst(cur.x + cur.w / 2, yOf(i) + cam + BH, 10, ['#fff', '#e5e7eb'], 140, { grav: 200, life: 0.4, size: 4 });
                 cur = null;
-                if (g.level >= MAX) { g.add(8, W / 2, H / 2 - 40, 'Wolkenkratzer!', '#ffd166'); g.sfx('fanfare'); g.flash('#fff', 0.4); over = true; endT = 1.1; }
+                if (idx >= labels.length) { g.add(10, W / 2, H / 2 - 40, 'Alles gestapelt!', '#ffd166'); g.sfx('fanfare'); g.flash('#fff', 0.4); over = true; endT = 1.3; }
                 else newBlock();
             }
             function block(c, b, y) {
-                const h = b.hue;
-                c.fillStyle = `hsl(${h},70%,72%)`;
+                const h = b.hue, sat = b.kind === 'base' ? 30 : 68;
+                c.fillStyle = `hsl(${h},${sat}%,74%)`;
                 c.beginPath(); c.moveTo(b.x, y); c.lineTo(b.x + b.w, y); c.lineTo(b.x + b.w + DEP, y - DEP); c.lineTo(b.x + DEP, y - DEP); c.closePath(); c.fill();
-                c.fillStyle = `hsl(${h},60%,42%)`;
+                c.fillStyle = `hsl(${h},${sat - 8}%,40%)`;
                 c.beginPath(); c.moveTo(b.x + b.w, y); c.lineTo(b.x + b.w + DEP, y - DEP); c.lineTo(b.x + b.w + DEP, y - DEP + BH); c.lineTo(b.x + b.w, y + BH); c.closePath(); c.fill();
-                c.fillStyle = `hsl(${h},68%,56%)`; c.fillRect(b.x, y, b.w, BH);
-                c.fillStyle = 'rgba(255,255,255,0.25)';
-                for (let x = b.x + 8; x < b.x + b.w - 10; x += 18) c.fillRect(x, y + 8, 8, 12);
-                if (b.w > 40) {
-                    c.save(); c.beginPath(); c.rect(b.x + 4, y, b.w - 8, BH); c.clip();
-                    c.fillStyle = `hsla(${h},70%,30%,0.85)`; c.font = `800 13px ${FONT}`;
-                    const tw = c.measureText(b.label).width + 16;
-                    rr(c, b.x + b.w / 2 - tw / 2, y + 6, tw, 18, 9); c.fill();
-                    txt(c, b.label, b.x + b.w / 2, y + 15.5, 13, '#fff');
+                c.fillStyle = `hsl(${h},${sat}%,55%)`; c.fillRect(b.x, y, b.w, BH);
+                if (b.w > 34) {
+                    c.save(); c.beginPath(); c.rect(b.x + 3, y, b.w - 6, BH); c.clip();
+                    let tag = KIND[b.kind] ? KIND[b.kind][0].toUpperCase() : '';
+                    const avail = b.w - 14;
+                    let fs = 13, label = b.label, tw2 = 0, lw = 0;
+                    const measure = () => {
+                        c.font = `800 8.5px ${FONT}`; tw2 = tag ? c.measureText(tag).width + 10 : 0;
+                        c.font = `800 ${fs}px ${FONT}`; lw = c.measureText(label).width;
+                        return lw + (tag ? tw2 + 6 : 0) + 16;
+                    };
+                    if (measure() > avail) tag = '';
+                    while (measure() > avail && fs > 9) fs -= 0.5;
+                    while (measure() > avail && label.length > 3) label = label.slice(0, -2) + '…';
+                    const total = measure();
+                    const x0 = b.x + b.w / 2 - total / 2;
+                    c.fillStyle = `hsla(${h},70%,24%,0.82)`; rr(c, x0, y + 6, total, 18, 9); c.fill();
+                    if (tag) { c.fillStyle = 'rgba(255,255,255,0.22)'; rr(c, x0 + 4, y + 9, tw2, 12, 6); c.fill(); txt(c, tag, x0 + 4 + tw2 / 2, y + 15.5, 8.5, '#fff'); }
+                    txt(c, label, x0 + (tag ? tw2 + 10 : 8) + lw / 2, y + 15.5, fs, '#fff');
                     c.restore();
                 }
             }
@@ -1130,7 +1150,7 @@
                     if (endT > 0) { endT -= dt; if (endT <= 0) g.end(); }
                 },
                 draw(c) {
-                    const hgt = Math.min(1, cam / 400);
+                    const hgt = Math.min(1, cam / 500);
                     const sky = c.createLinearGradient(0, 0, 0, H);
                     sky.addColorStop(0, `hsl(${215 + hgt * 25},${70 - hgt * 20}%,${72 - hgt * 45}%)`);
                     sky.addColorStop(1, `hsl(${30 + hgt * 200},${80 - hgt * 40}%,${88 - hgt * 40}%)`);
@@ -1153,12 +1173,18 @@
                     if (cur) {
                         const y = yOf(stack.length) + cam;
                         const top = stack[stack.length - 1];
-                        c.strokeStyle = 'rgba(255,255,255,0.5)'; c.setLineDash([4, 6]); c.lineWidth = 1.5;
+                        c.strokeStyle = 'rgba(255,255,255,0.55)'; c.setLineDash([4, 6]); c.lineWidth = 1.5;
                         c.beginPath(); c.moveTo(top.x, y + BH); c.lineTo(top.x, y - 30); c.moveTo(top.x + top.w, y + BH); c.lineTo(top.x + top.w, y - 30); c.stroke(); c.setLineDash([]);
                         block(c, cur, y);
                         c.strokeStyle = '#475569'; c.lineWidth = 2; c.beginPath(); c.moveTo(cur.x + cur.w / 2, y); c.lineTo(cur.x + cur.w / 2, y - 60); c.stroke();
                         c.fillStyle = '#facc15'; c.fillRect(cur.x + cur.w / 2 - 8, y - 66, 16, 8);
                     }
+                    // Legende
+                    let lx = 16;
+                    Object.values(KIND).forEach(([name, hue]) => {
+                        c.fillStyle = `hsl(${hue},68%,55%)`; rr(c, lx, H - 22, 10, 10, 3); c.fill();
+                        txt(c, name, lx + 16, H - 16.5, 11, '#fff', 'left', 700); lx += 26 + name.length * 6.4;
+                    });
                     if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Klick / Leertaste = absetzen', W / 2, 92, 17, '#fff', 'center', 800, 5); c.globalAlpha = 1; }
                 },
                 down() { drop(); },

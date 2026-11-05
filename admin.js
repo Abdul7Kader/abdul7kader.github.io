@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createStringField('title', 'Berufsbezeichnung / Untertitel');
         createStringField('location', 'Wohnort');
         createStringField('tagline', 'Kurzbeschreibung im Startbildschirm');
+        createStringField('summary', 'Kurzprofil (oben im Lebenslauf)');
         createStringField('availability', 'Verfügbarkeit (grünes Label im Lebenslauf)');
         createStringField('intro', 'Begrüßungstext (Fallback)');
         createStringField('profileImage', 'Profilbild (Datei oder URL)');
@@ -67,6 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addSectionTitle('Stärken (Kompakt-Lebenslauf)');
         createJSONField('strengths', 'Stärken (JSON: icon, title, text)');
+
+        addSectionTitle('KI-Kompetenzen (Tech-Lab & Lebenslauf)');
+        createJSONField('aiSkills', 'KI-Kompetenzen (JSON: name, text)');
+
+        addSectionTitle('Eigenschaften (Blöcke im Projekt-Stapler)');
+        createJSONField('traits', 'Eigenschaften (JSON-Liste)');
+
+        addSectionTitle('Ehrenamt & weitere Angaben');
+        createJSONField('volunteer', 'Ehrenamt (JSON: date, title, detail)');
+        createJSONField('extras', 'Weitere Angaben (JSON: name, text)');
 
         addSectionTitle('Stationen der Welt (Titel, Zeitraum, Abzeichen, Geschichte)');
         createJSONField('stations', 'Stationen (JSON) – arrival, language, school, career, lab, projects, lake, finale');
