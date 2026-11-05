@@ -477,7 +477,7 @@ kbd {
 /* ---------------------------------------------------------------- Finale */
 .finale { text-align: center; padding-bottom: 22px; }
 .tshirt { position: relative; width: min(100%, 440px); margin: 4px auto 14px; }
-.tshirt-cnv { display: block; width: 100%; height: auto; aspect-ratio: 690 / 662; border-radius: 26px; background: #dfe3e8; box-shadow: 0 0 0 5px #fff, 0 0 0 8px var(--gold), 0 22px 50px -12px rgba(245, 158, 11, 0.55); }
+.tshirt-cnv { display: block; width: 100%; height: auto; aspect-ratio: 838 / 944; border-radius: 26px; background: #dfe3e8; box-shadow: 0 0 0 5px #fff, 0 0 0 8px var(--gold), 0 22px 50px -12px rgba(245, 158, 11, 0.55); }
 .tshirt .trophy { position: absolute; right: -10px; bottom: -10px; font-size: 3rem; animation: spinpop 0.9s var(--spring) both; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25)); }
 .finale-title { font-family: var(--display); font-weight: 800; font-size: 1.8rem; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 6px; }
 .finale-text { color: var(--muted); max-width: 540px; margin: 0 auto 18px; line-height: 1.6; }

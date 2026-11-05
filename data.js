@@ -335,7 +335,8 @@ const resumeData = {
         "Eigeninitiative"
     ],
     "profileImage": "profilbild.jpg",
-    "congratsImage": "jubelbild.jpg"
+    "congratsImage": "jubelbild.jpg",
+    "finaleImage": "jubelbild-nah.jpg"
 };
 
 window.resumeData = resumeData;

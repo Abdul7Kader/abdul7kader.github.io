@@ -362,58 +362,75 @@
     };
 
     // ------------------------------------------------------------------ Finale: „Ihr Unternehmen“
-    // Der eingegebene Firmenname wird wie ein Druck auf das T-Shirt im Jubelbild gelegt.
-    const SHIRT = { cx: 512, cy: 432, maxW: 232, logo: { x0: 508, x1: 566, y0: 410, y1: 434 }, crop: { x: 170, y: 20, w: 690, h: 662 } };
-    function shirtPrint(cnv, img, name) {
-        const c = cnv.getContext('2d');
-        const { crop } = SHIRT;
-        cnv.width = crop.w; cnv.height = crop.h;
-        c.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
-        const ox = -crop.x, oy = -crop.y;
-        name = String(name || '').trim();
-        if (!name) return;
-        // Vorhandenes Logo auf der Brust ausblenden (zeilenweise zwischen linkem und rechtem Rand interpolieren)
-        try {
-            const L = SHIRT.logo, w = L.x1 - L.x0, h = L.y1 - L.y0;
-            const id = c.getImageData(L.x0 + ox, L.y0 + oy, w, h), d = id.data;
-            for (let y = 0; y < h; y++) {
-                const li = (y * w) * 4, ri = (y * w + w - 1) * 4;
-                for (let x = 1; x < w - 1; x++) {
-                    const t = x / (w - 1), i = (y * w + x) * 4, n = (Math.random() - 0.5) * 4;
-                    for (let k = 0; k < 3; k++) d[i + k] = d[li + k] * (1 - t) + d[ri + k] * t + n;
-                }
+    // Namensaufkleber auf dem T-Shirt (jubelbild-nah.jpg, 838 × 944). Der eingegebene Firmenname
+    // wird wie mit einem Marker auf den Aufkleber geschrieben; Falten und Licht des Shirts liegen darüber.
+    const STICKER = { cx: 440, cy: 642, w: 304, h: 150, rot: -0.04, band: 0.3, r: 12 };
+    const MARKER = '"Permanent Marker", "Segoe Print", "Comic Sans MS", cursive';
+    function stickerShape(c, S) { c.beginPath(); if (c.roundRect) c.roundRect(-S.w / 2, -S.h / 2, S.w, S.h, S.r); else c.rect(-S.w / 2, -S.h / 2, S.w, S.h); }
+    function stickerText(t, name, S) {
+        const maxW = S.w - 34, areaTop = -S.h / 2 + S.h * S.band, areaH = S.h * (1 - S.band);
+        let size = 46, lines = [name];
+        const fits = () => lines.every(l => { t.font = `${size}px ${MARKER}`; return t.measureText(l).width <= maxW; }) && lines.length * size * 1.02 <= areaH - 10;
+        while (!fits() && size > 26) size -= 1;
+        if (!fits() && name.includes(' ')) {           // lange Namen auf zwei Zeilen verteilen
+            const words = name.split(/\s+/); let best = null;
+            for (let i = 1; i < words.length; i++) {
+                const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');
+                const d = Math.abs(a.length - b.length);
+                if (!best || d < best.d) best = { d, l: [a, b] };
             }
-            c.putImageData(id, L.x0 + ox, L.y0 + oy);
-        } catch (e) { /* lokal per file:// nicht möglich – dann bleibt das Logo */ }
-        // Text in eigene Ebene setzen
-        const up = name.toUpperCase();
-        const layer = document.createElement('canvas');
-        layer.width = 420; layer.height = 120;
-        const t = layer.getContext('2d');
-        let size = 46;
-        const font = (sz) => `800 ${sz}px "Bricolage Grotesque", Outfit, system-ui, sans-serif`;
-        t.font = font(size);
-        while (size > 13 && t.measureText(up).width > SHIRT.maxW) { size -= 1; t.font = font(size); }
-        t.textAlign = 'center'; t.textBaseline = 'middle';
-        t.fillStyle = '#1b2a4a';
-        t.fillText(up, layer.width / 2, layer.height / 2 - 6);
-        t.font = `700 ${Math.max(8, size * 0.26)}px Outfit, system-ui, sans-serif`;
-        t.fillStyle = '#ff6a3d';
-        t.fillText('★  NÄCHSTES KAPITEL  ★', layer.width / 2, layer.height / 2 + size * 0.62);
-        // Auf die Brust wölben (Zylinder-Abbildung, Streifen für Streifen) und multiplizieren,
-        // damit Falten und Schatten des Stoffes durch den Druck sichtbar bleiben.
-        c.save();
-        c.globalCompositeOperation = 'multiply';
-        c.globalAlpha = 0.9;
-        c.filter = 'blur(0.35px)';
-        const cx = SHIRT.cx + ox, cy = SHIRT.cy + oy, half = layer.width / 2;
-        for (let x = 0; x < layer.width; x += 2) {
-            const u = (x - half) / half;                 // -1 … 1
-            const dx = Math.sin(u * 0.95) / Math.sin(0.95) * half * 0.98;
-            const sx2 = Math.cos(u * 0.95);              // Stauchung zum Rand hin
-            const dy = u * u * 9 - u * 3;                // leichte Rundung, Brust minimal nach rechts gedreht
-            c.drawImage(layer, x, 0, 2, layer.height, cx + dx - 1, cy - layer.height / 2 + dy, 2 * Math.max(0.55, sx2) + 0.6, layer.height);
+            lines = best.l; size = 40;
         }
+        while (!fits() && size > 14) size -= 1;
+        t.fillStyle = '#16213f'; t.textAlign = 'center'; t.textBaseline = 'middle';
+        const lh = size * 1.02, y0 = areaTop + areaH / 2 - (lines.length - 1) * lh / 2 + size * 0.06;
+        lines.forEach((l, i) => {
+            t.font = `${size}px ${MARKER}`;
+            t.save(); t.translate(0, y0 + i * lh); t.rotate(-0.025 + i * 0.015);
+            t.fillText(l, 0, 0); t.restore();
+        });
+    }
+    function shirtPrint(cnv, img, name) {
+        const S = STICKER;
+        const W2 = img.naturalWidth, H2 = img.naturalHeight;
+        cnv.width = W2; cnv.height = H2;
+        const c = cnv.getContext('2d');
+        c.drawImage(img, 0, 0);
+        name = String(name || '').trim();
+        // Aufkleber-Ebene in Bildgröße
+        const L = document.createElement('canvas'); L.width = W2; L.height = H2;
+        const t = L.getContext('2d');
+        t.save(); t.translate(S.cx, S.cy); t.rotate(S.rot);
+        stickerShape(t, S); t.fillStyle = '#fbfaf6'; t.fill();
+        t.save(); stickerShape(t, S); t.clip();
+        t.fillStyle = '#e8553a'; t.fillRect(-S.w / 2, -S.h / 2, S.w, S.h * S.band);
+        t.fillStyle = '#fff'; t.textAlign = 'center'; t.textBaseline = 'middle';
+        t.font = `800 ${Math.round(S.h * 0.11)}px Outfit, system-ui, sans-serif`;
+        if (t.letterSpacing !== undefined) t.letterSpacing = '2px';
+        t.fillText('MEIN NÄCHSTES KAPITEL', 0, -S.h / 2 + S.h * S.band / 2 + 1);
+        if (t.letterSpacing !== undefined) t.letterSpacing = '0px';
+        t.restore();
+        if (name) stickerText(t, name, S);
+        t.restore();
+        // Stoff-Schattierung: das Foto multiplizieren (aufgehellt), danach wieder auf die Aufkleberform zuschneiden
+        t.save();
+        t.globalCompositeOperation = 'multiply';
+        t.filter = 'grayscale(1) brightness(1.13) contrast(1.35)';
+        t.globalAlpha = 0.75;
+        t.drawImage(img, 0, 0);
+        t.restore();
+        t.save(); t.globalCompositeOperation = 'destination-in';
+        t.translate(S.cx, S.cy); t.rotate(S.rot); stickerShape(t, S); t.fillStyle = '#000'; t.fill();
+        t.restore();
+        // dezenter Schatten und Kante, dann aufs Foto
+        c.save();
+        c.translate(S.cx, S.cy + 2); c.rotate(S.rot);
+        c.filter = 'blur(3px)'; c.globalAlpha = 0.18; c.fillStyle = '#000';
+        stickerShape(c, S); c.fill();
+        c.restore();
+        c.drawImage(L, 0, 0);
+        c.save(); c.translate(S.cx, S.cy); c.rotate(S.rot);
+        c.strokeStyle = 'rgba(0,0,0,0.08)'; c.lineWidth = 1.2; stickerShape(c, S); c.stroke();
         c.restore();
     }
 
@@ -434,8 +451,8 @@
                 </div>
                 <label class="firm">
                     <span>Ihr Unternehmen</span>
-                    <input id="firm-input" type="text" maxlength="28" autocomplete="organization" placeholder="Firmenname eingeben …" value="${esc(G.firm)}">
-                    <small>Tippen Sie Ihren Firmennamen – er erscheint direkt auf meinem T-Shirt.</small>
+                    <input id="firm-input" type="text" maxlength="28" autocomplete="organization" placeholder="z. B. Deutsche Bahn" value="${esc(G.firm)}">
+                    <small>Tippen Sie Ihren Firmennamen – er erscheint auf dem Aufkleber auf meinem T-Shirt.</small>
                 </label>
                 <h3 class="finale-title">${done === n ? 'Sie haben meinen ganzen Weg erkundet!' : `${done} von ${n} Kapiteln erkundet`}</h3>
                 <p class="finale-text">${esc((st.finale && st.finale.story) || '')}</p>
@@ -463,8 +480,11 @@
         const img = new Image();
         let pending = 0;
         const draw = () => { if (img.complete && img.naturalWidth) shirtPrint(cnv, img, G.firm); };
-        img.onload = () => { draw(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw); };
-        img.src = d.congratsImage || d.profileImage;
+        img.onload = () => {
+            draw();
+            if (document.fonts && document.fonts.load) Promise.all([document.fonts.load(`40px ${MARKER}`), document.fonts.load('800 16px Outfit')]).then(draw, draw);
+        };
+        img.src = d.finaleImage || d.congratsImage || d.profileImage;
         const inp = body.querySelector('#firm-input');
         inp.addEventListener('input', () => {
             G.setFirm(inp.value);
