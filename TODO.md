@@ -56,6 +56,15 @@ Legende: ✅ umgesetzt · ⏳ wartet auf Abdul · ☐ offen
   - Optional: Den Alias, den FormSubmit danach anzeigt, im Admin unter „Kontaktformular“ eintragen. Dann steht die Adresse gar nicht mehr im Code.
 - ✅ **#15 Farbiges PDF.** „Als PDF speichern“ erzeugt die Datei selbst, farbig und im A4-Format. Die Umbrüche liegen zwischen den Einträgen, der Text ist auswählbar und die Links sind klickbar. Die Bibliotheken liegen lokal in `vendor/`.
 
+## Runde 3 (geplant für 11.11.2026, 02:00 Uhr · Plan: `docs/REFACTORING-PLAN.md`)
+
+- ☐ **Code-Review und Neustrukturierung:** ES-Module, klare Ordner (`config/`, `core/`, `world/`, `games/`, `ui/`, `css/`), benannte Konstanten statt Zahlen, eine Aufgabe pro Datei.
+- ☐ **Performance:** Zielwerte sind Welt im Stand ≤ 15 % CPU bei 60 fps (heute 100 % bei 29 fps), Welt beim Laufen ≤ 35 %, Dialog offen ≤ 5 %. Dafür nur noch eine Render-Schleife, ein Sprite-Cache, keine teuren Effekte pro Bild und eine begrenzte Auflösung.
+- ☐ **Englisch überall:** Alle Oberflächentexte, alle Minispiele, Lebenslauf, PDF, Formular, Karte und Admin kommen auf Englisch dazu. Umschalter DE/EN, die Sprache wird gemerkt, `?lang=en` funktioniert. Die englischen Inhalte übersetze ich; Abdul prüft sie.
+- ☐ **Dark Mode überall:** Umschalter System/Hell/Dunkel ohne Aufblitzen beim Laden. Oberfläche, Spielwelt bei Nacht, Minispiele, Projekt-Viertel, Weltkarte, GitHub-Kacheln, Admin und Unterseiten bekommen dunkle Farben. PDF und Druck bleiben hell. Die Kontraste prüfe ich in beiden Modi (WCAG AA).
+- ☐ **Lücken aus Runde 2:** GitHub-Werkstatt mit Leuchtwand in der Spielwelt, Projekt-Viertel begehbar und zoombar, Weltkarte mit Weltansicht, Datenschutz-Seite, Linkseite `/links/`, letzte Emoji-Reste, vollständige Prüfung auf Doppelungen, PDF-Test in Firefox und Safari.
+- ☐ **Qualität:** Linter, automatische Tests (Chromium/Firefox/WebKit, DE/EN, Hell/Dunkel), CI-Workflow, README.
+
 ## Wartet auf Abdul
 
 - ⏳ **#18 Linksammlung.** Dafür brauche ich die Social-Media-Kanäle der KI-Videos (Plattform + URL) und später die Projekt-Links. Die Projekt-Kacheln zeigen bis dahin „Link folgt“. Sobald ein `link` in `data.js` steht, erscheint dort „Ansehen ↗“.

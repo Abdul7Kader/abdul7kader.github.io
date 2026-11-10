@@ -2,6 +2,7 @@
 
 Start: **11.11.2026, 02:00 Uhr** · Branch: `abdul7kader/refactoring` (enthält den Stand von Runde 2)
 Ziel: Jede Zeile lesen, neu strukturieren und optimieren, ohne dass für Besucher etwas kaputtgeht. Am Ende soll das Spiel auf normalen Rechnern flüssig und sparsam laufen.
+Neu dazugekommen (Wunsch vom 10.11., 22 Uhr): **die ganze Seite auch auf Englisch** und ein **Dark Mode, der überall richtig funktioniert**.
 
 ---
 
@@ -67,9 +68,11 @@ assets/
   img/            profilbild.jpg, jubelbild.jpg, jubelbild-nah.jpg
   data/           worldmap-europe.js, worldmap-world.js (Kartendaten)
 data/
-  resume.js       Lebenslauf-Inhalte (bisher data.js; Admin erzeugt diese Datei)
+  resume.de.js    Lebenslauf-Inhalte Deutsch (bisher data.js; Admin erzeugt diese Datei)
+  resume.en.js    dieselben Inhalte auf Englisch (gleiche Struktur, im Admin pflegbar)
 css/
-  tokens.css      Farben, Abstände, Radien, Schatten, Schriften (CSS-Variablen)
+  tokens.css      Farben, Abstände, Radien, Schatten, Schriften (CSS-Variablen) –
+                  je ein Satz für Hell und Dunkel ([data-theme="dark"] + prefers-color-scheme)
   base.css        Reset, Typografie, Buttons, Formulare, Icons
   hud.css · overlays.css · station.css · cv.css · games.css
   worldmap.css · contact.css · github.css · print.css
@@ -77,11 +80,15 @@ js/
   main.js                 Einstieg: lädt Daten, startet App
   config/
     layout.js             Welt-Koordinaten: Stationen, Wege, See, Hügel, Spawn …
-    theme.js              Farbpaletten (Stationen, Haut-/Kleidungsfarben, Spiele)
+    theme.js              Farbpaletten für Canvas (Welt, Spiele, Karten) – Tag- und Nacht-Variante
     timing.js             Zeiten (Toasts, Animationen, Leerlauf-Hilfe …)
     performance.js        Bildraten-Ziele, max. Auflösung, Partikel-Limits
+  i18n/
+    i18n.js               t('key'), Sprache wählen/merken, Datums- und Zahlenformate (Intl)
+    de.js · en.js         alle Oberflächentexte (Buttons, Spiele, Meldungen, Formular, PDF …)
   core/
     dom.js · format.js · store.js · rng.js · icons.js · flags.js · derive.js
+    theme.js              Hell/Dunkel/System umschalten, merken, Änderungen an alle Module melden
     loop.js               EINE gemeinsame Render-Schleife mit Pause/Leerlauf/Tab-Erkennung
     events.js             kleiner Event-Bus statt Querverweise zwischen Modulen
   world/
@@ -108,7 +115,9 @@ Regeln für den neuen Code:
 - **Eine Aufgabe pro Datei**, Dateien höchstens etwa 300 Zeilen.
 - **Englische Bezeichner, deutsche Kommentare** (wie bisher), einheitlich `camelCase` / `UPPER_SNAKE` für Konstanten.
 - **Kein Verhalten ändert sich unbeabsichtigt**: Vorher-Nachher-Screenshots jeder Ansicht werden verglichen.
-- Inhalte bleiben in `data/resume.js` und sind weiter über `admin.html` pflegbar.
+- Inhalte bleiben in `data/resume.de.js` / `data/resume.en.js` und sind weiter über `admin.html` pflegbar.
+- **Kein Text fest im Code**: jede sichtbare Zeichenkette kommt aus `i18n/de.js` bzw. `en.js` oder aus den Inhaltsdaten.
+- **Keine Farbe fest im Code**: CSS nur über Tokens, Canvas nur über `config/theme.js` – so funktioniert Dark Mode überall.
 
 ---
 
@@ -139,12 +148,21 @@ Regeln für den neuen Code:
 
 ### Schritt 3: Konstanten statt Zahlen
 - **Welt-Layout** (`config/layout.js`): alle Stationen, Wege, Türen, See, Hügel, Landebahn, Spawn und NPC-Startpunkte mit Namen.
-- **Farben** (`config/theme.js` + `css/tokens.css`): eine Palette, keine verstreuten Hex-Werte.
+- **Farben** (`config/theme.js` + `css/tokens.css`): eine Palette, keine verstreuten Hex-Werte. Schon jetzt mit **Rollen-Namen** (z. B. `surface`, `text`, `accent`, `grass`, `water`) statt Farbnamen – das ist die Grundlage für den Dark Mode in Schritt 7.
 - **Spielwerte** je Minispiel als benanntes Objekt: Geschwindigkeiten, Schwerkraft, Spawn-Intervalle, Sterne-Schwellen.
 - **Zeiten** (`config/timing.js`): Toast-Dauer, Tipp-Verzögerung, Leerlauf-Hilfe usw.
 - Zeichenfunktionen der Gebäude arbeiten mit relativen, benannten Maßen.
 
-### Schritt 4: Code-Review Zeile für Zeile
+### Schritt 4: Mehrsprachigkeit Deutsch / Englisch
+Kommt direkt nach den Konstanten, weil beim Herauslösen der Texte ohnehin jede Datei angefasst wird – und vor dem Review, damit danach kein Text mehr fest im Code steht.
+- **i18n-Modul** (`js/i18n/`): `t('hud.search')`, Platzhalter (`t('chapter.of', { n, total })`), Mehrzahl (1 Beitrag / 3 Beiträge), Datum/Zahlen über `Intl` (z. B. „12. Okt.“ / „Oct 12“).
+- **Alle Oberflächentexte** herauslösen: HUD, Startseite, Stations-Dialoge, alle 6 Minispiele (Ziele, Hinweise, Ergebnis, Canvas-Beschriftungen wie „LOS!“/„GO!“, Wortkarten), Roboter- und Bewohner-Sprüche, Suche, Kapitelübersicht, Finale inkl. T-Shirt-Aufkleber („MEIN NÄCHSTES KAPITEL“ / „MY NEXT CHAPTER“), Kontaktformular samt Fehlermeldungen und E-Mail-Betreff, Lebenslauf, **PDF** (Dateiname `CV_Abdul_Kader_Sabouni.pdf`), Weltkarte (Ländernamen auf Englisch), GitHub-Kacheln, Projekt-Viertel, Toasts, `aria-label`/`title`, `<title>` und Meta-Beschreibung.
+- **Inhalte** (Lebenslauf, Stationstexte, Projekte, Ehrenamt): `data/resume.en.js` mit vollständiger englischer Fassung (von mir übersetzt, **Abdul prüft**). Fehlt ein Feld auf Englisch, wird automatisch das deutsche genommen.
+- **Sprachwahl:** Knopf DE/EN im HUD und auf der Startseite; Startsprache aus `?lang=en` → gespeicherter Wahl → Browsersprache; `<html lang>` passt sich an; Umschalten ohne Neuladen (offene Dialoge werden neu aufgebaut, Spielstand bleibt).
+- **Admin:** Umschalter „Deutsch / Englisch“, erzeugt jeweils `resume.de.js` bzw. `resume.en.js`; personalisierter Link mit `?lang=en`.
+- Test: automatische Prüfung, dass `en.js` und `de.js` dieselben Schlüssel haben und im englischen Modus kein deutscher Oberflächentext erscheint.
+
+### Schritt 5: Code-Review Zeile für Zeile
 - Jede Datei lesen und dabei korrigieren:
   - doppelte Logik, toter Code (z. B. ungenutzte Skill-Emojis, alte Abi-Sprint-Reste)
   - Event-Listener ohne Aufräumen, mögliche Speicherlecks bei Dialog-Wechseln
@@ -152,26 +170,39 @@ Regeln für den neuen Code:
   - Barrierefreiheit: Fokus im Dialog, `aria`, Tastaturbedienung
 - Kurze Kommentare dort, wo etwas nicht selbsterklärend ist.
 
-### Schritt 5: CSS neu ordnen
+### Schritt 6: CSS neu ordnen
 - Aufteilen nach Bereichen, Design-Tokens als Variablen, `!important` nur noch im Druck-CSS, ungenutzte Selektoren entfernen (automatisch geprüft), Animationen nur mit `transform`/`opacity`.
 
-### Schritt 6: Lücken aus Runde 2 schließen (Abschnitt 2)
-- GitHub-Werkstatt mit Leuchtwand in der Welt, Projekt-Viertel als begehbare Mini-Welt und zoombar, Weltkarte mit Weltansicht, Datenschutz-Seite, Linkseite, Emoji-Rest, Textliste gegen Doppelungen, PDF in Firefox/Safari.
+### Schritt 7: Dark Mode – überall
+Kommt direkt nach dem CSS-Umbau, weil dann alle Farben als Tokens vorliegen; vor den neuen Seiten, damit die gleich in beiden Modi gebaut werden.
+- **Umschalter** im HUD und auf der Startseite: System (Standard) → Hell → Dunkel; Wahl wird gemerkt; kein Aufblitzen beim Laden (Theme wird im `<head>` vor dem ersten Zeichnen gesetzt); `color-scheme` für Formularfelder und Scrollleisten.
+- **Oberfläche:** dunkle Tokens für alle Flächen – Startseite, HUD, Dialoge, Kacheln, Zeitleisten, Suche, Kapitelübersicht, Lebenslauf-Ansicht, Kontaktformular, Toasts, Sprechblasen, Admin, Datenschutz- und Linkseite.
+- **Spielwelt bei Nacht:** eigene Nacht-Palette in `config/theme.js` (dunkleres Gras und Wasser, beleuchtete Fenster, Laternen mit Lichtkegel, Sterne am Himmel der Minispiele); der Sprite-Cache wird beim Umschalten einmal neu erzeugt – keine Zusatzlast pro Bild.
+- **Minispiele, Projekt-Viertel, Weltkarte, GitHub-Kacheln, Minimap:** jeweils Nacht-Farben, gleiche Lesbarkeit.
+- **Bilder/Icons:** Fotos mit leichtem Rahmen statt weißem Hintergrund, SVG-Icons über `currentColor`, Flaggen mit Kontur.
+- **PDF und Druck bleiben immer hell** (Papier), unabhängig vom gewählten Modus.
+- **Kontrast:** alle Text-/Hintergrund-Paare automatisch auf WCAG AA (≥ 4,5 : 1) geprüft, in beiden Modi.
 
-### Schritt 7: Werkzeuge für dauerhafte Qualität
+### Schritt 8: Lücken aus Runde 2 schließen (Abschnitt 2)
+- GitHub-Werkstatt mit Leuchtwand in der Welt, Projekt-Viertel als begehbare Mini-Welt und zoombar, Weltkarte mit Weltansicht, Datenschutz-Seite, Linkseite, Emoji-Rest, Textliste gegen Doppelungen (für DE **und** EN), PDF in Firefox/Safari.
+- Alles Neue wird von Anfang an **zweisprachig und in Hell/Dunkel** gebaut.
+
+### Schritt 9: Werkzeuge für dauerhafte Qualität
 - `package.json` nur für Entwicklung (ESLint, Prettier, Playwright). Für die Webseite ist nichts zu installieren.
-- GitHub Action **CI**: Linter und Smoke-Test bei jedem Push und Pull Request.
+- GitHub Action **CI**: Linter, Smoke-Test, i18n-Schlüsselprüfung und Kontrastprüfung bei jedem Push und Pull Request.
 - `.editorconfig`, `README.md` mit Struktur, Datenpflege und Entwicklung.
 
-### Schritt 8: Abnahme
-- Messskript: alle Ziele aus Schritt 1 erreicht. Vorher-Nachher-Tabelle in den Abschlussbericht.
-- Screenshot-Vergleich aller Ansichten (Desktop + iPhone): nur gewollte Unterschiede.
-- Smoke-Test in Chromium, Firefox und WebKit grün.
+### Schritt 10: Abnahme
+- Messskript: alle Ziele aus Schritt 1 erreicht – auch im Dark Mode. Vorher-Nachher-Tabelle in den Abschlussbericht.
+- Screenshot-Vergleich aller Ansichten in der Matrix **Deutsch/Englisch × Hell/Dunkel × Desktop/iPhone**: nur gewollte Unterschiede, nichts unlesbar, kein deutscher Text im englischen Modus.
+- Smoke-Test in Chromium, Firefox und WebKit grün – in beiden Sprachen und beiden Modi.
+- PDF in beiden Sprachen, jeweils hell.
 - `TODO.md` aktualisieren, Abschlussbericht `docs/REFACTORING-BERICHT.md`, Push auf `abdul7kader/refactoring`.
 - Kein Merge auf `main` ohne Abduls Freigabe. Ein Pull Request nur auf Wunsch.
 
 ---
 
 ## 5. Hinweise
+- Die englischen Inhalte (Lebenslauf, Stationstexte, Ehrenamt, Projekte) übersetze ich; Abdul sollte sie vor dem Merge einmal lesen.
 - Neue Branches enthalten kein „claude“ im Namen. Gearbeitet wird auf `abdul7kader/refactoring`.
 - Der alte Arbeits-Branch `claude/intelligent-archimedes-1pvu41` bleibt unverändert bestehen. Er kann gelöscht werden, sobald Abdul das möchte.
