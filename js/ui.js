@@ -277,6 +277,8 @@
             closeStation();
             if (nextId) setTimeout(() => CV.World.walkToStation(nextId), 250);
         };
+        const wm = body.querySelector('.wm-root');
+        if (wm && CV.WorldMap) CV.WorldMap.mount(wm, D().countries);
         const pv = body.querySelector('.pv-wrap');
         if (pv && CV.ProjectQuarter) mountQuarter(pv, body, result);
         animateBars(body);
@@ -330,8 +332,10 @@
                     <div class="fact"><b>${D().countries.length}</b><span>Länder kennengelernt</span></div>
                     ${home ? `<div class="fact"><b>${esc(home.country)}</b><span>Heimat</span></div>` : ''}
                 </div>
+                <h3>Meine Weltkarte</h3>
+                <div class="wm-root"></div>
                 <h3>Bereiste Länder</h3>
-                <div class="flags">${D().countries.map(c => `<span class="flagchip">${CV.flag(c)} ${esc(c)}</span>`).join('')}</div>`;
+                <div class="flags">${D().countries.map(c => `<span class="flagchip">${CV.flagHtml(c)} ${esc(c)}</span>`).join('')}</div>`;
         },
         school() {
             return `<h3>Vom Integrationskurs zum Studium</h3>${timeline(D().educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}
@@ -573,7 +577,7 @@
         (d.aiSkills || []).forEach(a => items.push({ g: 'Inhalte', ic: '🤖', t: a.name, s: 'KI-Kompetenz', q: `${a.name} ${a.text} ki ai prompt`, run: info('lab') }));
         (d.volunteer || []).forEach(v => items.push({ g: 'Inhalte', ic: '💛', t: v.title, s: `Ehrenamt · ${v.date}`, q: `${v.title} ${v.detail} ehrenamt engagement`, run: info('lake') }));
         (d.hobbies || []).forEach(h => items.push({ g: 'Inhalte', ic: '🏄', t: String(h).replace(/^\S+\s+/, ''), s: 'Hobby', q: `${h} hobby freizeit sport`, run: info('lake') }));
-        x.countries.forEach(cn => items.push({ g: 'Inhalte', ic: CV.flag(cn) || '🌍', t: cn, s: 'Bereistes Land', q: `${cn} land reise`, run: info('arrival') }));
+        x.countries.forEach(cn => items.push({ g: 'Inhalte', ic: CV.flag(cn) || '🌍', icHtml: CV.flagSvgUrl(cn) ? CV.flagHtml(cn) : '', t: cn, s: 'Bereistes Land', q: `${cn} land reise`, run: info('arrival') }));
         return items;
     }
     const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -601,7 +605,7 @@
         list.innerHTML = palView.map((it, i) => {
             const head = it.g !== lastG ? `<li class="pal-group">${esc(it.g)}</li>` : '';
             lastG = it.g;
-            return `${head}<li class="pal-item ${i === palSel ? 'sel' : ''}" data-i="${i}" role="option"><span class="pi-ic">${esc(it.ic)}</span><span class="pi-t"><strong>${hl(it.t, q)}</strong><small>${esc(it.s || '')}</small></span>${it.k ? `<kbd>${esc(it.k)}</kbd>` : '<span class="pi-k">↵</span>'}</li>`;
+            return `${head}<li class="pal-item ${i === palSel ? 'sel' : ''}" data-i="${i}" role="option"><span class="pi-ic">${it.icHtml || esc(it.ic)}</span><span class="pi-t"><strong>${hl(it.t, q)}</strong><small>${esc(it.s || '')}</small></span>${it.k ? `<kbd>${esc(it.k)}</kbd>` : '<span class="pi-k">↵</span>'}</li>`;
         }).join('');
         const sel = list.querySelector('.pal-item.sel');
         if (sel) sel.scrollIntoView({ block: 'nearest' });

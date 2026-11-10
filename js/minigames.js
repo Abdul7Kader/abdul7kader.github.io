@@ -397,7 +397,7 @@
                     const n = Math.random() < 0.45 ? 3 : 1, y0 = rnd(80, H - 120), dy = rnd(-45, 45);
                     for (let i = 0; i < n; i++) {
                         const name = countries.length ? countries[ci++ % countries.length] : 'Welt';
-                        items.push({ kind: 'stamp', x: W + 40 + i * 64, y: CV.clamp(y0 + dy * i, 70, H - 100), r: 26, name, flag: CV.flag(name), h: hue(name), rot: rnd(-0.3, 0.3) });
+                        items.push({ kind: 'stamp', x: W + 40 + i * 64, y: CV.clamp(y0 + dy * i, 70, H - 100), r: 26, name, flag: CV.flag(name), img: CV.flagImage(name), h: hue(name), rot: rnd(-0.3, 0.3) });
                     }
                 }
             }
@@ -478,7 +478,8 @@
                             c.save(); c.translate(it.x, it.y + Math.sin(g.now * 3 + it.x * 0.02) * 3); c.rotate(it.rot);
                             c.fillStyle = '#fff'; ell(c, 0, 0, it.r, it.r); c.fill();
                             c.strokeStyle = `hsl(${it.h},70%,45%)`; c.lineWidth = 3; c.setLineDash([5, 4]); ell(c, 0, 0, it.r - 4, it.r - 4); c.stroke(); c.setLineDash([]);
-                            if (it.flag) emo(c, it.flag, 0, -3, 22);
+                            if (it.img && it.img.complete && it.img.naturalWidth) c.drawImage(it.img, -12, -11, 24, 16);
+                            else if (it.flag) emo(c, it.flag, 0, -3, 22);
                             else txt(c, it.name.slice(0, 2).toUpperCase(), 0, -3, 16, `hsl(${it.h},70%,40%)`);
                             txt(c, it.name.length > 10 ? it.name.slice(0, 9) + '.' : it.name, 0, 14, 8.5, `hsl(${it.h},70%,35%)`);
                             c.restore();

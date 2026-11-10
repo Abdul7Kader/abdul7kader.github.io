@@ -108,6 +108,33 @@
         return String.fromCodePoint(...[...code].map(c => 0x1F1A5 + c.charCodeAt(0)));
     };
 
+    // Eigene Flaggen-Grafiken für Länder, deren Emoji veraltet ist: Syrien zeigt die meisten Emoji-Schriften
+    // noch rot-weiß-schwarz mit zwei grünen Sternen – richtig ist grün-weiß-schwarz mit drei roten Sternen.
+    const star = (cx, cy, r) => Array.from({ length: 10 }, (_, i) => {
+        const rad = i % 2 ? r * 0.382 : r, a = -Math.PI / 2 + i * Math.PI / 5;
+        return `${(cx + Math.cos(a) * rad).toFixed(1)},${(cy + Math.sin(a) * rad).toFixed(1)}`;
+    }).join(' ');
+    const FLAG_SVG = {
+        SY: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600"><rect width="900" height="600" fill="#000"/><rect width="900" height="400" fill="#fff"/><rect width="900" height="200" fill="#007a3d"/><g fill="#ce1126"><polygon points="${star(225, 300, 62)}"/><polygon points="${star(450, 300, 62)}"/><polygon points="${star(675, 300, 62)}"/></g></svg>`
+    };
+    CV.flagSvgUrl = (country) => {
+        const svg = FLAG_SVG[FLAGS[country]];
+        return svg ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) : '';
+    };
+    // HTML-Variante: eigene Grafik, wenn vorhanden – sonst Emoji (auf Windows ohne Flaggen-Emojis: leer).
+    CV.flagHtml = (country, cls = 'flag-img') => {
+        const url = CV.flagSvgUrl(country);
+        return url ? `<img class="${cls}" src="${url}" alt="" width="20" height="14">` : CV.flag(country);
+    };
+    // Für Canvas-Spiele: fertiges Bild-Objekt (oder null → Emoji verwenden)
+    const flagImgs = {};
+    CV.flagImage = (country) => {
+        const url = CV.flagSvgUrl(country);
+        if (!url) return null;
+        if (!flagImgs[country]) { const im = new Image(); im.src = url; flagImgs[country] = im; }
+        return flagImgs[country];
+    };
+
     const LANG_NAMES = /^(arabisch|deutsch|englisch|französisch|franzoesisch|spanisch|türkisch|kurdisch|italienisch|russisch|niederländisch)$/i;
     const LEVEL_PCT = [[/mutter|native/i, 100], [/c2/i, 95], [/c1/i, 86], [/b2/i, 72], [/b1/i, 58], [/a2/i, 38], [/a1/i, 22]];
     CV.levelPct = (lvl) => {
