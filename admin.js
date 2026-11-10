@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         createStringField('name', 'Vollständiger Name');
         createStringField('firstName', 'Vorname (wird in Texten genutzt)');
         createStringField('title', 'Berufsbezeichnung / Untertitel');
+        if (currentData.cardRole == null) currentData.cardRole = '';
+        createStringField('cardRole', 'Zeile unter dem Namen auf der Spielerkarte (ohne Firmennamen)');
         createStringField('location', 'Wohnort');
         createStringField('tagline', 'Kurzbeschreibung im Startbildschirm');
         createStringField('summary', 'Kurzprofil (oben im Lebenslauf)');
@@ -60,14 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addSectionTitle('Kontakt (leere Felder werden ausgeblendet)');
         currentData.contact = currentData.contact || {};
-        ['email', 'phone', 'linkedin', 'github'].forEach(k => { if (currentData.contact[k] == null) currentData.contact[k] = ''; });
+        ['email', 'phone', 'linkedin', 'github', 'form'].forEach(k => { if (currentData.contact[k] == null) currentData.contact[k] = ''; });
         createStringField('contact.email', 'E-Mail (aktiviert den Button „Gespräch vereinbaren“)');
         createStringField('contact.phone', 'Telefon');
         createStringField('contact.linkedin', 'LinkedIn-URL');
         createStringField('contact.github', 'GitHub-URL');
+        createStringField('contact.form', 'Kontaktformular: FormSubmit-Alias nach der Aktivierung (leer = Standard-Adresse, verschleiert)');
 
         addSectionTitle('Stärken (Kompakt-Lebenslauf)');
-        createJSONField('strengths', 'Stärken (JSON: icon, title, text)');
+        createJSONField('strengths', 'Stärken (JSON: icon, title, text) – icon: cpu, code, users, trending, heart, globe, school …');
 
         addSectionTitle('KI-Kompetenzen (Tech-Lab & Lebenslauf)');
         createJSONField('aiSkills', 'KI-Kompetenzen (JSON: name, text)');
@@ -76,11 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
         createJSONField('traits', 'Eigenschaften (JSON-Liste)');
 
         addSectionTitle('Ehrenamt & weitere Angaben');
-        createJSONField('volunteer', 'Ehrenamt (JSON: date, title, detail)');
+        createJSONField('volunteer', 'Ehrenamt – jede Tätigkeit eine Kachel (JSON: date, title, role, text, icon: music, coffee, book, school, heart, moon …)');
         createJSONField('extras', 'Weitere Angaben (JSON: name, text)');
 
         addSectionTitle('Stationen der Welt (Titel, Zeitraum, Abzeichen, Geschichte)');
-        createJSONField('stations', 'Stationen (JSON) – arrival, language, school, career, lab, projects, lake, finale');
+        createJSONField('stations', 'Stationen (JSON) – arrival, school (Bildungsweg), career, lab, projects, lake, finale');
 
         addSectionTitle('Fakten der Bewohner');
         createJSONField('facts', 'Sätze, die die Figuren in der Welt sagen (JSON-Liste)');
@@ -88,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addSectionTitle('Hobbies & Sport (See)');
         createJSONField('hobbies', 'Hobbies (JSON Liste, jedes Element in "")');
 
-        addSectionTitle('Ausbildung (Campus & Sprachschule)');
+        addSectionTitle('Ausbildung (Bildungsweg)');
         createJSONField('education', 'Ausbildung (JSON)');
 
         addSectionTitle('Reisen (Ankunft)');
@@ -97,14 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
         addSectionTitle('Fähigkeiten (Tech-Lab)');
         createJSONField('skills', 'Fähigkeiten (JSON)');
 
-        addSectionTitle('Sprachen (Sprachschule)');
+        addSectionTitle('Sprachen (Bildungsweg)');
         createJSONField('languages', 'Sprachen (JSON: name, level – z. B. "C1")');
 
         addSectionTitle('Berufserfahrung (Business-Viertel)');
-        createJSONField('experience', 'Berufserfahrung (JSON)');
+        createJSONField('experience', 'Berufserfahrung (JSON) – optional badge + note, z. B. „100 % ohne KI-Werkzeuge“ bei PSI');
 
-        addSectionTitle('Eigene Projekte (Baustelle)');
-        createJSONField('projects', 'Projekte (JSON)');
+        addSectionTitle('Eigene Projekte (Projekt-Viertel)');
+        createJSONField('projects', 'Projekte (JSON: title, tag, tech, detail, progress 0–100, stage optional, building: shop | studio | refinery | stadium | restaurant | foundation, link)');
     }
 
     function createLinkBuilder() {

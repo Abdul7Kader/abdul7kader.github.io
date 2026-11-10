@@ -262,9 +262,9 @@
             ${badge}
             <div class="info">${(CONTENT[id] || (() => ''))(result)}</div>
             <footer class="panel-foot">
-                ${CV.Minigames[id] ? `<button class="btn ghost small" data-act="replay">${CV.Minigames[id].icon} ${result ? 'Nochmal spielen' : 'Minispiel spielen'}</button>` : ''}
+                ${CV.Minigames[id] ? `<button class="btn ghost small" data-act="replay">${CV.icon('play')} ${result ? 'Nochmal spielen' : 'Minispiel spielen'}</button>` : ''}
                 <span class="spacer"></span>
-                <button class="btn primary" data-act="next">${next ? `Weiter: ${esc(next.emoji)} ${esc(nextTitle)} →` : 'Zurück zur Welt'}</button>
+                <button class="btn primary" data-act="next">${next ? `Weiter: ${esc(nextTitle)} →` : 'Zurück zur Welt'}</button>
             </footer>`;
         if (firstTime) {
             CV.audio.play('badge');
@@ -318,9 +318,9 @@
     }).join('')}</ol>`;
     const ghBtn = () => {
         const gh = (CV.data.contact || {}).github;
-        return gh ? `<a class="gh-card" href="${esc(gh)}" target="_blank" rel="noopener"><span class="gh-ic">🐙</span><span><strong>Mein GitHub</strong><small>${esc(gh.replace(/^https?:\/\/(www\.)?/, ''))}</small></span><span class="gh-go">Öffnen ↗</span></a>` : '';
+        return gh ? `<a class="gh-card" href="${esc(gh)}" target="_blank" rel="noopener"><span class="gh-ic">${CV.icon('github')}</span><span><strong>Mein GitHub</strong><small>${esc(gh.replace(/^https?:\/\/(www\.)?/, ''))}</small></span><span class="gh-go">Öffnen ↗</span></a>` : '';
     };
-    const chips = (list) => `<div class="chips">${list.map(t => `<span class="chip"><b>${CV.skillIcon(t)}</b>${esc(t)}</span>`).join('')}</div>`;
+    const chips = (list) => `<div class="chips">${list.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>`;
     const langBars = () => `<div class="langs">${D().languages.map(l => `
         <div class="lang"><div class="lang-top"><strong>${esc(l.name)}</strong><span>${esc(l.level)}</span></div>
         <div class="bar"><i data-pct="${CV.levelPct(l.level)}"></i></div></div>`).join('')}</div>`;

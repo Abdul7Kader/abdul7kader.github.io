@@ -916,3 +916,6 @@ kbd {
 .gh-act.compact .gh-stats b { font-size: 1.1rem; }
 .pdf-mode .no-print { display: none !important; }
 @media (max-width: 640px) { .gh-stats { grid-template-columns: 1fr 1fr; } .gh-stats div:nth-child(3) { grid-column: 1 / -1; } }
+
+.gh-ic .ico { width: 24px; height: 24px; }
+.panel-foot .btn .ico { width: 15px; height: 15px; margin-right: 2px; }

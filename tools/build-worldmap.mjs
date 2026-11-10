@@ -1,5 +1,8 @@
 // Erzeugt js/worldmap-data.js: vereinfachte Ländergrenzen (Natural Earth 1:50m über world-atlas),
 // projiziert mit Deutschland in der Mitte, als fertige SVG-Pfade mit deutschen Namen.
+// Nur nötig, wenn sich Ausschnitt oder Namen ändern sollen. Ausführen (in einem leeren Ordner mit Kopie dieses Scripts):
+//   npm i world-atlas@2.0.2 topojson-client@3.1.0 topojson-simplify@3.0.3 d3-geo@3.1.1
+//   node build-worldmap.mjs ../js/worldmap-data.js
 import fs from 'fs';
 import * as topo from 'topojson-client';
 import { presimplify, simplify, quantile } from 'topojson-simplify';

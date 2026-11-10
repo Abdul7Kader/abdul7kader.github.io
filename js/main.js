@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.allDone = false;
                 setTimeout(() => {
                     CV.UI.achieve('🏆', 'Alle Kapitel entdeckt', 'Das Finale wartet auf dem Hügel!', 4200, 'gold');
-                    CV.World.sayRobot('Wow, alles entdeckt! Kommen Sie mit zum Finale auf dem Hügel 🏆', 5000);
                 }, 400);
             }
             idleReset();
