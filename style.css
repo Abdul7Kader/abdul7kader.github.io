@@ -761,3 +761,26 @@ kbd {
 .cv-stage.build { background: #fff1d6; color: #a15c00 !important; }
 .cv-stage.base { background: #eceff6; color: #5f6880 !important; }
 .cv-projects small { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+.pv-wrap { overflow-x: auto; overflow-y: hidden; border-radius: 18px; background: #eaf7ff; box-shadow: inset 0 0 0 1px var(--line); -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.pv-cnv { display: block; touch-action: pan-x pan-y; }
+.pv-legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 2px 14px; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.pv-legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.pv-legend .done::before { background: #16a34a; }
+.pv-legend .build::before { background: #f59e0b; }
+.pv-legend .base::before { background: #9aa1ad; }
+.pv-card { cursor: pointer; outline: none; }
+.pv-card.sel { background: #fff; box-shadow: 0 0 0 2px var(--c1), var(--shadow); }
+.pv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pv-card .tag { position: static; white-space: nowrap; }
+.tag.done { background: #d9f7e8; color: #0f6b44; }
+.tag.build { background: #fff1d6; color: #a15c00; }
+.tag.base { background: #eceff6; color: #5f6880; }
+.pv-card strong { padding-right: 0; margin-top: 2px; }
+.pv-bar { height: 6px; border-radius: 3px; background: #e6e9f0; overflow: hidden; margin: 4px 0 2px; }
+.pv-bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: #f59e0b; transition: width 1s var(--ease); }
+.pv-bar i.done { background: #16a34a; }
+.pv-bar i.base { background: #9aa1ad; }
+.pv-tech { color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+.pv-link { align-self: flex-start; display: inline-flex; gap: 5px; align-items: center; margin-top: 4px; font-weight: 700; font-size: 0.86rem; color: var(--c1); text-decoration: none; }
+.pv-soon { align-self: flex-start; margin-top: 4px; font-size: 0.78rem; font-weight: 700; color: #9aa1ad; }
+.h-note { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: none; letter-spacing: 0; margin-left: 6px; }

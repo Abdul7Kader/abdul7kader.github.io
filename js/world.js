@@ -705,26 +705,36 @@
                 c.beginPath(); c.arc(fx, hy - 1, 12.6, 0.12 * Math.PI, 0.88 * Math.PI); c.lineTo(fx - 9, hy + 3); c.quadraticCurveTo(fx, hy + 1, fx + 9, hy + 3); c.closePath(); c.fill();
                 c.globalAlpha = 1;
             }
+            // Augen: von vorn symmetrisch, seitlich als Dreiviertel-Ansicht – immer zwei Augen.
+            // near = Auge zur Kamera hin (größer), far = Auge am Gesichtsrand (schmaler).
+            const eyes = side === 0
+                ? [{ x: fx - 4.6, rx: 1.9, ry: 2.2 }, { x: fx + 4.6, rx: 1.9, ry: 2.2 }]
+                : [{ x: fx - side * 2.4, rx: 1.9, ry: 2.2, near: true }, { x: fx + side * 5, rx: 1.4, ry: 2.1 }];
+            const ey = hy - 2;
             if (L.hero) { // Augenbrauen
                 c.strokeStyle = L.hair; c.lineWidth = 1.8; c.lineCap = 'round';
-                if (side === 0) { c.beginPath(); c.moveTo(fx - 7, hy - 7); c.lineTo(fx - 2.5, hy - 7.5); c.moveTo(fx + 2.5, hy - 7.5); c.lineTo(fx + 7, hy - 7); c.stroke(); }
-                else { c.beginPath(); c.moveTo(fx + side * 2 - 3, hy - 7.5); c.lineTo(fx + side * 2 + 3, hy - 7.5); c.stroke(); }
+                c.beginPath();
+                eyes.forEach(e => { const w = e.rx * 1.6; c.moveTo(e.x - w, ey - 5.2); c.lineTo(e.x + w, ey - 5.6); });
+                c.stroke();
             }
-            // Augen
-            c.fillStyle = '#1c1c1c';
-            const blink = (Math.sin(time * 1.3 + x) > 0.985) ? 0.4 : 1;
-            if (side === 0) { ellipse(c, fx - 4.5, hy - 2, 1.6, 1.8 * blink); c.fill(); ellipse(c, fx + 4.5, hy - 2, 1.6, 1.8 * blink); c.fill(); }
-            else { ellipse(c, fx + side * 2, hy - 2, 1.6, 1.8 * blink); c.fill(); }
+            const blink = (Math.sin(time * 1.3 + x) > 0.985) ? 0.25 : 1;
+            eyes.forEach(e => {
+                c.fillStyle = '#1c1c1c'; ellipse(c, e.x, ey, e.rx, e.ry * blink); c.fill();
+                if (blink === 1) { c.fillStyle = 'rgba(255,255,255,0.9)'; ellipse(c, e.x + 0.6, ey - 0.8, 0.6, 0.6); c.fill(); }
+            });
             if (L.glasses) {
                 c.strokeStyle = '#26262b'; c.lineWidth = 1.3;
-                if (side === 0) {
-                    ellipse(c, fx - 4.5, hy - 2, 3.8, 3.4); c.stroke(); ellipse(c, fx + 4.5, hy - 2, 3.8, 3.4); c.stroke();
-                    c.beginPath(); c.moveTo(fx - 0.8, hy - 2.4); c.lineTo(fx + 0.8, hy - 2.4); c.stroke();
-                } else { ellipse(c, fx + side * 2, hy - 2, 3.8, 3.4); c.stroke(); c.beginPath(); c.moveTo(fx + side * 2 - side * 3.8, hy - 2.5); c.lineTo(fx - side * 9, hy - 3.5); c.stroke(); }
+                eyes.forEach(e => { ellipse(c, e.x, ey, e.rx + 2.1, 3.4); c.stroke(); });
+                const [a, b] = eyes[0].x < eyes[1].x ? eyes : [eyes[1], eyes[0]];
+                c.beginPath(); c.moveTo(a.x + a.rx + 2.1, ey - 0.4); c.lineTo(b.x - b.rx - 2.1, ey - 0.4); c.stroke();
+                if (side !== 0) { // Bügel zum sichtbaren Ohr
+                    const n = eyes[0];
+                    c.beginPath(); c.moveTo(n.x - side * (n.rx + 2.1), ey - 0.6); c.lineTo(hx - side * 10, ey - 1.6); c.stroke();
+                }
             }
             // Lächeln
             c.strokeStyle = L.beard ? '#fff' : '#6b3b2a'; c.lineWidth = 1.4;
-            c.beginPath(); c.arc(fx, hy + 3, 3.2, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+            c.beginPath(); c.arc(fx + side * 1.2, hy + 3, 3.2, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
         }
     }
 
@@ -924,13 +934,33 @@
             c.beginPath(); c.moveTo(mx - 8, s.base - 30); c.lineTo(mx - 8, top); c.moveTo(mx + 8, s.base - 30); c.lineTo(mx + 8, top); c.stroke();
             c.lineWidth = 2;
             for (let y = s.base - 30; y > top; y -= 18) { c.beginPath(); c.moveTo(mx - 8, y); c.lineTo(mx + 8, y - 18); c.stroke(); }
-            const ang = time * 0.25, len = Math.cos(ang) * 190, back = -Math.cos(ang) * 60;
-            c.strokeStyle = '#f2b705'; c.lineWidth = 6;
-            c.beginPath(); c.moveTo(mx + back, top - 4 + Math.sin(ang) * 10); c.lineTo(mx - len, top - 4 - Math.sin(ang) * 20); c.stroke();
+            // Ausleger: fest an der Mastspitze, fährt teleskopartig aus und ein (nie kürzer als 110).
+            const jy = top - 4, BASE = 110;
+            const len = CV.reducedMotion ? 160 : 150 + Math.sin(time * 0.35) * 40;
+            // Gegenausleger mit Gegengewicht
+            c.strokeStyle = '#f2b705'; c.lineWidth = 6; c.lineCap = 'butt';
+            c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx + 56, jy); c.stroke();
+            c.fillStyle = '#6b7280'; rr(c, mx + 34, jy + 3, 22, 16, 2); c.fill();
+            // Grundteil (Gitter) + ausfahrbares Teil (etwas schmaler, liegt darin)
+            c.strokeStyle = '#f2b705'; c.lineWidth = 7;
+            c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx - BASE, jy); c.stroke();
+            c.strokeStyle = '#c99400'; c.lineWidth = 1.2;
+            for (let k = 0; k < BASE - 8; k += 12) { c.beginPath(); c.moveTo(mx - k, jy - 3); c.lineTo(mx - k - 12, jy + 3); c.stroke(); }
+            c.strokeStyle = '#ffd23f'; c.lineWidth = 4.5;
+            c.beginPath(); c.moveTo(mx - BASE + 14, jy); c.lineTo(mx - len, jy); c.stroke();
+            c.fillStyle = '#c99400'; c.fillRect(mx - len - 3, jy - 4, 5, 8);
+            // Abspannseile von der Turmspitze
+            c.strokeStyle = 'rgba(60,60,60,0.55)'; c.lineWidth = 1;
+            c.beginPath(); c.moveTo(mx, jy - 34); c.lineTo(mx - BASE * 0.95, jy - 2); c.moveTo(mx, jy - 34); c.lineTo(mx + 50, jy - 2); c.stroke();
+            c.strokeStyle = '#f2b705'; c.lineWidth = 3; c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx, jy - 36); c.stroke();
             c.fillStyle = '#555'; rr(c, mx - 12, top - 22, 24, 18, 3); c.fill();
-            const hx = mx - len * 0.8, hy = top - 4 - Math.sin(ang) * 16;
-            c.strokeStyle = '#444'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy + 70); c.stroke();
-            c.fillStyle = '#ff8a3d'; rr(c, hx - 16, hy + 70, 32, 16, 3); c.fill();
+            c.fillStyle = '#9fd4f5'; rr(c, mx - 9, top - 19, 10, 8, 2); c.fill();
+            // Laufkatze fährt auf dem Ausleger mit, Seil hängt senkrecht
+            const hx = mx - len + 12 + (len - 40) * (0.15 + 0.1 * Math.sin(time * 0.6)), hy = jy + 4;
+            c.fillStyle = '#374151'; rr(c, hx - 7, jy + 1, 14, 6, 2); c.fill();
+            const drop = 64 + Math.sin(time * 0.9) * 8;
+            c.strokeStyle = '#444'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy + drop); c.stroke();
+            c.fillStyle = '#ff8a3d'; rr(c, hx - 16, hy + drop, 32, 16, 3); c.fill();
             // Hütchen
             [[s.x + 40, s.base + 16], [s.x + 120, s.base + 18], [s.x + 200, s.base + 14]].forEach(([x, y]) => {
                 c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(x - 7, y); c.lineTo(x + 7, y); c.lineTo(x, y - 18); c.closePath(); c.fill();
@@ -1276,5 +1306,5 @@
     World.tokenList = () => tokens.map(t => ({ x: t.x, y: t.y, got: t.got }));
     World.tokenCount = () => tokens.length;
     World.tokensGot = () => tokens.filter(t => t.got).map(t => t.label);
-    World.debug = { findPath, blocked, cam, get zoom() { return zoom; } };
+    World.debug = { findPath, blocked, cam, drawPerson, get zoom() { return zoom; } };
 })();

@@ -259,7 +259,7 @@
             </div>` : '';
         body.innerHTML = `
             ${badge}
-            <div class="info">${(CONTENT[id] || (() => ''))()}</div>
+            <div class="info">${(CONTENT[id] || (() => ''))(result)}</div>
             <footer class="panel-foot">
                 ${CV.Minigames[id] ? `<button class="btn ghost small" data-act="replay">${CV.Minigames[id].icon} ${result ? 'Nochmal spielen' : 'Minispiel spielen'}</button>` : ''}
                 <span class="spacer"></span>
@@ -277,9 +277,25 @@
             closeStation();
             if (nextId) setTimeout(() => CV.World.walkToStation(nextId), 250);
         };
+        const pv = body.querySelector('.pv-wrap');
+        if (pv && CV.ProjectQuarter) mountQuarter(pv, body, result);
         animateBars(body);
         CV.$('#station .panel').scrollTop = 0;
         setTimeout(() => nb.isConnected && nb.focus({ preventScroll: true }), 60);
+    }
+
+    function mountQuarter(pv, body, result) {
+        const cards = CV.$$('.pv-card', body);
+        const mark = (i) => cards.forEach((el, k) => el.classList.toggle('sel', k === i));
+        const q = CV.ProjectQuarter.mount(pv, CV.data.projects, {
+            animate: !!(result && result.stars),
+            onSelect: (i) => { CV.audio.play('click'); mark(i); if (cards[i]) cards[i].scrollIntoView({ behavior: CV.reducedMotion ? 'auto' : 'smooth', block: 'nearest' }); }
+        });
+        cards.forEach((el, i) => {
+            const go = () => { mark(i); q.select(i); if (pv.scrollTo) pv.scrollTo({ left: Math.max(0, (30 + i * 150) / 960 * pv.scrollWidth - 60), behavior: 'smooth' }); };
+            el.addEventListener('click', (e) => { if (!e.target.closest('a')) go(); });
+            el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+        });
     }
 
     function animateBars(root) {
@@ -334,16 +350,23 @@
                 ${D().skills.map(s => `<h3>${esc(s.name)}${s.note ? ` <small class="h-note">${esc(s.note)}</small>` : ''}</h3>${chips(String(s.level).split(',').map(x => x.trim()).filter(Boolean))}`).join('')}
                 ${ghBtn()}`;
         },
-        projects() {
+        projects(result) {
             const founder = D().experienceDesc.find(e => /gründer/i.test(e.role));
+            const list = CV.data.projects || [];
             return `${founder ? `<div class="role-card"><span class="kicker">Eigenes Unternehmen · seit ${esc(String(founder.date).split('-')[0].trim())}</span><strong>${esc(founder.role)}</strong><span>${esc(founder.company)}</span></div>` : ''}
-            <h3>Projekte</h3>
-            <div class="projects">${(CV.data.projects || []).map(p => {
-                const soon = /coming soon/i.test(p.detail), idea = /nicht umgesetzt|offen/i.test(p.detail);
-                const cls = /kunde/i.test(p.tag || '') ? 'live' : /studium/i.test(p.tag || '') ? 'idea' : 'soon';
-                const tag = p.tag ? `<span class="tag ${cls}">${esc(p.tag)}</span>` : soon ? '<span class="tag soon">in Arbeit</span>' : idea ? '<span class="tag idea">Konzept</span>' : '<span class="tag live">umgesetzt</span>';
-                const detail = String(p.detail).replace(/\s*\((coming soon!?|nicht umgesetzt \/ offen)\)/i, '').trim();
-                return `<div class="project">${tag}<strong>${esc(p.title)}</strong><span class="kicker">${esc(p.tech)}</span><p>${esc(detail)}</p></div>`;
+            <h3>Mein Projekt-Viertel <small class="h-note">${result && result.stars ? 'Ihre Belohnung: Hier wird gerade gebaut' : 'Gebäude antippen für Details'}</small></h3>
+            <div class="pv-wrap"></div>
+            <div class="pv-legend"><span class="done">Fertig</span><span class="build">Im Bau</span><span class="base">Fundament</span></div>
+            <div class="projects">${list.map((p, i) => {
+                const stg = CV.projStage(p);
+                return `<article class="project pv-card" data-i="${i}" tabindex="0">
+                    <div class="pv-head"><span class="kicker">${esc(p.tag || 'Projekt')}</span><span class="tag ${stg.cls}">${esc(stg.label)}</span></div>
+                    <strong>${esc(p.title)}</strong>
+                    <div class="pv-bar"><i data-pct="${stg.pct}" class="${stg.cls}"></i></div>
+                    <p>${esc(p.detail)}</p>
+                    ${p.tech ? `<small class="pv-tech">${esc(p.tech)}</small>` : ''}
+                    ${p.link ? `<a class="pv-link" href="${esc(p.link)}" target="_blank" rel="noopener">Ansehen ${CV.icon('external')}</a>` : '<span class="pv-soon">Link folgt</span>'}
+                </article>`;
             }).join('')}</div>
             ${ghBtn()}`;
         },

@@ -663,33 +663,49 @@
     });
 
     // ================================================================== 4) Business: Prompt-Fabrik
-    // Ein KI-Agent braucht einen guten Prompt: Rolle, Kontext, Beispiel und Format.
-    // Die Bausteine fahren übers Fließband – den Baustein antippen, dessen Platz gerade leuchtet.
+    // Agentische Softwareentwicklung: Ein KI-Agent liefert nur dann sicher aus, wenn der Mensch den Ablauf steuert –
+    // Anforderung klären, Plan prüfen, Code generieren lassen, selbst reviewen (Human in the Loop), testen.
+    // Die Schritte fahren übers Fließband – den Schritt antippen, dessen Platz gerade leuchtet.
     const PIECES = [
-        { k: 'rolle', ic: '👤', name: 'Rolle', col: '#7b5cff' },
-        { k: 'kontext', ic: '📄', name: 'Kontext', col: '#3a86ff' },
-        { k: 'beispiel', ic: '💡', name: 'Beispiel', col: '#f59e0b' },
-        { k: 'format', ic: '📋', name: 'Format', col: '#16a34a' }
+        { k: 'anf', ic: '🎯', name: 'Anforderung', col: '#7b5cff' },
+        { k: 'plan', ic: '🗺️', name: 'Plan prüfen', col: '#3a86ff' },
+        { k: 'code', ic: '🤖', name: 'KI-Code', col: '#0e9f9a' },
+        { k: 'hitl', ic: '🧑‍💻', name: 'Human in the Loop', col: '#e08600' },
+        { k: 'test', ic: '✅', name: 'Tests & QS', col: '#16a34a' }
     ];
-    const VAGUE = { k: 'vage', ic: '❓', name: 'Unklar', col: '#9aa1ad' };
+    const TRAPS = [
+        { k: 'blind', ic: '⚠️', name: 'Ungeprüft übernehmen', col: '#8b93a3', msg: 'Nie ungeprüft!' },
+        { k: 'vage', ic: '❓', name: 'Unklare Anforderung', col: '#9aa1ad', msg: 'Zu unklar!' }
+    ];
+    const NP = PIECES.length;
     M.career = arcade('career', {
         name: 'Prompt-Fabrik', icon: '🤖', color: '#7b5cff', time: 15, stars: [10, 24, 40],
-        goal: 'Bauen Sie dem KI-Roboter einen guten Prompt: Tippen Sie auf dem Fließband den Baustein an, dessen Platz gerade leuchtet.',
+        goal: 'Führen Sie den KI-Agenten sicher zur Auslieferung: Tippen Sie auf dem Fließband den Schritt an, dessen Platz gerade leuchtet. Ungeprüftes meiden!',
         controls: ['click', 'tap'],
-        result: () => 'Rolle, Kontext, Beispiel, Format – so schreibe ich Prompts, damit KI-Agenten wie Claude Code verlässlich arbeiten. Darauf baut mein eigenes Unternehmen auf.',
+        result: (g) => g.shipped ? `${g.shipped}× sicher ausgeliefert – mit Plan, Review und Tests.` : 'Plan, Review, Tests – erst dann wird ausgeliefert.',
         make(g) {
-            const BELT_Y = 312, PW = 104, PH = 60;
-            const SLOT_Y = 150, SLOT_W = 82, SLOT_H = 56, SLOT_X0 = 198, SLOT_GAP = 8;
+            const BELT_Y = 312, PW = 108, PH = 60;
+            const SLOT_Y = 150, SLOT_W = 76, SLOT_H = 58, SLOT_X0 = 176, SLOT_GAP = 6;
+            g.shipped = 0;
+            // Text in eine oder zwei Zeilen setzen, damit lange Schritte („Human in the Loop“) passen
+            function label(c, s, x, y, maxW, size, col) {
+                c.font = `800 ${size}px ${FONT}`;
+                if (c.measureText(s).width <= maxW || !s.includes(' ')) { txt(c, s, x, y, size, col); return; }
+                const w = s.split(' '); let best = null;
+                for (let i = 1; i < w.length; i++) { const a = w.slice(0, i).join(' '), b = w.slice(i).join(' '); const d = Math.max(c.measureText(a).width, c.measureText(b).width); if (!best || d < best.d) best = { d, a, b }; }
+                const fs = best.d > maxW ? size * maxW / best.d : size;
+                txt(c, best.a, x, y - fs * 0.55, fs, col); txt(c, best.b, x, y + fs * 0.55, fs, col);
+            }
             const slotX = (i) => SLOT_X0 + i * (SLOT_W + SLOT_GAP) + SLOT_W / 2;
             let items = [], flying = [], filled = 0, spawnT = 0.2, speed = 150, belt = 0, robo = { happy: 0, think: 0 }, outputs = [], done = 0;
             function spawn() {
-                const need = PIECES[filled % 4];
+                const need = PIECES[filled % NP];
                 const r = Math.random();
-                const kind = r < 0.42 ? need : r < 0.56 ? VAGUE : pick(PIECES);
+                const kind = r < 0.42 ? need : r < 0.58 ? pick(TRAPS) : pick(PIECES);
                 items.push({ kind, x: W + PW / 2 + 4, y: BELT_Y, shake: 0, wob: Math.random() * TAU });
             }
             function tap(it) {
-                if (filled >= 4) return;
+                if (filled >= NP) return;
                 const need = PIECES[filled];
                 if (it.kind === need) {
                     it.dead = true;
@@ -697,11 +713,11 @@
                     g.hit(1, it.x, it.y - 46, it.kind.name, '#fff');
                     g.sfx('pop');
                     filled++;
-                    if (filled === 4) {
-                        done++;
+                    if (filled === NP) {
+                        done++; g.shipped = done;
                         setTimeout(() => {
                             if (g.state !== 'play') return;
-                            g.add(5, 100, 92, 'Prompt perfekt!', '#ffd166');
+                            g.add(5, 100, 92, 'Sicher ausgeliefert ✓', '#ffd166');
                             g.sfx('bonus'); g.flash('#e9e3ff', 0.35);
                             g.burst(92, 150, 26, ['#ffd166', '#b9a8ff', '#fff', '#7ee8fa'], 300, { shape: 'star', size: 6, grav: 120 });
                             robo.happy = 1.2;
@@ -712,7 +728,7 @@
                     }
                 } else {
                     it.shake = 0.4;
-                    g.miss(it.x, it.y - 46, it.kind === VAGUE ? 'Zu unklar!' : `Erst ${need.name}!`);
+                    g.miss(it.x, it.y - 46, it.kind.msg || `Erst ${need.name}!`);
                 }
             }
             function card(c, kind, x, y, s = 1, alpha = 1) {
@@ -720,8 +736,8 @@
                 c.fillStyle = 'rgba(0,0,0,0.18)'; rr(c, -PW / 2 + 2, -PH / 2 + 5, PW, PH, 14); c.fill();
                 c.fillStyle = kind.col; rr(c, -PW / 2, -PH / 2, PW, PH, 14); c.fill();
                 c.fillStyle = 'rgba(255,255,255,0.18)'; rr(c, -PW / 2 + 4, -PH / 2 + 4, PW - 8, PH / 2 - 4, 10); c.fill();
-                emo(c, kind.ic, -PW / 2 + 24, 0, 24);
-                txt(c, kind.name, 14, 1, 14, '#fff', 'center', 800);
+                emo(c, kind.ic, -PW / 2 + 20, 0, 21);
+                label(c, kind.name, 15, 1, PW - 44, 13, '#fff');
                 c.restore(); c.globalAlpha = 1;
             }
             return {
@@ -731,7 +747,7 @@
                         speed = 150 + g.t * 7;
                         spawnT -= dt;
                         if (spawnT <= 0) { spawn(); spawnT = Math.max(0.5, 0.82 - g.t * 0.015); }
-                    } else if (!items.length && g.state !== 'over') { for (let i = 0; i < 5; i++) items.push({ kind: i % 2 ? pick(PIECES) : VAGUE, x: 70 + i * 120, y: BELT_Y, shake: 0, wob: 0 }); }
+                    } else if (!items.length && g.state !== 'over') { for (let i = 0; i < 5; i++) items.push({ kind: i % 2 ? pick(TRAPS) : PIECES[i], x: 70 + i * 120, y: BELT_Y, shake: 0, wob: 0 }); }
                     const sp = live ? speed : 40;
                     belt += sp * dt;
                     for (const it of items) { it.x -= sp * dt; it.shake = Math.max(0, it.shake - dt); }
@@ -775,21 +791,23 @@
                         c.restore();
                     }
                     // Prompt-Leiste mit vier Plätzen
-                    c.fillStyle = '#ffffff'; rr(c, SLOT_X0 - 14, SLOT_Y - 58, 4 * (SLOT_W + SLOT_GAP) - SLOT_GAP + 28, 104, 20); c.fill();
+                    c.fillStyle = '#ffffff'; rr(c, SLOT_X0 - 12, SLOT_Y - 58, NP * (SLOT_W + SLOT_GAP) - SLOT_GAP + 24, 108, 20); c.fill();
                     c.strokeStyle = '#e1dcff'; c.lineWidth = 2; c.stroke();
-                    txt(c, 'DEIN PROMPT', SLOT_X0, SLOT_Y - 40, 11, '#7b5cff', 'left', 800);
+                    txt(c, 'SICHERER KI-WORKFLOW', SLOT_X0, SLOT_Y - 40, 11, '#7b5cff', 'left', 800);
+                    c.strokeStyle = '#d6d0f5'; c.lineWidth = 2;
+                    for (let i = 0; i < NP - 1; i++) { const ax = slotX(i) + SLOT_W / 2, y = SLOT_Y + 6; c.beginPath(); c.moveTo(ax, y); c.lineTo(ax + SLOT_GAP, y); c.stroke(); }
                     PIECES.forEach((p, i) => {
                         const x = slotX(i), y = SLOT_Y + 6;
                         const isNext = i === filled && g.state === 'play';
                         if (i < filled) {
                             c.fillStyle = p.col; rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 12); c.fill();
-                            emo(c, p.ic, x, y - 8, 20); txt(c, p.name, x, y + 15, 11, '#fff');
+                            emo(c, p.ic, x, y - 12, 18); label(c, p.name, x, y + 14, SLOT_W - 8, 10.5, '#fff');
                         } else {
                             const pulse = isNext ? 0.5 + Math.sin(g.now * 8) * 0.5 : 0;
                             c.fillStyle = isNext ? p.col + '33' : '#f4f2fb'; rr(c, x - SLOT_W / 2, y - SLOT_H / 2, SLOT_W, SLOT_H, 12); c.fill();
                             c.setLineDash([6, 5]); c.strokeStyle = p.col; c.lineWidth = isNext ? 3 + pulse * 2 : 2; c.globalAlpha = isNext ? 1 : 0.45;
                             c.stroke(); c.setLineDash([]);
-                            emo(c, p.ic, x, y - 8, 20); txt(c, p.name, x, y + 15, 11, p.col);
+                            emo(c, p.ic, x, y - 12, 18); label(c, p.name, x, y + 14, SLOT_W - 8, 10.5, p.col);
                             c.globalAlpha = 1;
                         }
                     });
@@ -806,7 +824,7 @@
                         const k = ease(f.t);
                         card(c, f.kind, CV.lerp(f.x, f.tx, k), CV.lerp(f.y, f.ty, k) - Math.sin(k * Math.PI) * 60, 1 - k * 0.2, 1 - k * 0.6);
                     }
-                    if (g.state === 'play' && g.t < 2.6) { c.globalAlpha = 1 - g.t / 2.6; txt(c, 'Tippen Sie den Baustein an, der oben leuchtet!', W / 2, 392, 16, '#4b3fb0', 'center', 800); c.globalAlpha = 1; }
+                    if (g.state === 'play' && g.t < 2.6) { c.globalAlpha = 1 - g.t / 2.6; txt(c, 'Tippen Sie den Schritt an, der oben leuchtet!', W / 2, 392, 16, '#4b3fb0', 'center', 800); c.globalAlpha = 1; }
                 },
                 down(p) {
                     for (let i = items.length - 1; i >= 0; i--) {
@@ -921,7 +939,8 @@
         const traits = (d.traits || []).slice(0, 6).map(t => ['e', t]);
         const out = [], n = Math.max(proj.length, skills.length, traits.length);
         for (let i = 0; i < n; i++) [proj[i], skills[i], traits[i]].forEach(v => v && out.push(v));
-        return out;
+        // Lange Begriffe zuerst (unten, auf den breiten Blöcken), kürzere oben – der Turm wird schmaler wie eine Pyramide.
+        return out.sort((a, b) => b[1].length - a[1].length);
     }
     M.projects = arcade('projects', {
         name: 'Projekt-Stapler', icon: '🏗️', color: '#f59e0b', time: 0,
@@ -1071,8 +1090,8 @@
     // ================================================================== 7) See: SUP-Slalom
     M.lake = arcade('lake', {
         name: 'SUP-Slalom', icon: '🏄', color: '#06b6d4', time: 15, stars: [7, 18, 32],
-        goal: 'Links oder rechts tippen, um den Felsen auszuweichen. Sterne einsammeln!',
-        controls: ['arrows', 'tap'],
+        goal: 'Das Board folgt Ihrer Maus oder Ihrem Finger: einfach nach links oder rechts bewegen, Felsen ausweichen und Sterne einsammeln!',
+        controls: ['mouse', 'swipe', 'arrows'],
         result: (g) => `${g.hits} Sterne eingesammelt – Ausdauer zahlt sich aus.`,
         make(g) {
             const RL = W / 2 - 190, RR = W / 2 + 190;
@@ -1097,9 +1116,15 @@
                 if (kind === 'star') for (let i = 0; i < 3; i++) objs.push({ kind, x: LANES[free], y: -40 - i * 46, hw: 18, hh: 18 });
                 else if (kind) objs.push({ kind, x: LANES[free], y: -50, hw: kind === 'ramp' ? 40 : 20, hh: kind === 'ramp' ? 20 : 18 });
             }
-            function move(d) {
-                const nl = CV.clamp(p.lane + d, 0, 2);
+            function move(d) { setLane(p.lane + d); }
+            function setLane(l) {
+                const nl = CV.clamp(l, 0, 2);
                 if (nl !== p.lane) { p.lane = nl; g.sfx('step'); g.burst(p.x, p.y + 20, 6, ['#e0fbff', '#fff'], 100, { grav: 0, life: 0.4, size: 4 }); }
+            }
+            function follow(x) {
+                let best = 0;
+                LANES.forEach((lx, i) => { if (Math.abs(x - lx) < Math.abs(x - LANES[best])) best = i; });
+                setLane(best);
             }
             return {
                 update(dt) {
@@ -1193,9 +1218,11 @@
                     c.fillStyle = '#e0a979'; ell(c, 0, -10, 8, 8); c.fill();
                     c.fillStyle = '#2b1d14'; ell(c, 0, -13, 8, 5); c.fill();
                     c.restore(); c.globalAlpha = 1;
-                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, '← → oder links/rechts tippen', W / 2, 90, 17, '#fff', 'center', 800, 5); c.globalAlpha = 1; }
+                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, CV.isTouch ? 'Finger nach links oder rechts ziehen' : 'Maus nach links oder rechts bewegen', W / 2, 90, 17, '#fff', 'center', 800, 5); c.globalAlpha = 1; }
                 },
-                down(pp) { move(pp.x < W / 2 ? -1 : 1); },
+                // Board folgt dem Zeiger: nächstliegende Spur, die Bewegung dorthin ist weich.
+                down(pp) { follow(pp.x); },
+                move(pp) { follow(pp.x); },
                 key(k, down, _g, rep) {
                     if (!down || rep) return ['ArrowLeft', 'ArrowRight', 'a', 'd', 'A', 'D'].includes(k);
                     if (k === 'ArrowLeft' || k === 'a' || k === 'A') { move(-1); return true; }
