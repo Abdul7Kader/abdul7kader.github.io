@@ -40,11 +40,12 @@
             </button>
         </div>
         <div class="hud-right">
-            <button id="btn-search" class="glass hbtn search" title="Suchen &amp; springen (Strg+K)"><span class="ic">🔎</span><span class="lbl">Suchen</span><kbd class="lbl">Strg K</kbd></button>
-            <button id="btn-cv" class="hbtn dark" title="Lebenslauf kompakt (L)"><span class="ic">📄</span><span class="lbl">Lebenslauf</span></button>
-            <button id="btn-map" class="glass hbtn icon" title="Kapitelübersicht (M)">🗺️</button>
-            <button id="btn-sound" class="glass hbtn icon" title="Soundeffekte an/aus">🔊</button>
-            <button id="btn-music" class="glass hbtn icon off" title="Musik an/aus">♪</button>
+            <button id="btn-search" class="glass hbtn search" title="Suchen &amp; springen (Strg+K)"><span class="ic" data-ic="search"></span><span class="lbl">Suchen</span><kbd class="lbl">Strg K</kbd></button>
+            <button id="btn-contact" class="hbtn accent" title="Kontakt aufnehmen"><span class="ic" data-ic="send"></span><span class="lbl">Jetzt kontaktieren</span><span class="lbl-s">Kontakt</span></button>
+            <button id="btn-cv" class="hbtn dark" title="Lebenslauf kompakt (L)"><span class="ic" data-ic="file"></span><span class="lbl">Lebenslauf</span></button>
+            <button id="btn-map" class="glass hbtn icon" title="Kapitelübersicht (M)" aria-label="Kapitelübersicht" data-ic="map"></button>
+            <button id="btn-sound" class="glass hbtn icon" title="Soundeffekte an/aus" aria-label="Soundeffekte an/aus"></button>
+            <button id="btn-music" class="glass hbtn icon off" title="Musik an/aus" aria-label="Musik an/aus" data-ic="music"></button>
         </div>
     </header>
 
@@ -140,6 +141,19 @@
         </div>
     </section>
 
+    <!-- Kontaktformular -->
+    <section id="contact" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+        <div class="panel narrow contact-panel">
+            <button class="close" data-close="contact" aria-label="Schließen">✕</button>
+            <header class="plain-head">
+                <span class="kicker">Kontakt</span>
+                <h2 id="contact-title">Lassen Sie uns sprechen</h2>
+                <p class="muted">Schreiben Sie mir kurz – die Nachricht landet direkt in meinem Postfach.</p>
+            </header>
+            <div id="contact-body"></div>
+        </div>
+    </section>
+
     <!-- Kompakter Lebenslauf (auch Druck/PDF) -->
     <section id="cv" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Lebenslauf kompakt">
         <div class="cv-sheet" id="cv-sheet"></div>
@@ -163,6 +177,8 @@
     <script src="js/projects.js"></script>
     <script src="js/worldmap-data.js"></script>
     <script src="js/worldmap.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/pdf.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
 </body>

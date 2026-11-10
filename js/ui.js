@@ -123,7 +123,7 @@
     };
 
     // ------------------------------------------------------------------ Overlays
-    const OVERLAYS = ['station', 'journey', 'cv', 'palette'];
+    const OVERLAYS = ['contact', 'station', 'journey', 'cv', 'palette'];
     function showOverlay(id) { CV.$('#' + id).classList.remove('hidden'); CV.World.paused = true; }
     function hideOverlay(id) {
         CV.$('#' + id).classList.add('hidden');
@@ -131,6 +131,7 @@
         if (!anyOpen && CV.game.started) CV.World.paused = false;
     }
     UI.hideOverlay = hideOverlay;
+    UI.showOverlay = showOverlay;
     UI.anyOverlay = () => OVERLAYS.find(o => !CV.$('#' + o).classList.contains('hidden'));
 
     // ------------------------------------------------------------------ Station
@@ -470,7 +471,6 @@
         G.markVisited('finale');
         const c = d.contact || {};
         const body = CV.$('#station-body');
-        const subject = () => encodeURIComponent(`Kennenlernen${G.firm ? ' – ' + G.firm : ''}`);
         body.innerHTML = `
             <div class="finale">
                 <div class="tshirt">
@@ -479,9 +479,10 @@
                 </div>
                 <label class="firm">
                     <span>Ihr Unternehmen</span>
-                    <input id="firm-input" type="text" maxlength="28" autocomplete="organization" placeholder="z. B. Deutsche Bahn" value="${esc(G.firm)}">
-                    <small>Tippen Sie Ihren Firmennamen – er erscheint auf dem Aufkleber auf meinem T-Shirt.</small>
+                    <input id="firm-input" type="text" maxlength="28" autocomplete="organization" placeholder="Bitte Ihren Firmennamen eingeben" value="${esc(G.firm)}">
+                    <small>Er erscheint auf dem Aufkleber auf meinem T-Shirt.</small>
                 </label>
+                <div class="firm-next ${G.firm ? '' : 'hidden'}"><button class="btn primary big" data-act="contact">${CV.icon('send')} <span>${esc(CV.derived.firstName)} kontaktieren</span></button></div>
                 <h3 class="finale-title">${done === n ? 'Sie haben meinen ganzen Weg erkundet!' : `${done} von ${n} Kapiteln erkundet`}</h3>
                 <p class="finale-text">${esc((st.finale && st.finale.story) || '')}</p>
                 <div class="cert">
@@ -494,10 +495,10 @@
                     </ul>
                 </div>
                 <div class="cta">
-                    ${c.email ? `<a class="btn primary" data-act="mail" href="mailto:${esc(c.email)}?subject=${subject()}">✉️ Gespräch vereinbaren</a>` : ''}
-                    <button class="btn ${c.email ? 'ghost' : 'primary'}" data-act="cv">📄 Lebenslauf kompakt &amp; PDF</button>
-                    ${c.phone ? `<a class="btn ghost" href="tel:${esc(c.phone.replace(/\s/g, ''))}">📞 ${esc(c.phone)}</a>` : ''}
-                    ${c.linkedin ? `<a class="btn ghost" href="${esc(c.linkedin)}" target="_blank" rel="noopener">in LinkedIn</a>` : ''}
+                    <button class="btn ghost" data-act="contact">${CV.icon('send')} Kontakt aufnehmen</button>
+                    <button class="btn ghost" data-act="cv">${CV.icon('file')} Lebenslauf kompakt &amp; PDF</button>
+                    ${c.phone ? `<a class="btn ghost" href="tel:${esc(c.phone.replace(/\s/g, ''))}">${CV.icon('phone')} ${esc(c.phone)}</a>` : ''}
+                    ${c.linkedin ? `<a class="btn ghost" href="${esc(c.linkedin)}" target="_blank" rel="noopener">${CV.icon('linkedin')} LinkedIn</a>` : ''}
                 </div>
             </div>`;
         CV.audio.play('fanfare');
@@ -516,9 +517,10 @@
         inp.addEventListener('input', () => {
             G.setFirm(inp.value);
             cancelAnimationFrame(pending); pending = requestAnimationFrame(draw);
-            const m = body.querySelector('[data-act="mail"]');
-            if (m) m.href = `mailto:${c.email}?subject=${subject()}`;
+            body.querySelector('.firm-next').classList.toggle('hidden', !G.firm);
         });
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && G.firm) { e.preventDefault(); CV.Contact.open({ firm: G.firm }); } });
+        body.querySelectorAll('[data-act="contact"]').forEach(b => b.onclick = () => { CV.audio.play('click'); CV.Contact.open({ firm: G.firm }); });
         if (!G.firm) setTimeout(() => inp.isConnected && inp.focus({ preventScroll: true }), 400);
         body.querySelector('[data-act="cv"]').onclick = () => { closeStation(); UI.openCv('world'); };
     }
@@ -558,11 +560,12 @@
         const emojiOf = (id) => (CV.World.stations.find(s => s.id === id) || {}).emoji || '📍';
         const c = d.contact || {};
         items.push({ g: 'Aktionen', ic: '📄', t: 'Lebenslauf kompakt öffnen', s: 'Alle Fakten auf einer Seite', k: 'L', q: 'lebenslauf cv kompakt resume', run: () => { hideOverlay('palette'); UI.openCv('world'); } });
-        items.push({ g: 'Aktionen', ic: '🖨️', t: 'Als PDF speichern', s: 'Druckansicht des Lebenslaufs', q: 'pdf drucken print download', run: () => { hideOverlay('palette'); UI.openCv('world'); setTimeout(() => window.print(), 400); } });
+        items.push({ g: 'Aktionen', ic: '📄', t: 'Als PDF speichern', s: 'Farbiger Lebenslauf als PDF-Datei', q: 'pdf drucken print download speichern', run: () => { hideOverlay('palette'); UI.openCv('world'); setTimeout(() => CV.savePdf(CV.$('#cv-sheet [data-act="print"]')), 300); } });
         items.push({ g: 'Aktionen', ic: '🗺️', t: 'Kapitelübersicht', s: 'Alle Stationen & Sterne', k: 'M', q: 'karte map übersicht kapitel fortschritt', run: () => { hideOverlay('palette'); UI.openJourney(); } });
         const next = CV.game.nextId();
         if (next) items.push({ g: 'Aktionen', ic: '🎯', t: `Zum nächsten Ziel: ${stTitle(next)}`, s: 'Automatisch hinlaufen', k: 'G', q: 'weiter nächstes ziel', run: goto(next) });
         items.push({ g: 'Aktionen', ic: CV.audio.state.sfx ? '🔇' : '🔊', t: CV.audio.state.sfx ? 'Ton ausschalten' : 'Ton einschalten', s: 'Soundeffekte', q: 'ton sound audio leise mute', run: () => { CV.$('#btn-sound').click(); hideOverlay('palette'); } });
+        items.push({ g: 'Aktionen', ic: '✉️', t: 'Jetzt kontaktieren', s: 'Nachricht direkt an mich senden', q: 'kontakt mail email anfrage formular nachricht', run: () => { hideOverlay('palette'); CV.Contact.open(); } });
         if (c.email) items.push({ g: 'Aktionen', ic: '✉️', t: 'E-Mail schreiben', s: c.email, q: 'kontakt mail email', run: () => { location.href = 'mailto:' + c.email; } });
         if (c.github) items.push({ g: 'Aktionen', ic: '🐙', t: 'GitHub öffnen', s: c.github.replace(/^https?:\/\//, ''), q: 'github code repo', run: () => window.open(c.github, '_blank', 'noopener') });
         CV.game.order.forEach((id, i) => {
@@ -664,8 +667,8 @@
             <div class="cv-toolbar no-print">
                 <button class="btn ghost small" data-act="back">← ${cvReturnTo === 'start' ? 'Zurück' : 'Zurück zur Welt'}</button>
                 <div class="tb-r">
-                    ${c.email ? `<a class="btn ghost small" href="mailto:${esc(c.email)}">✉️ Kontakt</a>` : ''}
-                    <button class="btn dark small" data-act="print">📄 Als PDF speichern</button>
+                    <button class="btn ghost small" data-act="contact">${CV.icon('send')} Kontakt</button>
+                    <button class="btn dark small" data-act="print">${CV.icon('download')} Als PDF speichern</button>
                 </div>
             </div>
             <article class="cv-page">
@@ -710,7 +713,8 @@
             </footer>`;
         const sheet = CV.$('#cv-sheet');
         sheet.querySelector('[data-act="back"]').onclick = () => UI.closeCv();
-        sheet.querySelector('[data-act="print"]').onclick = () => { CV.audio.play('click'); window.print(); };
+        sheet.querySelector('[data-act="print"]').onclick = (e) => { CV.audio.play('click'); CV.savePdf(e.currentTarget); };
+        sheet.querySelector('[data-act="contact"]').onclick = () => { CV.audio.play('click'); CV.Contact.open(); };
         sheet.querySelector('[data-act="play"]').onclick = () => { UI.closeCv(true); };
         animateBars(sheet);
     }

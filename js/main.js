@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#btn-cv').onclick = () => { CV.audio.play('click'); CV.UI.openCv('world'); };
     $('#btn-map').onclick = () => { CV.audio.play('click'); CV.UI.openJourney(); };
     $('#btn-search').onclick = () => CV.UI.openPalette();
+    $('#btn-contact').onclick = () => { CV.audio.play('click'); CV.Contact.open(); };
+    CV.$$('[data-ic]').forEach(el => { el.innerHTML = CV.icon(el.dataset.ic); });
     $('#hud-profile').onclick = () => { CV.audio.play('click'); CV.UI.openJourney(); };
     const goNext = () => { const n = G.nextId(); if (n) { CV.audio.play('click'); CV.World.walkToStation(n); } };
     $('#objective').onclick = goNext;
@@ -158,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     CV.$$('[data-close]').forEach(b => b.onclick = () => CV.UI.hideOverlay(b.dataset.close));
     const snd = $('#btn-sound'), mus = $('#btn-music');
     const syncAudioBtns = () => {
-        snd.textContent = CV.audio.state.sfx ? '🔊' : '🔈';
+        snd.innerHTML = CV.icon(CV.audio.state.sfx ? 'volume' : 'mute');
         snd.classList.toggle('off', !CV.audio.state.sfx);
         mus.classList.toggle('off', !CV.audio.state.music);
     };
@@ -183,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 150);
 
     // Klick außerhalb des Panels schließt Overlays
-    ['station', 'journey', 'palette'].forEach(id => {
+    ['station', 'journey', 'palette', 'contact'].forEach(id => {
         $('#' + id).addEventListener('pointerdown', (e) => {
             if (e.target.id === id) id === 'station' ? CV.UI.closeStation() : CV.UI.hideOverlay(id);
         });
