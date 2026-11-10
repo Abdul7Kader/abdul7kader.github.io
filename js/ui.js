@@ -278,6 +278,8 @@
             closeStation();
             if (nextId) setTimeout(() => CV.World.walkToStation(nextId), 250);
         };
+        const ghr = body.querySelector('.gh-root');
+        if (ghr && CV.GitHub) CV.GitHub.mount(ghr, { onReady: () => { const l = body.querySelector('.gh-card'); if (l && ghr.nextElementSibling === l) l.remove(); } });
         const wm = body.querySelector('.wm-root');
         if (wm && CV.WorldMap) CV.WorldMap.mount(wm, D().countries);
         const pv = body.querySelector('.pv-wrap');
@@ -353,6 +355,8 @@
                     ${(r.bullets || []).length ? `<ul>${r.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div>` : ''}
                 ${(CV.data.aiSkills || []).length ? `<h3>KI-Kompetenzen</h3><div class="ai-grid">${CV.data.aiSkills.map(a => `<div class="ai-item"><strong>${esc(a.name)}</strong><span>${esc(a.text)}</span></div>`).join('')}</div>` : ''}
                 ${D().skills.map(s => `<h3>${esc(s.name)}${s.note ? ` <small class="h-note">${esc(s.note)}</small>` : ''}</h3>${chips(String(s.level).split(',').map(x => x.trim()).filter(Boolean))}`).join('')}
+                <h3>Woran ich gerade arbeite</h3>
+                <div class="gh-root"></div>
                 ${ghBtn()}`;
         },
         projects(result) {
@@ -690,6 +694,7 @@
                         ${tl(x.experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets, badge: e.badge, note: e.note }))}
                         <h2>Bildungsweg</h2>
                         ${tl(x.educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}
+                        <div class="no-print cv-gh"><h2>GitHub-Aktivität</h2><div class="gh-root"></div></div>
                         ${(d.volunteer || []).length ? `<h2>Ehrenamtliches Engagement</h2>${tl(d.volunteer, v => ({ date: v.date, title: v.title, sub: v.role || v.detail || '' }))}` : ''}
                     </div>
                     <aside>
@@ -717,6 +722,8 @@
         sheet.querySelector('[data-act="contact"]').onclick = () => { CV.audio.play('click'); CV.Contact.open(); };
         sheet.querySelector('[data-act="play"]').onclick = () => { UI.closeCv(true); };
         animateBars(sheet);
+        const ghr = sheet.querySelector('.gh-root');
+        if (ghr && CV.GitHub) CV.GitHub.mount(ghr, { compact: true }).then(() => { if (!ghr.innerHTML) ghr.parentElement.remove(); });
     }
     UI.closeCv = function (play) {
         hideOverlay('cv');
