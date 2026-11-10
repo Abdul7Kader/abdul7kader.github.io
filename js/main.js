@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     CV.data = window.resumeData || {};
     CV.derived = CV.derive(CV.data);
     const d = CV.data, x = CV.derived;
-    const ORDER = ['arrival', 'language', 'school', 'career', 'lab', 'projects', 'lake', 'finale'];
+    const ORDER = ['arrival', 'school', 'career', 'lab', 'projects', 'lake', 'finale'];
+    const CH = ORDER.length - 1;   // Kapitel ohne Finale
     const st = d.stations || {};
 
     const G = CV.game = {
@@ -14,19 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
         visited: new Set(CV.store.get('visited', []).filter(id => ORDER.includes(id))),
         firm: CV.param('firma') || CV.param('company') || CV.store.get('firm', ''),
         nextId() {
-            return ORDER.slice(0, 7).find(id => !this.visited.has(id)) || (this.visited.has('finale') ? null : 'finale');
+            return ORDER.slice(0, CH).find(id => !this.visited.has(id)) || (this.visited.has('finale') ? null : 'finale');
         },
-        allVisited() { return ORDER.slice(0, 7).every(id => this.visited.has(id)); },
+        allVisited() { return ORDER.slice(0, CH).every(id => this.visited.has(id)); },
         markVisited(id) {
             if (this.visited.has(id)) return;
             const wasAll = this.allVisited();
             this.visited.add(id);
             CV.store.set('visited', Array.from(this.visited));
             CV.UI.updateHud();
-            if (id !== 'finale') {
-                const s = st[id] || {};
-                CV.UI.achieve(s.badgeIcon || '⭐', 'Stärke freigeschaltet', CV.esc(s.badge || s.title || ''), 2800);
-            }
             if (!wasAll && this.allVisited() && id !== 'finale') this.allDone = true;
         },
         setFirm(name) {
@@ -50,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const returning = this.visited.size > 0;
             setTimeout(() => {
                 CV.World.sayRobot(returning
-                    ? `Willkommen zurück! ${Math.min(7, this.visited.size)} Kapitel kennen Sie schon. Weiter geht’s! 🤖`
+                    ? `Willkommen zurück! ${Math.min(CH, this.visited.size)} Kapitel kennen Sie schon. Weiter geht’s! 🤖`
                     : `Hi, ich bin Bit 🤖 – ${x.firstName}s Assistent. Folgen Sie dem orangen Pfeil – oder ${window.innerWidth < 640 ? 'unten' : 'oben links'} auf „Nächstes Ziel“ ${CV.isTouch ? 'tippen' : 'klicken'}!`, 5600);
             }, 700);
             if (!returning) setTimeout(() => CV.World.say(CV.World.player, 'Kommen Sie mit – hier beginnt mein Weg! 👋', 3800), 6600);
@@ -63,10 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     CV.UI.achieve('🏆', 'Alle Kapitel entdeckt', 'Das Finale wartet auf dem Hügel!', 4200, 'gold');
                     CV.World.sayRobot('Wow, alles entdeckt! Kommen Sie mit zum Finale auf dem Hügel 🏆', 5000);
                 }, 400);
-            } else if (id && id !== 'finale') {
-                const next = this.nextId();
-                const s = next && CV.World.stations.find(s2 => s2.id === next);
-                if (s) setTimeout(() => CV.World.sayRobot(`Nächster Halt: ${s.emoji} ${(st[next] && st[next].title) || s.title}`, 3000), 300);
             }
             idleReset();
         }
@@ -82,16 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const who = CV.param('name');
     $('#start-greeting').textContent = who && G.firm ? `👋 Hallo ${who} von ${G.firm}!` : G.firm ? `👋 Willkommen, Team ${G.firm}!` : who ? `👋 Hallo ${who}!` : '👋 Schön, dass Sie da sind';
     $('#pc-name').textContent = d.name || '';
-    $('#pc-class').textContent = x.currentRole ? `${x.currentRole.role} · ${x.currentRole.companyShort}` : (d.title || '');
+    $('#pc-class').textContent = d.cardRole || 'Full-Stack-Entwickler · Informatikstudent';
     $('#pc-status').textContent = d.availability ? d.availability.replace(/^Offen für /i, 'offen für ') : 'verfügbar';
     const stats = [];
-    if (x.roleSinceYear && x.currentRole) stats.push([String(x.roleSinceYear), `bei ${x.currentRole.companyShort.replace(/\s+(SE|GmbH|AG)$/i, '')}`]);
+    if (x.devYears) stats.push([x.devYears.value, x.devYears.label]);
     if (x.languages.length) stats.push([String(x.languages.length), 'Sprachen']);
     if (x.countries.length) stats.push([String(x.countries.length), 'Länder bereist']);
     $('#start-stats').innerHTML = stats.slice(0, 3).map(([v, l]) => `<div class="stat"><b>${CV.esc(v)}</b><span>${CV.esc(l)}</span></div>`).join('');
-    const seen = G.order.slice(0, 7).filter(id => G.visited.has(id)).length;
-    $('#start-chapters').innerHTML = ORDER.slice(0, 7).map(id => `<span class="${G.visited.has(id) ? 'got' : ''}" title="${CV.esc((st[id] || {}).badge || '')}">${CV.esc((st[id] || {}).badgeIcon || '⭐')}</span>`).join('');
-    $('#start-foot').textContent = seen ? `Willkommen zurück – Sie haben bereits ${seen} von 7 Kapiteln entdeckt.` : 'Ohne Installation · Maus, Tastatur oder Touch · kein Game Over';
+    const seen = G.order.slice(0, CH).filter(id => G.visited.has(id)).length;
+    $('#start-chapters').innerHTML = ORDER.slice(0, CH).map(id => `<span class="${G.visited.has(id) ? 'got' : ''}" title="${CV.esc((st[id] || {}).badge || '')}">${CV.esc((st[id] || {}).badgeIcon || '⭐')}</span>`).join('');
+    $('#start-foot').textContent = seen ? `Willkommen zurück – Sie haben bereits ${seen} von ${CH} Kapiteln entdeckt.` : 'Ohne Installation · Maus, Tastatur oder Touch · kein Game Over';
     if (seen) $('#start-play .cta-txt b').textContent = 'Weiter spielen';
 
     // Spielerkarte folgt der Maus (3D-Neigung)
@@ -112,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     CV.World.init($('#world'));
     CV.World.onEnterStation = (id) => CV.UI.openStation(id);
     // Erster Besuch: automatisch hinein. Danach nur noch per „Betreten“ (Knopf, E/Enter oder Klick aufs Gebäude).
-    const missing = () => ORDER.slice(0, 7).filter(id => !G.visited.has(id)).length;
+    const missing = () => ORDER.slice(0, CH).filter(id => !G.visited.has(id)).length;
     CV.World.isLocked = (id) => id === 'finale' && !G.allVisited();
     CV.World.canAutoEnter = (id) => !G.visited.has(id) && !CV.World.isLocked(id);
     let lockSaid = 0;
@@ -121,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (performance.now() - lockSaid < 2500) return;
         lockSaid = performance.now();
         CV.audio.play('bad');
-        CV.World.sayRobot(`🔒 Das letzte Kapitel öffnet sich erst, wenn Sie alle 7 Gebäude besucht haben – noch ${n} offen.`, 4200);
+        CV.World.sayRobot(`🔒 Das letzte Kapitel öffnet sich erst, wenn Sie alle ${CH} Gebäude besucht haben – noch ${n} offen.`, 4200);
     };
     CV.World.onFirstMove = () => setTimeout(() => $('#controls-hint').classList.add('hidden'), 2500);
     const tokMax = CV.World.tokenCount();

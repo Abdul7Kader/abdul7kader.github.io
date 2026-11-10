@@ -10,7 +10,6 @@
     // Farbwelt je Station (Verlauf im Kopf des Dialogs, Akzente im Inhalt)
     const THEME = {
         arrival: ['#3a86ff', '#22b8e6'],
-        language: ['#7b5cff', '#c05cff'],
         school: ['#ff7a3d', '#ffb02e'],
         career: ['#0fa89a', '#21c7a8'],
         lab: ['#16a34a', '#0ea5a4'],
@@ -178,7 +177,6 @@
                 <div class="gc-txt">
                     <span class="kicker">Minispiel · ${mg.time ? `${mg.time} Sek.` : 'ohne Zeitlimit'}</span>
                     <strong>${esc(mg.name)}</strong>
-                    <p>${esc(mg.goal)}</p>
                     ${best ? `<span class="gc-best">Bestwert ${best} · ${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span>` : ''}
                 </div>
                 <button class="btn primary" data-act="play">▶ Spielen</button>
@@ -256,7 +254,7 @@
                 <div>
                     <small>${firstTime ? 'Stärke freigeschaltet' : 'Ergebnis'}${result ? `<span class="a-stars">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</span>` : ''}</small>
                     <strong>${esc(st.badge || '')}</strong>
-                    ${result ? `<p>${esc(result.text)}</p>` : ''}
+                    ${result ? `<p>${result.score} Punkte${result.isBest ? ' · neuer Bestwert' : ''}</p>` : ''}
                 </div>
             </div>` : '';
         body.innerHTML = `
@@ -295,7 +293,7 @@
     const timeline = (items, map) => `<ol class="timeline">${items.map(it => {
         const m = map(it);
         const bl = (m.bullets || []).length ? `<ul class="tl-bullets">${m.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : '';
-        return `<li class="${m.current ? 'current' : ''}"><span class="tl-date">${esc(String(m.date).replace(/Aktuell/, 'heute'))}${m.current ? ' <em>aktuell</em>' : ''}</span><strong>${esc(m.title)}</strong><span class="tl-sub">${esc(m.sub)}</span>${bl}</li>`;
+        return `<li class="${m.current ? 'current' : ''}"><span class="tl-date">${esc(String(m.date).replace(/Aktuell/, 'heute'))}${m.current ? ' <em>aktuell</em>' : ''}</span><strong>${esc(m.title)}</strong><span class="tl-sub">${esc(m.sub)}</span>${m.badge ? `<span class="noai">${esc(m.badge)}</span>` : ''}${bl}</li>`;
     }).join('')}</ol>`;
     const ghBtn = () => {
         const gh = (CV.data.contact || {}).github;
@@ -319,20 +317,18 @@
                 <h3>Bereiste Länder</h3>
                 <div class="flags">${D().countries.map(c => `<span class="flagchip">${CV.flag(c)} ${esc(c)}</span>`).join('')}</div>`;
         },
-        language() {
-            return `<h3>Meine Sprachen</h3>${langBars()}
-                ${D().languageCourses.length ? `<h3>Der Weg zur Sprache</h3>${timeline(D().languageCourses, e => ({ date: e.date, title: e.title, sub: e.detail }))}` : ''}`;
-        },
         school() {
-            return `<h3>Bildungsweg</h3>${timeline(D().academic, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}`;
+            return `<h3>Vom Integrationskurs zum Studium</h3>${timeline(D().educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}
+                <h3>Meine Sprachen heute</h3>${langBars()}`;
         },
         career() {
-            return `<h3>Berufserfahrung</h3>${timeline(D().experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets }))}`;
+            return `<h3>Berufserfahrung</h3>${timeline(D().experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets, badge: e.badge }))}`;
         },
         lab() {
             const r = D().currentRole;
             return `
-                ${r ? `<div class="role-card"><span class="kicker">Aktuelle Position</span><strong>${esc(r.role)}</strong><span>${esc(r.company)} · seit ${esc(String(r.date).split('-')[0].trim())}</span>
+                ${r ? `<div class="role-card"><span class="kicker">Aktuelle Position</span><strong>${esc(r.role)}</strong><span class="rc-sub">${esc(r.company)} · seit ${esc(String(r.date).split('-')[0].trim())}</span>
+                    ${r.badge || r.note ? `<p class="rc-noai">${r.badge ? `<b>${esc(r.badge)}</b>` : ''}${r.note ? `<span>${esc(r.note)}</span>` : ''}</p>` : ''}
                     ${(r.bullets || []).length ? `<ul>${r.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div>` : ''}
                 ${(CV.data.aiSkills || []).length ? `<h3>KI-Kompetenzen</h3><div class="ai-grid">${CV.data.aiSkills.map(a => `<div class="ai-item"><strong>${esc(a.name)}</strong><span>${esc(a.text)}</span></div>`).join('')}</div>` : ''}
                 ${D().skills.map(s => `<h3>${esc(s.name)}${s.note ? ` <small class="h-note">${esc(s.note)}</small>` : ''}</h3>${chips(String(s.level).split(',').map(x => x.trim()).filter(Boolean))}`).join('')}
@@ -352,12 +348,17 @@
             ${ghBtn()}`;
         },
         lake() {
-            return `<div class="hobbies">${(CV.data.hobbies || []).map(h => {
-                const m = String(h).match(/^(\S+)\s+(.*)$/);
-                const isEmoji = m && /\p{Extended_Pictographic}/u.test(m[1]);
-                return `<div class="hobby"><b>${esc(isEmoji ? m[1] : '⭐')}</b><span>${esc(isEmoji ? m[2] : h)}</span></div>`;
+            return `<h3>Freizeit</h3><div class="hobbies">${(CV.data.hobbies || []).map(h => {
+                const t = CV.noEmoji(h);
+                return `<div class="hobby"><b>${CV.icon(CV.hobbyIcon(t))}</b><span>${esc(t)}</span></div>`;
             }).join('')}</div>
-            ${(CV.data.volunteer || []).length ? `<h3>Ehrenamtliches Engagement</h3>${timeline(CV.data.volunteer, v => ({ date: v.date, title: v.title, sub: v.detail }))}` : ''}`;
+            ${(CV.data.volunteer || []).length ? `<h3>Ehrenamtliches Engagement</h3><div class="vol-grid">${CV.data.volunteer.map(v => `
+                <article class="vol">
+                    <span class="vol-ic">${CV.icon(v.icon || 'heart')}</span>
+                    <div><span class="vol-meta">${esc(v.date || '')}${v.role ? ' · ' + esc(v.role) : ''}</span>
+                    <strong>${esc(v.title)}</strong>
+                    <p>${esc(v.text || v.detail || '')}</p></div>
+                </article>`).join('')}</div>` : ''}`;
         }
     };
 
@@ -471,7 +472,6 @@
                     ${c.phone ? `<a class="btn ghost" href="tel:${esc(c.phone.replace(/\s/g, ''))}">📞 ${esc(c.phone)}</a>` : ''}
                     ${c.linkedin ? `<a class="btn ghost" href="${esc(c.linkedin)}" target="_blank" rel="noopener">in LinkedIn</a>` : ''}
                 </div>
-                <p class="muted small">Danke für Ihre Zeit – ich freue mich darauf, von Ihnen zu hören.</p>
             </div>`;
         CV.audio.play('fanfare');
         CV.World.confettiOnPlayer(160);
@@ -508,7 +508,7 @@
             const s = CV.World.stations.find(x => x.id === id), meta = st[id] || {};
             const mg = CV.Minigames[id];
             const locked = CV.World.isLocked && CV.World.isLocked(id);
-            const status = locked ? `<span class="js">🔒 gesperrt<small>öffnet nach allen 7 Kapiteln</small></span>` : G.visited.has(id)
+            const status = locked ? `<span class="js">🔒 gesperrt<small>öffnet nach allen ${n} Kapiteln</small></span>` : G.visited.has(id)
                 ? `<span class="js done">✓ entdeckt${mg ? `<span class="st">${starStr(starsOf(id))}</span>` : ''}</span>`
                 : id === next ? '<span class="js next"><span class="pill">nächstes Ziel</span></span>' : `<span class="js">offen${mg ? `<small>${esc(mg.icon)} ${esc(mg.name)}</small>` : ''}</span>`;
             return `<li class="${id === next ? 'is-next' : ''}"><button data-id="${id}"><span class="je">${s.emoji}</span><span class="jt"><strong>${esc(meta.title || s.title)}</strong><small>${esc(meta.era || '')}${meta.badge ? ' · ' + esc(meta.badge) : ''}</small></span>${status}</button></li>`;
@@ -540,12 +540,12 @@
         if (c.github) items.push({ g: 'Aktionen', ic: '🐙', t: 'GitHub öffnen', s: c.github.replace(/^https?:\/\//, ''), q: 'github code repo', run: () => window.open(c.github, '_blank', 'noopener') });
         CV.game.order.forEach((id, i) => {
             const s = st[id] || {};
-            items.push({ g: 'Kapitel', ic: emojiOf(id), t: `${i < 7 ? (i + 1) + '. ' : ''}${stTitle(id)}`, s: [s.era, s.badge].filter(Boolean).join(' · '), q: `${stTitle(id)} ${s.badge || ''} ${s.story || ''}`, run: goto(id) });
+            items.push({ g: 'Kapitel', ic: emojiOf(id), t: `${i < CV.game.order.length - 1 ? (i + 1) + '. ' : ''}${stTitle(id)}`, s: [s.era, s.badge].filter(Boolean).join(' · '), q: `${stTitle(id)} ${s.badge || ''} ${s.story || ''}`, run: goto(id) });
         });
         x.skillTokens.forEach(tk => items.push({ g: 'Inhalte', ic: CV.skillIcon(tk), t: tk, s: `Kenntnis · ${stTitle('lab')}`, q: tk, run: info('lab') }));
         x.experienceDesc.forEach(e => items.push({ g: 'Inhalte', ic: '💼', t: e.role, s: `${e.company} · ${e.date}`, q: `${e.role} ${e.company} beruf job arbeit`, run: info('career') }));
         x.academic.forEach(e => items.push({ g: 'Inhalte', ic: '🎓', t: e.title, s: `${e.detail} · ${e.date}`, q: `${e.title} ${e.detail} studium schule ausbildung`, run: info('school') }));
-        x.languages.forEach(l => items.push({ g: 'Inhalte', ic: '🗣️', t: l.name, s: `Sprache · ${l.level}`, q: `${l.name} ${l.level} sprache`, run: info('language') }));
+        x.languages.forEach(l => items.push({ g: 'Inhalte', ic: '🗣️', t: l.name, s: `Sprache · ${l.level}`, q: `${l.name} ${l.level} sprache`, run: info('school') }));
         (d.projects || []).forEach(p => items.push({ g: 'Inhalte', ic: '🚀', t: p.title, s: `${p.tech} · Projekt`, q: `${p.title} ${p.tech} ${p.detail} projekt`, run: info('projects') }));
         (d.aiSkills || []).forEach(a => items.push({ g: 'Inhalte', ic: '🤖', t: a.name, s: 'KI-Kompetenz', q: `${a.name} ${a.text} ki ai prompt`, run: info('lab') }));
         (d.volunteer || []).forEach(v => items.push({ g: 'Inhalte', ic: '💛', t: v.title, s: `Ehrenamt · ${v.date}`, q: `${v.title} ${v.detail} ehrenamt engagement`, run: info('lake') }));
@@ -625,13 +625,14 @@
     function renderCv() {
         const d = CV.data, x = CV.derived, c = d.contact || {};
         const contact = [
-            d.location ? `<span>📍 ${esc(d.location)}</span>` : '',
-            c.email ? `<a href="mailto:${esc(c.email)}">✉️ ${esc(c.email)}</a>` : '',
-            c.phone ? `<a href="tel:${esc(c.phone.replace(/\s/g, ''))}">📞 ${esc(c.phone)}</a>` : '',
-            c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : '',
-            c.github ? `<a href="${esc(c.github)}" target="_blank" rel="noopener">🐙 ${esc(c.github.replace(/^https?:\/\/(www\.)?/, ''))}</a>` : ''
+            d.location ? `<span>${CV.icon('pin')} ${esc(d.location)}</span>` : '',
+            c.email ? `<a href="mailto:${esc(c.email)}">${CV.icon('mail')} ${esc(c.email)}</a>` : '',
+            c.phone ? `<a href="tel:${esc(c.phone.replace(/\s/g, ''))}">${CV.icon('phone')} ${esc(c.phone)}</a>` : '',
+            c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank" rel="noopener">${CV.icon('linkedin')} LinkedIn</a>` : '',
+            c.github ? `<a href="${esc(c.github)}" target="_blank" rel="noopener">${CV.icon('github')} ${esc(c.github.replace(/^https?:\/\/(www\.)?/, ''))}</a>` : '',
+            `<a href="${esc(location.origin + location.pathname)}" target="_blank" rel="noopener" class="only-print">${CV.icon('globe')} ${esc((location.host + location.pathname).replace(/index\.html$/, '').replace(/\/$/, ''))}</a>`
         ].filter(Boolean).join('');
-        const tl = (items, map) => `<ol class="cv-tl">${items.map(it => { const m = map(it); return `<li class="${m.current ? 'current' : ''}"><span class="d">${esc(String(m.date).replace(/Aktuell/, 'heute'))}</span><div><strong>${esc(m.title)}</strong><span>${esc(m.sub)}</span>${(m.bullets || []).length ? `<ul class="cv-bullets">${m.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div></li>`; }).join('')}</ol>`;
+        const tl = (items, map) => `<ol class="cv-tl">${items.map(it => { const m = map(it); return `<li class="${m.current ? 'current' : ''}"><span class="d">${esc(String(m.date).replace(/Aktuell/, 'heute'))}</span><div><strong>${esc(m.title)}</strong><span>${esc(m.sub)}</span>${m.badge ? `<em class="cv-noai">${esc(m.badge)}${m.note ? ` – ${esc(m.note)}` : ''}</em>` : ''}${(m.bullets || []).length ? `<ul class="cv-bullets">${m.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div></li>`; }).join('')}</ol>`;
         CV.$('#cv-sheet').innerHTML = `
             <div class="cv-toolbar no-print">
                 <button class="btn ghost small" data-act="back">← ${cvReturnTo === 'start' ? 'Zurück' : 'Zurück zur Welt'}</button>
@@ -651,25 +652,25 @@
                     </div>
                 </header>
                 ${d.summary ? `<p class="cv-summary">${esc(d.summary)}</p>` : ''}
-                ${(d.strengths || []).length ? `<section class="cv-strengths">${d.strengths.map(s => `<div><b>${esc(s.icon || '★')}</b><strong>${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join('')}</section>` : ''}
+                ${(d.strengths || []).length ? `<section class="cv-strengths">${d.strengths.map(s => `<div><b>${CV.icon(s.icon) || CV.icon('check')}</b><strong>${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join('')}</section>` : ''}
                 <div class="cv-grid">
                     <div>
                         ${(d.aiSkills || []).length ? `<h2>KI-Kompetenzen</h2><dl class="cv-dl">${d.aiSkills.map(a => `<dt>${esc(a.name)}</dt><dd>${esc(a.text)}</dd>`).join('')}</dl>` : ''}
                         <h2>Berufliche Tätigkeiten</h2>
-                        ${tl(x.experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets }))}
+                        ${tl(x.experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets, badge: e.badge, note: e.note }))}
                         <h2>Bildungsweg</h2>
                         ${tl(x.educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}
-                        ${(d.volunteer || []).length ? `<h2>Ehrenamtliches Engagement</h2>${tl(d.volunteer, v => ({ date: v.date, title: v.title, sub: v.detail }))}` : ''}
+                        ${(d.volunteer || []).length ? `<h2>Ehrenamtliches Engagement</h2>${tl(d.volunteer, v => ({ date: v.date, title: v.title, sub: v.role || v.detail || '' }))}` : ''}
                     </div>
                     <aside>
                         <h2>Kenntnisse</h2>
                         ${x.skills.map(s => `<h4>${esc(s.name)}</h4><p class="cv-chips">${String(s.level).split(',').map(t => `<span>${esc(t.trim())}</span>`).join('')}</p>${s.note ? `<p class="cv-note">${esc(s.note)}</p>` : ''}`).join('')}
                         <h2>Projekte</h2>
-                        <ul class="cv-projects">${(d.projects || []).map(p => `<li><strong>${esc(p.title)}</strong> <em>${esc(p.tech)}</em><span>${esc(p.detail)}</span></li>`).join('')}</ul>
+                        <ul class="cv-projects">${(d.projects || []).map(p => `<li><strong>${esc(p.title)}</strong> <em class="cv-stage ${CV.projStage(p).cls}">${esc(CV.projStage(p).label)}</em>${p.tech ? `<small>${esc(p.tech)}</small>` : ''}<span>${esc(p.detail)}</span></li>`).join('')}</ul>
                         <h2>Sprachen</h2>
                         ${x.languages.map(l => `<div class="cv-lang"><div><strong>${esc(l.name)}</strong><span>${esc(l.level)}</span></div><div class="bar"><i data-pct="${CV.levelPct(l.level)}"></i></div></div>`).join('')}
                         <h2>Interessen</h2>
-                        <ul class="cv-plain">${(d.hobbies || []).map(h => `<li>${esc(h)}</li>`).join('')}</ul>
+                        <p class="cv-travel">${(d.hobbies || []).map(h => esc(CV.noEmoji(h))).join(' · ')}</p>
                         <h2>Reisen</h2>
                         <p class="cv-travel"><strong>${x.countries.length} Länder</strong> – ${x.countries.map(n => esc(n)).join(', ')}</p>
                         ${(d.extras || []).length ? `<h2>Weitere Angaben</h2><ul class="cv-plain">${d.extras.map(e => `<li><strong>${esc(e.name)}:</strong> ${esc(e.text)}</li>`).join('')}</ul>` : ''}
@@ -677,7 +678,7 @@
                 </div>
             </article>
             <footer class="cv-foot no-print">
-                <div><strong>Lust auf die spielerische Version?</strong>7 kurze Kapitel – in ca. 3 Minuten.</div>
+                <div><strong>Lust auf die spielerische Version?</strong>${CV.game.order.length - 1} kurze Kapitel – in ca. 3 Minuten.</div>
                 <button class="btn primary" data-act="play">▶ Welt erkunden</button>
             </footer>`;
         const sheet = CV.$('#cv-sheet');

@@ -1,4 +1,4 @@
-// Sieben Arcade-Minispiele (je ca. 20 Sekunden) auf einer gemeinsamen Engine:
+// Sechs Arcade-Minispiele (je ca. 20 Sekunden) auf einer gemeinsamen Engine:
 // Startkarte → Countdown → Spiel mit Combo, Screenshake & Partikeln → Ergebnis mit Sternen und Bestwert.
 // Alle Spiele sind fehlerverzeihend: Es gibt kein „Game Over“, Fehler kosten nur die Combo.
 (function () {
@@ -381,7 +381,7 @@
         name: 'Stempel-Jet', icon: '✈️', color: '#3a86ff', time: 15, stars: [6, 16, 30],
         goal: 'Gedrückt halten = steigen, loslassen = sinken. Sammeln Sie Länder-Stempel ein!',
         controls: ['hold', 'space', 'tap'],
-        result: (g) => `${g.hits} Stempel im Pass! Ich selbst war schon in ${D().countries.length} Ländern – neue Kulturen machen mich offen und anpassungsfähig.`,
+        result: (g) => `${g.hits} Stempel im Pass – gleich sehen Sie, wo ich wirklich überall war.`,
         make(g) {
             const countries = CV.shuffle(D().countries.filter(n => !/deutschland|syrien/i.test(n)));
             let ci = 0, hold = false, spawnT = 0.9, speed = 230, scroll = 0;
@@ -512,7 +512,7 @@
         }
     });
 
-    // ================================================================== 2) Sprachschule: Wort-Ninja
+    // ================================================================== 2) Bildungsweg: Wort-Ninja
     const WORDS = [
         { de: 'Hallo', ar: 'مرحبا', en: 'Hello', fr: 'Bonjour' },
         { de: 'Danke', ar: 'شكراً', en: 'Thanks', fr: 'Merci' },
@@ -526,11 +526,11 @@
         { de: 'Familie', ar: 'عائلة', en: 'Family', fr: 'Famille' }
     ];
     const LANG = { ar: ['AR', '#2a9d8f'], en: ['EN', '#3a86ff'], fr: ['FR', '#e63946'], de: ['DE', '#f4a300'] };
-    M.language = arcade('language', {
+    M.school = arcade('school', {
         name: 'Wort-Ninja', icon: '🥷', color: '#7b5cff', time: 15, stars: [8, 20, 34],
         goal: 'Wischen Sie durch die fliegenden Wörter in vier Sprachen. Nur die Bomben 💣 nicht treffen!',
         controls: ['swipe', 'hold'],
-        result: (g) => `${g.hits} Wörter zerlegt! Arabisch, Deutsch (C1), Englisch und Französisch – zwischen ${D().languages.length} Sprachen wechsle ich jeden Tag.`,
+        result: (g) => `${g.hits} Wörter zerlegt – ganz ohne Wörterbuch.`,
         make(g) {
             let items = [], halves = [], trail = [], spawnT = 0.4, swipeN = 0, swipeT = 0, stun = 0;
             const bg = Array.from({ length: 14 }, () => ({ x: rnd(0, W), y: rnd(0, H), s: pick(['A', 'ع', 'é', 'ß', 'Ω', 'ç', 'ä', 'ل']), size: rnd(26, 70), sp: rnd(4, 12) }));
@@ -658,167 +658,6 @@
                     trail.push({ x: p.x, y: p.y, t: 0 });
                 },
                 up() { swipeN = 0; }
-            };
-        }
-    });
-
-    // ================================================================== 3) Campus: Abi-Sprint
-    M.school = arcade('school', {
-        name: 'Abi-Sprint', icon: '🎓', color: '#ff8a3d', time: 15, stars: [8, 22, 42],
-        goal: 'Tippen = springen. Hüpfen Sie über die Bücherstapel und sammeln Sie Glühbirnen ein!',
-        controls: ['click', 'space', 'tap'],
-        result: () => {
-            const abi = (D().academic || []).find(e => /reife|abitur/i.test(e.title));
-            return `Geschafft! ${abi ? `Mein Abitur habe ich am ${abi.detail} gemacht – ` : ''}parallel zum Job. Heute studiere ich Informatik an der FH Dortmund.`;
-        },
-        make(g) {
-            const GY = H - 74;
-            const p = { x: 120, y: GY, vy: 0, jumps: 0, stumble: 0, inv: 0, run: 0, squash: 0 };
-            let speed = 300, target = 300, dist = 0, nextObs = 520, obs = [], items = [], held = false;
-            const town = Array.from({ length: 10 }, (_, i) => ({ x: i * 110, w: rnd(60, 100), h: rnd(60, 140), c: pick(['#c9d6f2', '#d6cdee', '#c4e0e5']) }));
-            const trees = Array.from({ length: 8 }, (_, i) => ({ x: i * 140 + rnd(0, 60), s: rnd(0.8, 1.2) }));
-            function spawnObs() {
-                const type = pick(['books', 'books', 'clock', 'exam']);
-                const o = { type, x: W + 40, w: 40, h: 40, ph: Math.random() * TAU };
-                if (type === 'books') { o.n = 2 + Math.floor(Math.random() * 3); o.h = o.n * 15; o.w = 46; o.cols = Array.from({ length: o.n }, () => pick(['#e63946', '#3a86ff', '#2a9d8f', '#ffb703', '#8338ec'])); }
-                if (type === 'clock') { o.w = 40; o.h = 46; }
-                if (type === 'exam') { o.w = 52; o.h = 54; }
-                obs.push(o);
-                // Geistesblitze im Bogen über dem Hindernis
-                const arc = Math.random() < 0.7;
-                for (let i = 0; i < 3; i++) {
-                    const gold = i === 1 && Math.random() < 0.15;
-                    items.push({ x: o.x + o.w / 2 + (i - 1) * 42, y: arc ? GY - o.h - 46 - (i === 1 ? 26 : 0) : GY - 26, gold });
-                }
-            }
-            function jump() {
-                if (p.jumps >= 2 || p.stumble > 0.25) return;
-                p.vy = p.jumps ? -600 : -680; p.jumps++; p.squash = 0.15;
-                g.sfx('jump');
-                if (p.jumps === 2) g.burst(p.x, p.y, 10, ['#fff', '#ffe8cc'], 140, { grav: 200, life: 0.4, size: 5 });
-            }
-            function release() { held = false; if (p.vy < -260) p.vy = -260; }
-            function drawPlayer(c) {
-                c.save(); c.translate(p.x, p.y);
-                if (p.inv > 0 && Math.floor(p.inv * 12) % 2) c.globalAlpha = 0.5;
-                c.fillStyle = 'rgba(0,0,0,0.15)'; ell(c, 0, GY - p.y + 2, 18 - Math.min(10, (GY - p.y) / 12), 4); c.fill();
-                if (p.stumble > 0) c.rotate(Math.sin((1 - p.stumble / 0.6) * Math.PI) * 0.9);
-                const sq = p.squash > 0 ? 1 - p.squash : 1;
-                c.scale(1 / sq * 0.95 + 0.05, sq);
-                const air = p.y < GY - 1, ph = p.run * 14;
-                const leg = air ? 0.6 : Math.sin(ph) * 0.8;
-                c.strokeStyle = '#1b2a4a'; c.lineWidth = 6; c.lineCap = 'round';
-                c.beginPath(); c.moveTo(-3, -18); c.lineTo(-3 + Math.sin(leg) * 14, -2 + (air ? -4 : 0)); c.stroke();
-                c.beginPath(); c.moveTo(3, -18); c.lineTo(3 - Math.sin(leg) * 14, -2); c.stroke();
-                c.fillStyle = '#1b2a4a'; rr(c, -17, -42, 10, 22, 4); c.fill(); // Rucksack
-                c.fillStyle = '#ff8a3d'; rr(c, -10, -44, 20, 28, 7); c.fill();
-                c.strokeStyle = '#ff8a3d'; c.lineWidth = 5;
-                c.beginPath(); c.moveTo(4, -38); c.lineTo(12 + Math.cos(ph) * 4, -28 - (air ? 10 : 0)); c.stroke();
-                c.fillStyle = '#e0a979'; ell(c, 1, -54, 11, 11); c.fill();
-                c.fillStyle = '#2b1d14'; ell(c, -1, -60, 11, 7); c.fill();
-                c.fillStyle = '#1b2a4a'; ell(c, 6, -55, 1.8, 1.8); c.fill();
-                c.restore(); c.globalAlpha = 1;
-            }
-            return {
-                update(dt) {
-                    const live = g.state === 'play';
-                    if (live) {
-                        target = Math.min(480, 300 + g.t * 8);
-                        speed = CV.lerp(speed, target, dt * (p.stumble > 0 ? 0.3 : 1.5));
-                    }
-                    const sp = live ? speed : 120;
-                    dist += sp * dt; p.run += dt * sp / 300;
-                    for (const t of town) { t.x -= sp * 0.15 * dt; if (t.x < -120) t.x += 1100; }
-                    for (const t of trees) { t.x -= sp * 0.45 * dt; if (t.x < -80) t.x += 1120; }
-                    p.vy += 1900 * dt; p.y += p.vy * dt;
-                    if (p.y >= GY) { if (p.vy > 300) { p.squash = 0.2; } p.y = GY; p.vy = 0; p.jumps = 0; }
-                    p.squash = Math.max(0, p.squash - dt);
-                    p.stumble = Math.max(0, p.stumble - dt); p.inv = Math.max(0, p.inv - dt);
-                    if (live) {
-                        nextObs -= sp * dt;
-                        if (nextObs <= 0) { spawnObs(); nextObs = rnd(330, 540) + speed * 0.25; }
-                    }
-                    for (const o of obs) {
-                        if (o.knock) { o.knock.vy += 1400 * dt; o.x += o.knock.vx * dt; o.knock.y += o.knock.vy * dt; o.knock.r += 8 * dt; continue; }
-                        o.x -= sp * dt;
-                        if (!live) continue;
-                        const hitX = p.x + 11 > o.x + 4 && p.x - 11 < o.x + o.w - 4, hitY = p.y > GY - o.h + 6;
-                        if (hitX && hitY && p.inv <= 0 && !o.cleared) {
-                            o.knock = { vx: 260, vy: -420, y: 0, r: 0 };
-                            p.stumble = 0.6; p.inv = 1; speed *= 0.55;
-                            g.miss(p.x, p.y - 80, pick(['Autsch!', 'Stress!', 'Deadline!']));
-                            g.burst(o.x + o.w / 2, GY - o.h / 2, 16, ['#fff', '#ffd6a5', '#cdb4db'], 260, { shape: 'sq', size: 7 });
-                        } else if (!o.cleared && o.x + o.w < p.x - 12) {
-                            o.cleared = true; g.hit(1, o.x + o.w / 2, GY - o.h - 30, '', '#b8f2e6'); g.sfx('pop');
-                        }
-                    }
-                    obs = obs.filter(o => o.x > -120 && (!o.knock || o.knock.y < 400));
-                    for (const it of items) {
-                        it.x -= sp * dt;
-                        if (live && !it.got && Math.abs(it.x - p.x) < 24 && Math.abs(it.y - (p.y - 30)) < 36) {
-                            it.got = true;
-                            if (it.gold) { g.hit(5, it.x, it.y - 24, 'Einser!', '#ffd166'); g.sfx('bonus'); g.ring(it.x, it.y, '#ffd166', 40); }
-                            else { g.hit(1, it.x, it.y - 20, '', '#ffe08a'); g.sfx('coin'); }
-                            g.burst(it.x, it.y, 10, ['#ffe08a', '#fff'], 160, { shape: 'star', size: 5, grav: 100 });
-                        }
-                    }
-                    items = items.filter(it => !it.got && it.x > -40);
-                },
-                draw(c) {
-                    const sky = c.createLinearGradient(0, 0, 0, H);
-                    sky.addColorStop(0, '#ffcf9f'); sky.addColorStop(0.55, '#ffe9cf'); sky.addColorStop(1, '#fff6ea');
-                    c.fillStyle = sky; c.fillRect(0, 0, W, H);
-                    c.fillStyle = 'rgba(255,170,90,0.35)'; ell(c, W * 0.7, 120, 70, 70); c.fill();
-                    for (const t of town) {
-                        c.fillStyle = t.c; c.fillRect(t.x, GY - 30 - t.h, t.w, t.h + 30);
-                        c.fillStyle = 'rgba(255,255,255,0.55)';
-                        for (let y = GY - 20 - t.h; y < GY - 40; y += 18) for (let x = t.x + 8; x < t.x + t.w - 10; x += 16) c.fillRect(x, y, 8, 9);
-                    }
-                    for (const t of trees) {
-                        c.fillStyle = '#7a5a3a'; c.fillRect(t.x - 3, GY - 40 * t.s, 6, 40 * t.s);
-                        c.fillStyle = '#7cc46b'; ell(c, t.x, GY - 50 * t.s, 22 * t.s, 24 * t.s); c.fill();
-                    }
-                    c.fillStyle = '#8cce6c'; c.fillRect(0, GY, W, H - GY);
-                    c.fillStyle = '#e8d3a8'; c.fillRect(0, GY, W, 22);
-                    c.fillStyle = 'rgba(0,0,0,0.08)';
-                    for (let x = -(dist % 40); x < W; x += 40) c.fillRect(x, GY + 26, 20, 4);
-                    for (const it of items) {
-                        const y = it.y + Math.sin(g.now * 5 + it.x * 0.05) * 4;
-                        c.fillStyle = it.gold ? 'rgba(255,209,102,0.45)' : 'rgba(255,224,138,0.35)'; ell(c, it.x, y, 17, 17); c.fill();
-                        if (it.gold) { c.fillStyle = '#ffb703'; starPath(c, it.x, y, 13, 6); c.fill(); txt(c, '1', it.x, y + 1, 11, '#7a4a00'); }
-                        else {
-                            c.fillStyle = '#ffd60a'; ell(c, it.x, y - 3, 8, 8); c.fill();
-                            c.fillStyle = '#9aa5b1'; c.fillRect(it.x - 4, y + 4, 8, 6);
-                        }
-                    }
-                    for (const o of obs) {
-                        c.save();
-                        const by = o.knock ? o.knock.y : 0;
-                        c.translate(o.x + o.w / 2, GY - o.h / 2 + by); if (o.knock) c.rotate(o.knock.r);
-                        if (o.type === 'books') {
-                            o.cols.forEach((col, i) => { c.fillStyle = col; rr(c, -o.w / 2 + (i % 2) * 4 - 2, o.h / 2 - (i + 1) * 15, o.w - 4, 14, 3); c.fill(); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(-o.w / 2 + (i % 2) * 4 + 2, o.h / 2 - (i + 1) * 15 + 4, o.w - 14, 2); });
-                        } else if (o.type === 'clock') {
-                            const sh = Math.sin(g.now * 30 + o.ph) * 2;
-                            c.fillStyle = '#e63946'; ell(c, sh, 2, 19, 19); c.fill();
-                            c.fillStyle = '#fff'; ell(c, sh, 2, 14, 14); c.fill();
-                            c.strokeStyle = '#1b2a4a'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(sh, 2); c.lineTo(sh, -8); c.moveTo(sh, 2); c.lineTo(sh + 7, 4); c.stroke();
-                            c.fillStyle = '#e63946'; ell(c, sh - 13, -17, 6, 6); c.fill(); ell(c, sh + 13, -17, 6, 6); c.fill();
-                        } else {
-                            c.fillStyle = '#5c4033'; c.fillRect(-o.w / 2 + 4, -o.h / 2 + 18, 5, o.h - 18); c.fillRect(o.w / 2 - 9, -o.h / 2 + 18, 5, o.h - 18);
-                            c.fillStyle = '#fff'; rr(c, -o.w / 2, -o.h / 2, o.w, 24, 4); c.fill();
-                            c.strokeStyle = '#e63946'; c.lineWidth = 2; c.stroke();
-                            txt(c, 'PRÜFUNG', 0, -o.h / 2 + 12, 9.5, '#e63946');
-                        }
-                        c.restore();
-                    }
-                    drawPlayer(c);
-                    if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, 'Klick / Leertaste = springen · 2× = Doppelsprung', W / 2, 80, 16, '#7a4a00', 'center', 800); c.globalAlpha = 1; }
-                },
-                down() { held = true; jump(); },
-                up() { release(); },
-                key(k, down, _g, rep) {
-                    if (k === ' ' || k === 'ArrowUp' || k === 'w' || k === 'W') { if (down && !rep) { held = true; jump(); } else if (!down) release(); return true; }
-                }
             };
         }
     });
@@ -984,10 +823,7 @@
         name: 'Ideen-Regen', icon: '💡', color: '#16a34a', time: 15, stars: [8, 20, 34],
         goal: 'Bewegen Sie den Korb und fangen Sie die fallenden Ideen. Den grauen Regenwolken ausweichen!',
         controls: ['mouse', 'tap', 'arrows'],
-        result: () => {
-            const r = D().currentRole;
-            return `Gute Ideen auffangen und umsetzen – ${r ? `das mache ich als ${r.role.replace(/\s*\(.*\)/, '')} bei ${r.company}` : 'das mache ich jeden Tag'}, gemeinsam im Team.`;
-        },
+        result: (g) => `${g.hits} Ideen gefangen – die besten landen im Code.`,
         make(g) {
             const bk = { x: W / 2, tx: W / 2, y: H - 58, w: 96, wob: 0, squash: 0 };
             let items = [], spawnT = 0.4, keyL = false, keyR = false;
@@ -1093,7 +929,7 @@
         goal: 'Tippen, um den Block abzusetzen. Stapeln Sie alle meine Projekte, Skills und Eigenschaften!',
         controls: ['click', 'space', 'tap'],
         hud: (g) => `🏗️ ${g.level || 0} / ${g.total || 0}`,
-        result: (g) => `${g.level || 0} Bausteine gestapelt! Projekte, Skills und Eigenschaften – so baue ich Stein für Stein an meinem Weg.`,
+        result: (g) => `${g.level || 0} Bausteine sicher gestapelt.`,
         make(g) {
             const labels = stackLabels();
             const BH = 30, DEP = 10, MINW = 54;
@@ -1237,7 +1073,7 @@
         name: 'SUP-Slalom', icon: '🏄', color: '#06b6d4', time: 15, stars: [7, 18, 32],
         goal: 'Links oder rechts tippen, um den Felsen auszuweichen. Sterne einsammeln!',
         controls: ['arrows', 'tap'],
-        result: () => 'Schwimmen, Fitness und Stand-Up-Paddling sind mein Ausgleich. Ausdauer zahlt sich aus – im Sport wie im Job.',
+        result: (g) => `${g.hits} Sterne eingesammelt – Ausdauer zahlt sich aus.`,
         make(g) {
             const RL = W / 2 - 190, RR = W / 2 + 190;
             const LANES = [W / 2 - 125, W / 2, W / 2 + 125];

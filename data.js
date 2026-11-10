@@ -6,35 +6,37 @@ const resumeData = {
     "name": "Abdul Kader Sabouni",
     "firstName": "Abdul",
     "title": "Informatikstudent · Softwareentwicklung mit KI-Agenten",
+    "cardRole": "Full-Stack-Entwickler · Informatikstudent",
     "location": "Dortmund",
-    "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen KI-Projekten – erleben Sie meinen Weg als kleine, begehbare Welt.",
+    "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen Projekten – erleben Sie meinen Weg als kleine, begehbare Welt.",
     "availability": "Offen für neue Herausforderungen",
     "summary": "Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen entsteht Software mit KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein.",
     "contact": {
         "email": "",
         "phone": "",
         "linkedin": "",
-        "github": "https://github.com/Abdul7Kader"
+        "github": "https://github.com/Abdul7Kader",
+        "form": ""
     },
     "intro": "Willkommen in meiner Welt! Laufen Sie mit WASD/Pfeiltasten oder per Klick. Jedes Gebäude ist eine Station meines Lebenslaufs.",
     "strengths": [
         {
-            "icon": "🤖",
+            "icon": "cpu",
             "title": "Softwareentwicklung mit KI",
-            "text": "Eigene Software mit Claude Code und OpenAI Codex – vom Prompt bis zur geprüften Auslieferung."
+            "text": "Eigene Software mit Claude Code und OpenAI Codex – mit Plan, menschlichem Review und Tests."
         },
         {
-            "icon": "💻",
+            "icon": "code",
             "title": "Praxis seit 2023",
             "text": "Werkstudent bei PSI: Java, SQL und ein Lagerverwaltungssystem für Logistik-Kunden."
         },
         {
-            "icon": "🤝",
+            "icon": "users",
             "title": "Kommunikation & Kundenfokus",
             "text": "Kundenservice und Vertrieb für Telekom und Samsung, Kundentermine bei PSI."
         },
         {
-            "icon": "📈",
+            "icon": "trending",
             "title": "Steile Lernkurve",
             "text": "Neustart 2014 – heute Deutsch auf C2-Niveau, Abitur und Informatikstudium."
         }
@@ -46,7 +48,7 @@ const resumeData = {
         },
         {
             "name": "Agentic Coding",
-            "text": "Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging mit KI-Agenten; Review und Test des generierten Codes"
+            "text": "Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging mit KI-Agenten – mit Human in the Loop: Plan prüfen, Code reviewen, testen"
         },
         {
             "name": "KI-Modelle",
@@ -54,12 +56,11 @@ const resumeData = {
         }
     ],
     "facts": [
-        "Wussten Sie schon? Abdul hat sein Abitur parallel zum Job bei adesso gemacht.",
-        "Seit 11/2023 entwickelt Abdul bei PSI ein Lagerverwaltungssystem für Logistik-Kunden weiter.",
+        "Wussten Sie schon? Abdul hat sein Abitur abends gemacht – tagsüber hat er gearbeitet.",
+        "Neue KI-Modelle testet Abdul gern sofort – und prüft kritisch, was sie wirklich können.",
         "Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen.",
-        "Abdul hat ein eigenes Unternehmen: Er entwickelt Software mit KI-Agenten wie Claude Code.",
         "Kundenservice für Samsung und die Telekom – da lernt man, auch unter Druck freundlich zu bleiben.",
-        "Im Verein KUMULI besucht Abdul Kinder in der Kinderklinik und macht Musik mit ihnen.",
+        "Schon gesehen? Hinter der Baustelle wächst Abduls Projekt-Viertel.",
         "Abdul hat schon über 20 Länder bereist."
     ],
     "stations": {
@@ -68,49 +69,42 @@ const resumeData = {
             "era": "seit 10.2014",
             "badge": "Weltoffen",
             "badgeIcon": "🌍",
-            "story": "Im Oktober 2014 begann mein Neuanfang in Deutschland. Seitdem habe ich viele Länder bereist – neue Kulturen machen mich offen, neugierig und anpassungsfähig."
-        },
-        "language": {
-            "title": "Sprachschule",
-            "era": "2015 – 2016",
-            "badge": "Sprachtalent",
-            "badgeIcon": "🗣️",
-            "story": "Sprache war mein erster Schlüssel: Integrationskurs, dann B1 – heute spreche ich Deutsch verhandlungssicher (C2), dazu Arabisch, Englisch und Französisch."
+            "story": "Mein Neuanfang in Deutschland war die größte Reise meines Lebens. Seitdem entdecke ich gern neue Länder – andere Kulturen machen mich offen, neugierig und anpassungsfähig."
         },
         "school": {
-            "title": "Campus",
-            "era": "2016 – heute",
+            "title": "Bildungsweg",
+            "era": "2015 – heute",
             "badge": "Wissensdurst",
             "badgeIcon": "🎓",
-            "story": "Abitur am Westfalen-Kolleg – parallel zu meinem Job bei adesso. Seit 2021 studiere ich Praktische Informatik an der FH Dortmund, Abschluss voraussichtlich 2027."
+            "story": "Sprache war mein erster Schlüssel – danach kam Schritt für Schritt alles andere, bis zum Informatikstudium."
         },
         "career": {
             "title": "Business-Viertel",
             "era": "2017 – heute",
             "badge": "Kundenfokus",
             "badgeIcon": "🤝",
-            "story": "Von adesso über den Kundenservice für Samsung und die Telekom bis zu Kundenterminen bei PSI: Ich höre zu, finde Lösungen und bleibe freundlich – auch wenn es hektisch wird."
+            "story": "Ich übersetze Kundenwünsche in Lösungen: Im Kundenservice habe ich gelernt, genau hinzuhören – heute stimme ich Anforderungen direkt mit Kunden ab."
         },
         "lab": {
             "title": "Tech-Lab",
             "era": "seit 11.2023",
             "badge": "Problemlöser",
             "badgeIcon": "🧠",
-            "story": "Seit November 2023 entwickle ich bei PSI ein Lagerverwaltungssystem für Logistik-Kunden weiter. Und mit KI-Agenten wie Claude Code baue ich eigene Software."
+            "story": "Hier entsteht Code – im Team bei PSI ganz klassisch, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt."
         },
         "projects": {
             "title": "Projekt-Baustelle",
-            "era": "2026 – heute",
+            "era": "eigene Projekte",
             "badge": "Macher",
             "badgeIcon": "🚀",
-            "story": "2026 habe ich mein eigenes Unternehmen gegründet: Software, entwickelt mit KI-Agenten – zum Beispiel eine Werkzeugverleih-Software für einen Kunden. Dazu kommen Projekte aus dem Studium."
+            "story": "Was ich anfange, baue ich fertig. In meinem Projekt-Viertel sehen Sie, was schon steht und was gerade wächst."
         },
         "lake": {
             "title": "Freizeit & Ehrenamt",
             "era": "Freizeit",
             "badge": "Engagement",
             "badgeIcon": "💛",
-            "story": "Ausgleich finde ich beim Schwimmen, im Fitnessstudio und auf dem SUP-Board. Und ich engagiere mich ehrenamtlich – zum Beispiel mit Musik für Kinder in der Kinderklinik."
+            "story": "Abschalten kann ich am besten im Wasser und im Fitnessstudio. Und ich gebe gern etwas zurück – an die Stadt, die mich so gut aufgenommen hat."
         },
         "finale": {
             "title": "Ihr Unternehmen",
@@ -119,22 +113,54 @@ const resumeData = {
         }
     },
     "hobbies": [
-        "🤖 Entwicklung von KI-Tools",
-        "🏋️ Fitness",
-        "🏊 Schwimmen",
-        "🏄 Stand-up-Paddling",
-        "🌍 Reisen"
+        "Entwicklung von KI-Tools",
+        "Fitness",
+        "Schwimmen",
+        "Stand-up-Paddling",
+        "Reisen"
     ],
     "volunteer": [
         {
             "date": "seit 2024",
             "title": "Studentenverein KUMULI",
-            "detail": "Besuche in der Kinderklinik des Klinikums Dortmund mit musikalischen Aktivitäten für Kinder."
+            "role": "Mitglied",
+            "icon": "music",
+            "text": "Ich besuche mit dem Verein Kinder in der Kinderklinik des Klinikums Dortmund und mache Musik mit ihnen – ein bisschen Normalität und gute Laune im Klinikalltag."
         },
         {
             "date": "mehrjährig",
-            "title": "Weitere ehrenamtliche Tätigkeiten",
-            "detail": "Begegnungscafé für Geflüchtete und Einheimische: mehrjährige Verantwortung für Kasse und Finanzen. Deutschunterricht in Flüchtlingsunterkünften; Caritas „Warm durch die Nacht“; Seniorencafé im Bruder-Jordan-Haus."
+            "title": "Sprachcafé / Begegnungscafé",
+            "role": "Kasse & Orga-Team",
+            "icon": "coffee",
+            "text": "Im Begegnungscafé für Geflüchtete und Einheimische war ich mehrere Jahre für Kasse und Finanzen verantwortlich und habe im Orga-Team Treffen geplant und organisiert."
+        },
+        {
+            "date": "mehrjährig",
+            "title": "Deutschkurse in Kirchengemeinden",
+            "role": "Kursleiter",
+            "icon": "book",
+            "text": "In verschiedenen Kirchengemeinden habe ich Deutschkurse für Geflüchtete gegeben – die Sprache, die mir selbst den Neustart ermöglicht hat, gebe ich gern weiter."
+        },
+        {
+            "date": "mehrjährig",
+            "title": "Deutschunterricht bei der Caritas",
+            "role": "Ehemalige Unterkunft am Ostpark",
+            "icon": "school",
+            "text": "In der früheren Flüchtlingsunterkunft am Ostpark habe ich mit der Caritas Deutschunterricht für die Bewohnerinnen und Bewohner gegeben."
+        },
+        {
+            "date": "mehrjährig",
+            "title": "Seniorencafé im Bruder-Jordan-Haus",
+            "role": "Helfer",
+            "icon": "heart",
+            "text": "Im Seniorencafé verbringe ich Zeit mit älteren Menschen – zuhören, erzählen, Kaffee ausschenken."
+        },
+        {
+            "date": "Winter",
+            "title": "Caritas „Warm durch die Nacht“",
+            "role": "Helfer",
+            "icon": "moon",
+            "text": "Bei „Warm durch die Nacht“ habe ich die Caritas bei der Versorgung wohnungsloser Menschen in kalten Nächten unterstützt."
         }
     ],
     "extras": [
@@ -244,7 +270,7 @@ const resumeData = {
     "experience": [
         {
             "date": "2026 - Aktuell",
-            "role": "Gründer – KI-gestützte Softwareentwicklung",
+            "role": "Mitgründer eines eigenen Unternehmens – Softwareentwicklung",
             "company": "Eigenes Unternehmen, Dortmund (nebenberuflich)",
             "bullets": [
                 "Konzeption und Entwicklung eigener Softwarelösungen mit KI-Agenten (Claude Code, OpenAI Codex) – von der Anforderung über Prompt-Design und Code-Generierung bis zu Test, Deployment und Support.",
@@ -263,7 +289,9 @@ const resumeData = {
                 "Umsetzung funktionaler Erweiterungen: Benutzeroberflächen, Geschäftslogik in Java und SQL-Abfragen auf Microsoft SQL Server.",
                 "Konfiguration und serverseitige Anbindung von Schnittstellen; automatisierte und manuelle Tests; Versionsverwaltung mit GitLab.",
                 "Teilnahme an Kundenterminen zur Aufnahme und Abstimmung fachlicher Anforderungen."
-            ]
+            ],
+            "badge": "100 % ohne KI-Werkzeuge",
+            "note": "Bei PSI entwickle ich klassisch im Team – Java, SQL und Code-Reviews ohne KI-Unterstützung."
         },
         {
             "date": "01.2021 - 12.2021",
@@ -297,31 +325,57 @@ const resumeData = {
             "title": "Werkzeugverleih-Software",
             "tag": "Kundenprojekt",
             "tech": "React, Node.js, Express.js, SQLite",
-            "detail": "Kundenprojekt im eigenen Unternehmen – inklusive Kundenabstimmung, Aufwandsschätzung und Angebot."
+            "detail": "Software für einen Werkzeugverleih – live im Einsatz, mit echten Kundinnen und Kunden. Wird laufend erweitert.",
+            "progress": 100,
+            "stage": "Fertig · erweiterbar",
+            "building": "shop",
+            "link": ""
         },
         {
-            "title": "Software mit KI-Agenten",
-            "tag": "Eigenes Unternehmen",
-            "tech": "Claude Code, OpenAI Codex",
-            "detail": "Eigene Softwarelösungen: von der Anforderung über Prompt-Design bis zu Test, Deployment und Support."
+            "title": "KI-Videos auf Social Media",
+            "tag": "Eigene Kanäle",
+            "tech": "KI-Videogenerierung",
+            "detail": "Eigene Social-Media-Kanäle mit KI-generierten Videos.",
+            "progress": 95,
+            "building": "studio",
+            "link": ""
         },
         {
-            "title": "Kinderaktivitäten Herne",
-            "tag": "Studium",
-            "tech": "Scrum · Website",
-            "detail": "Hochschulprojekt: Scrum-basierte Website für Kinderaktivitäten der Stadt Herne."
+            "title": "Rustfall (Arbeitstitel)",
+            "tag": "Handyspiel",
+            "tech": "",
+            "detail": "Postapokalyptisches Handyspiel im Stil von „Mad Max“. Der endgültige Name folgt.",
+            "progress": 70,
+            "building": "refinery",
+            "link": ""
         },
         {
-            "title": "IT-Service-Management",
-            "tag": "Studium",
-            "tech": "BMC Helix ITSM",
-            "detail": "Hochschulprojekt: Incidents, Service und Change Requests mit BMC Helix ITSM."
+            "title": "Ultranisator",
+            "tag": "App",
+            "tech": "",
+            "detail": "App für Fußballfans: Planung und Verwaltung von Fan-Strukturen.",
+            "progress": 50,
+            "building": "stadium",
+            "link": ""
         },
         {
-            "title": "Java-Verwaltungsanwendung",
-            "tag": "Studium",
-            "tech": "Java",
-            "detail": "Eigenständige Verwaltungsanwendung aus dem Studium."
+            "title": "Rest-IQ",
+            "tag": "Plattform",
+            "tech": "",
+            "detail": "Plattform, mit der Restaurants kostenlos eigene Webseiten bauen.",
+            "progress": 20,
+            "building": "restaurant",
+            "link": ""
+        },
+        {
+            "title": "Drive Pluz",
+            "tag": "Software",
+            "tech": "",
+            "detail": "Fahrschulverwaltung inklusive Fahrschüler-App.",
+            "progress": 5,
+            "stage": "Fundament",
+            "building": "foundation",
+            "link": ""
         }
     ],
     "traits": [

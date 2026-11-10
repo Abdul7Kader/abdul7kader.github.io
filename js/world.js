@@ -7,7 +7,6 @@
     // Chronologische Stationen meines Lebenslaufs (Gebäude). base = Unterkante, depth = Tiefe am Boden.
     const STATION_DEFS = [
         { id: 'arrival', emoji: '✈️', style: 'airport', x: 160, base: 1470, w: 360, depth: 120, height: 96 },
-        { id: 'language', emoji: '🗣️', style: 'language', x: 640, base: 1300, w: 260, depth: 100, height: 104 },
         { id: 'school', emoji: '🎓', style: 'school', x: 330, base: 760, w: 380, depth: 130, height: 120 },
         { id: 'career', emoji: '🏢', style: 'career', x: 900, base: 560, w: 360, depth: 110, height: 190 },
         { id: 'lab', emoji: '💻', style: 'lab', x: 1500, base: 620, w: 320, depth: 120, height: 116 },
@@ -17,7 +16,7 @@
     ];
 
     const ROADS = [
-        [[340, 1500], [340, 1560], [770, 1560], [770, 1320]],
+        [[340, 1500], [340, 1560], [770, 1560], [770, 1420]],
         [[770, 1420], [1010, 1420], [1250, 1080]],
         [[1120, 950], [520, 950], [520, 780]],
         [[1250, 820], [1250, 690], [1080, 690], [1080, 580]],
@@ -600,7 +599,7 @@
             const a = Math.random() * TAU;
             spawn({ type: 'drop', x: FOUNTAIN.x + Math.cos(a) * 4, y: FOUNTAIN.y - 38, vx: Math.cos(a) * (30 + Math.random() * 30), vy: -140 - Math.random() * 60, g: 420, life: 0, max: 0.9, floor: FOUNTAIN.y + 6 + Math.sin(a) * 18 });
         }
-        const fin = World.stations[7];
+        const fin = World.stations.find(s => s.id === 'finale');
         if (G && G.allVisited && G.allVisited() && Math.random() < dt * 6) {
             spawn({ type: 'spark', x: fin.x + Math.random() * fin.w, y: fin.base - Math.random() * (fin.height + fin.depth), vx: 0, vy: -30, life: 0, max: 1 });
         }
@@ -831,24 +830,6 @@
             c.strokeStyle = '#777'; c.lineWidth = 2; c.beginPath(); c.moveTo(s.x - 20, s.base); c.lineTo(s.x - 20, s.base - 60); c.stroke();
             c.fillStyle = '#ff7a2f'; const wv = Math.sin(time * 3) * 3;
             c.beginPath(); c.moveTo(s.x - 20, s.base - 60); c.lineTo(s.x + 6, s.base - 56 + wv); c.lineTo(s.x + 6, s.base - 48 + wv); c.lineTo(s.x - 20, s.base - 50); c.fill();
-        },
-        language(c, s) {
-            const { yT, yR } = box(c, s, ['#f8e7c7', '#e9cfa4'], ['#d8744a', '#b85a35']);
-            c.strokeStyle = 'rgba(120,40,20,0.25)'; c.lineWidth = 2;
-            for (let i = 1; i < 5; i++) { c.beginPath(); c.moveTo(s.x - 8, yR + i * s.depth / 5); c.lineTo(s.x + s.w + 8, yR + i * s.depth / 5); c.stroke(); }
-            windows(c, s.x + 16, yT + 16, 80, 50, 2, 1, '#7cc6e8');
-            windows(c, s.x + s.w - 96, yT + 16, 80, 50, 2, 1, '#7cc6e8');
-            c.fillStyle = '#5aa24f'; c.fillRect(s.x + 18, yT + 58, 76, 8); c.fillRect(s.x + s.w - 94, yT + 58, 76, 8);
-            ['#ff6b9a', '#ffd23f', '#ffffff'].forEach((col, i) => { c.fillStyle = col; for (let k = 0; k < 6; k++) { ellipse(c, s.x + 24 + k * 12 + i * 3, yT + 57, 2.5, 2.5); c.fill(); ellipse(c, s.x + s.w - 88 + k * 12 + i * 3, yT + 57, 2.5, 2.5); c.fill(); } });
-            door(c, s.x + s.w / 2, s.base, '#8a4b2a');
-            // Sprechblase
-            const words = ['Hallo!', 'مرحبا', 'Hello!', 'Bonjour!'];
-            const wi = Math.floor(time / 2) % words.length;
-            const bx = s.x + s.w / 2, by = yR - 30 + Math.sin(time * 2) * 3;
-            c.fillStyle = '#ffffff'; rr(c, bx - 54, by - 20, 108, 38, 14); c.fill();
-            c.beginPath(); c.moveTo(bx - 8, by + 17); c.lineTo(bx + 4, by + 17); c.lineTo(bx - 10, by + 30); c.fill();
-            c.strokeStyle = '#e07a4a'; c.lineWidth = 2.5; rr(c, bx - 54, by - 20, 108, 38, 14); c.stroke();
-            signText(c, words[wi], bx, by - 1, 17, '#b85a35', 800);
         },
         school(c, s) {
             const { yT, yR } = box(c, s, ['#f4ece0', '#e2d5c1'], ['#b5523b', '#94402c']);
@@ -1213,7 +1194,7 @@
         for (const s of World.stations) {
             const visited = CV.game && CV.game.visited && CV.game.visited.has(s.id);
             const isNext = next && next.id === s.id;
-            const topY = s.base - s.height - s.depth - (s.style === 'career' ? 100 : s.style === 'airport' ? 30 : s.style === 'school' ? 136 : s.style === 'construction' ? 60 : s.style === 'language' ? 76 : 34) - (isNext ? Math.abs(Math.sin(time * 3)) * 8 : 0);
+            const topY = s.base - s.height - s.depth - (s.style === 'career' ? 100 : s.style === 'airport' ? 30 : s.style === 'school' ? 136 : s.style === 'construction' ? 60 : 34) - (isNext ? Math.abs(Math.sin(time * 3)) * 8 : 0);
             const locked = World.isLocked && World.isLocked(s.id);
             const label = locked ? `🔒 ${s.title}` : `${s.emoji} ${s.title}${visited ? '  ✓' : ''}`;
             c.font = `700 ${fs}px Outfit, system-ui, sans-serif`;
