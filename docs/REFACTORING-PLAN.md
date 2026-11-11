@@ -206,3 +206,67 @@ Kommt direkt nach dem CSS-Umbau, weil dann alle Farben als Tokens vorliegen; vor
 - Die englischen Inhalte (Lebenslauf, Stationstexte, Ehrenamt, Projekte) übersetze ich; Abdul sollte sie vor dem Merge einmal lesen.
 - Neue Branches enthalten kein „claude“ im Namen. Gearbeitet wird auf `abdul7kader/refactoring`.
 - Der alte Arbeits-Branch `claude/intelligent-archimedes-1pvu41` bleibt unverändert bestehen. Er kann gelöscht werden, sobald Abdul das möchte.
+
+---
+
+## 6. Nacht 2 (12.11.2026, ab 02:00 Uhr): Rest von Schritt 5 bis Schritt 10
+
+### Stand am 11.11.2026, 11:00 Uhr
+| Schritt | Stand | Commit |
+|---|---|---|
+| 0 Absichern | fertig | `c08fb9e` |
+| 1 Performance | fertig | `f9d7496` |
+| 2+3 Struktur, Konstanten | fertig | `0b4f026` |
+| 4 Englisch | fertig | `f6f0dd7` |
+| 5 Review | Teil 1 fertig (ESLint, Fokus in Dialogen) | `874f266` |
+| 6–10 | offen | – |
+
+Messung (Hauptthread, ohne GPU): Welt steht 13 % ✓ · Dialog 1 % ✓ · Minispiel 27 % ✓ · **Welt läuft 44–50 % ✗ (Ziel ≤ 35 %)**.
+
+### Arbeitsweise in der Nacht
+- Branch `abdul7kader/refactoring`, jeder Teilschritt ein eigener Commit mit Tests, danach sofort Push (der Container kann jederzeit neu starten).
+- Nach jedem Teilschritt laufen `npx eslint .`, `node tests/smoke.mjs`, `node tests/smoke.mjs --lang=en` und `node tests/i18n.mjs`. Bei sichtbaren Änderungen zusätzlich `node tests/visual.mjs` mit Vergleich gegen den letzten Stand.
+- Alles Neue wird gleich zweisprachig (DE/EN) und, ab Schritt 7, in Hell und Dunkel gebaut.
+- Reihenfolge = Priorität. Reicht die Zeit nicht, bleibt der Rest offen und steht ehrlich im Bericht.
+
+### 5b – Review abschließen (≈ 1 Std.)
+1. **Welt beim Laufen ≤ 35 %:** im Renderer messen, was pro Bild Zeit kostet (Profil mit CDP). Kandidaten sind Schatten und Labels pro Bild statt aus dem Sprite-Cache, das Neuzeichnen verdeckender Objekte, die Bodenkacheln bei Kamerafahrt und die Auflösung beim Laufen (DPR beim Bewegen auf 1,25 begrenzen, im Stand wieder voll). Jede Maßnahme einzeln messen; nur behalten, was hilft und nicht sichtbar schlechter aussieht.
+2. Durchsicht von `world/`, `games/`, `ui/project-quarter.js`: tote Zweige, doppelte Hilfsfunktionen (z. B. `rr`/`ell` mehrfach → `core/canvas.js`), Resize-Listener durch `ResizeObserver` ersetzen (Weltkarte, Projekt-Viertel), Abbruch laufender Animationen beim Schließen.
+3. Sicherheit: alle `innerHTML`-Stellen auf `esc()` prüfen; `fetch` mit Fehlerpfad.
+4. Barrierefreiheit: Minispiele per Tastatur startbar, sichtbarer Fokusrahmen, `aria-live` für Toasts prüfen.
+
+### 6 – CSS neu ordnen (≈ 1 Std.)
+1. `style.css` aufteilen in `css/tokens.css`, `base.css`, `hud.css`, `start.css`, `overlays.css`, `station.css`, `games.css`, `cv.css`, `worldmap.css`, `contact.css`, `github.css`, `print.css`; Einbindung über `<link>` in fester Reihenfolge (kein Build).
+2. Alle Farben, Abstände, Radien und Schatten als Variablen in `tokens.css` – Grundlage für den Dark Mode.
+3. Ungenutzte Selektoren automatisch finden (Skript `tools/css-unused.mjs`: Selektoren gegen gerenderte Ansichten prüfen) und entfernen; `!important` nur noch im Druck-CSS; doppelte Regeln aus dem Performance-Block von Schritt 1 an die richtige Stelle ziehen.
+4. Screenshot-Vergleich: darf sich nicht sichtbar ändern.
+
+### 7 – Dark Mode überall (≈ 2 Std.)
+1. **Umschalter** System → Hell → Dunkel auf der Startseite (neben DE/EN) und im HUD; Wahl in `store` (`theme`), Kürzel in der Suche ist schon vorhanden (`theme:cycle`). Kleines Inline-Skript im `<head>` setzt `data-theme` vor dem ersten Zeichnen (kein Aufblitzen), `color-scheme` passend.
+2. **Oberfläche:** dunkle Werte für alle Tokens; Dialoge, Kacheln, Zeitleisten, Suche, Kapitelübersicht, Lebenslauf-Ansicht, Formular, Toasts, Sprechblasen, Minimap-Rahmen, Admin.
+3. **Spielwelt bei Nacht:** `WORLD_NIGHT`-Palette in `config/theme.js` (Gras, Wege, Wasser, Dächer), beleuchtete Fenster, Lichtkegel der Laternen, Sterne/Mond; beim Umschalten einmal Sprite-Cache und Bodenkacheln neu (`World.setPalette`), keine Zusatzlast pro Bild – nachmessen.
+4. **Minispiele, Projekt-Viertel, Weltkarte, GitHub-Kacheln:** Nacht-Farben über dieselben Tokens bzw. Paletten.
+5. **PDF und Druck bleiben hell** (`.pdf-mode` und `@media print` erzwingen die hellen Tokens).
+6. **Kontrastprüfung** als Test (`tests/contrast.mjs`): alle sichtbaren Text-/Hintergrund-Paare in beiden Modi ≥ 4,5 : 1 (große Schrift ≥ 3 : 1).
+
+### 8 – Lücken aus Runde 2 (≈ 2–3 Std., Reihenfolge nach Nutzen)
+1. **Datenschutz-Seite** `datenschutz.html` (DE/EN, Hell/Dunkel): Kontaktformular/FormSubmit, Google Fonts, lokale Kartendaten, GitHub-Abruf, keine Cookies; verlinkt im Formular und auf der Startseite.
+2. **Emoji-Rest:** Abzeichen, Kapitelübersicht und Startseite mit SVG-Icons statt Emojis (Spielwelt bleibt verspielt).
+3. **GitHub-Werkstatt** am früheren Platz der Sprachschule: kleines Gebäude mit Leuchtwand (Commit-Kacheln aus `github-activity.json`, als Sprite gecacht), Klick öffnet die GitHub-Ansicht.
+4. **Weltkarte mit Weltansicht:** Natural Earth 110m für die ganze Welt (eigene JSON, lazy), Europa-Detail beim Hineinzoomen; Zoom mit Mausrad und Zwei-Finger-Geste.
+5. **Projekt-Viertel zoom- und verschiebbar** im Dialog (Mausrad, Pinch, Ziehen); begehbare Mini-Szene nur, wenn danach noch Zeit ist – sonst als offener Punkt im Bericht.
+6. **Linkseite `/links/`** (DE/EN, Hell/Dunkel) mit Datenstruktur `links` in den Lebenslauf-Daten und Admin-Abschnitt; URLs bleiben leer, bis Abdul sie liefert.
+7. **Doppelungen:** `docs/texte.md` – alle sichtbaren Texte (DE und EN) automatisch sammeln und auf Wiederholungen prüfen; gefundene Doppelungen umformulieren.
+
+### 9 – Werkzeuge (≈ 45 Min.)
+1. `.editorconfig`, Prettier-Konfiguration nur zur Prüfung (kein Massen-Umformatieren), `tools/serve.mjs` (lokaler Server für `npm run serve`).
+2. GitHub Action `ci.yml`: `npm ci`, ESLint, Smoke-Test (Chromium, Firefox, WebKit), i18n-Test, Kontrasttest – bei Push und Pull Request.
+3. `README.md`: Aufbau, Inhalte pflegen (Admin, `data/resume.*.js`), Sprachen, Farbmodi, Tests, Leistungsmessung.
+
+### 10 – Abnahme und Bericht (≈ 1 Std.)
+1. Leistungsmessung hell und dunkel, Vorher-Nachher-Tabelle.
+2. Screenshot-Matrix Deutsch/Englisch × Hell/Dunkel × Desktop/iPhone und Sichtprüfung.
+3. Smoke-Test in Chromium; Firefox/WebKit, soweit hier installierbar, sonst über die CI.
+4. PDF in beiden Sprachen, jeweils hell.
+5. `docs/REFACTORING-BERICHT.md` (was gemacht wurde, Messwerte, offene Punkte, was Abdul prüfen muss), `TODO.md` aktualisieren, Push.
+6. Kein Merge auf `main`, kein Pull Request ohne Abduls ausdrücklichen Wunsch.
