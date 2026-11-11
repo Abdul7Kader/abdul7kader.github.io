@@ -12,7 +12,7 @@ const DPR = +arg('dpr', 2), SECS = +arg('secs', 5), theme = arg('theme', 'light'
 
 // Zielwerte aus docs/REFACTORING-PLAN.md – gelten für den Hauptthread (wie die Ausgangsmessung).
 // „CPU gesamt“ (alle Browser-Prozesse) wird zusätzlich ausgegeben; ohne GPU enthält er das Compositing in Software.
-const BUDGET = { 'Welt, Spieler steht': 15, 'Welt, Spieler läuft': 35, 'Dialog offen (Tech-Lab)': 5, 'Minispiel läuft (Prompt-Fabrik)': 35 };
+const BUDGET = { 'Welt, Spieler steht (eingeschwungen)': 15, 'Welt, Spieler läuft': 35, 'Dialog offen (Tech-Lab)': 5, 'Minispiel läuft (Prompt-Fabrik)': 35 };
 
 const server = await startServer();
 const browser = await chromium.launch({ args: ['--disable-gpu'] });
@@ -39,9 +39,9 @@ const HAS_PROC = fs.existsSync('/proc/self/stat');
 const TICKS_PER_SEC = 100;
 
 const results = [];
-async function measure(label, setup) {
+async function measure(label, setup, settleMs = 900) {
     if (setup) await app(setup);
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(settleMs);
     const f0 = await frames();
     const a = await metrics(), t0 = Date.now(), k0 = HAS_PROC ? cpuTicks() : 0;
     await page.waitForTimeout(SECS * 1000);
@@ -61,6 +61,8 @@ async function measure(label, setup) {
 await page.evaluate(`(${APP}).setTheme('${theme}')`);
 await measure('Startbildschirm');
 await measure('Welt, Spieler steht', A => A.start());
+// dieselbe Lage, nachdem Kamerafahrt und Begrüßung vorbei sind (Dauerzustand beim Lesen der Welt)
+await measure('Welt, Spieler steht (eingeschwungen)', null, 6000);
 await measure('Welt, Spieler läuft', A => A.walkTo('lake'));
 await measure('Dialog offen (Tech-Lab)', A => A.openStation('lab', { info: true }));
 await measure('Projekt-Viertel offen', A => { A.closeStation(); A.openStation('projects', { info: true }); });

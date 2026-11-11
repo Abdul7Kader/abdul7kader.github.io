@@ -19,9 +19,6 @@ export const WORLD_PERF = {
     MINIMAP_INTERVAL_MS: 200  // Minimap: 5 Bilder pro Sekunde
 };
 
-/** Wie oft das zwischengespeicherte Bild eines Gebäudes neu gezeichnet wird (Sekunden; 0 = nur einmal). */
-export const BUILDING_REFRESH_S = { airport: 0.25, school: 1, career: 0.5, lab: 0.2, construction: 0, boathouse: 0, finale: 0.25 };
-
 export const GAME_PERF = {
     MAX_DPR: 1.5,
     IDLE_FRAME_MS: 1000 / 30,  // Start- und Ergebniskarte der Minispiele

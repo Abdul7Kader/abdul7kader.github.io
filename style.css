@@ -968,3 +968,6 @@ body.is-covered #dock *, body.is-covered #minimap, body.is-covered #bubbles *, b
     .seg-btn { height: 30px; min-width: 40px; }
     .start-wrap { padding-top: calc(64px + var(--safe-t)); }
 }
+
+/* Dialog-Fläche, die den Fokus bekommt, wenn darin nichts Bedienbares fokussiert ist */
+.panel:focus, .palette:focus, .cv-sheet:focus { outline: none; }

@@ -110,7 +110,7 @@ const B = {
         });
         return h + 54;
     },
-    restaurant(c, cx, t) { // Rest-IQ: kleines Restaurant
+    restaurant(c, cx) { // Rest-IQ: kleines Restaurant
         const w = 112, h = 78, x = cx - w / 2, y = GROUND - h;
         c.fillStyle = '#f4e3c3'; c.fillRect(x, y, w, h);
         c.fillStyle = '#7c3f22'; c.beginPath(); c.moveTo(x - 8, y + 2); c.lineTo(cx, y - 30); c.lineTo(x + w + 8, y + 2); c.closePath(); c.fill();

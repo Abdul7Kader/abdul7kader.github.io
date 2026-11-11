@@ -10,7 +10,7 @@
 // Alles Unbewegliche wird einmal in kleine Bilder (Sprites) in Bildschirm-Auflösung gezeichnet und danach nur noch
 // 1:1 kopiert – auf ganze Pixel gerundet, damit der Browser nicht filtern muss.
 import { WORLD, LAKE, PROPS, RUNWAY, CAMERA } from '../config/layout.js';
-import { WORLD_PERF as PERF, BUILDING_REFRESH_S } from '../config/performance.js';
+import { WORLD_PERF as PERF } from '../config/performance.js';
 import { WORLD_DAY } from '../config/theme.js';
 import { clamp, TAU } from '../core/math.js';
 import { isTouch, reducedMotion } from '../core/env.js';

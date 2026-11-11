@@ -12,7 +12,7 @@ import { WORLD_PERF } from './config/performance.js';
 import { World } from './world/world.js';
 import { progress } from './app/progress.js';
 import { data, derived, station } from './app/content.js';
-import { isOpen, topOverlay, hideOverlay } from './ui/overlays.js';
+import { isOpen, topOverlay, hideOverlay, setupFocusTrap } from './ui/overlays.js';
 import { achieve } from './ui/toasts.js';
 import { updateHud, translateHud, syncAudioButtons, showControlsHint, hideControlsHint, updateActionButton, robotCorner } from './ui/hud.js';
 import { drawMinimap, minimapClick } from './ui/minimap.js';
@@ -231,6 +231,7 @@ function boot() {
     setupEvents();
     setupPalette();
     setupPrint();
+    setupFocusTrap();
     exposeTestApi();
     // Direktlinks: ?cv=1 oder #lebenslauf / #cv öffnet direkt die Kompaktansicht
     if (param('cv') || /lebenslauf|cv/i.test(location.hash)) cvNow();

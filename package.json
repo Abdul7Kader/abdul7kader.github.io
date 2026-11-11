@@ -1,0 +1,20 @@
+{
+  "name": "abdul7kader-cv-world",
+  "private": true,
+  "description": "Interaktiver Lebenslauf als begehbare Spielwelt (statische Seite, GitHub Pages). Diese Datei enthält nur Entwicklungswerkzeuge – die Seite selbst braucht keinen Build.",
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "lint": "eslint .",
+    "test": "node tests/smoke.mjs && node tests/i18n.mjs",
+    "test:smoke": "node tests/smoke.mjs",
+    "test:i18n": "node tests/i18n.mjs",
+    "test:visual": "node tests/visual.mjs shots",
+    "perf": "node tests/perf.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0"
+  }
+}

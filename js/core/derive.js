@@ -29,7 +29,7 @@ export const skillIcon = (name) => SKILL_ICONS[String(name).toLowerCase()] || '�
 
 /** Emojis aus einem Text entfernen (für Lebenslauf und PDF) */
 export const noEmoji = (s) => String(s == null ? '' : s)
-    .replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}️‍]/gu, '').replace(/\s{2,}/g, ' ').trim();
+    .replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}]|\u{FE0F}|\u{200D}/gu, '').replace(/\s{2,}/g, ' ').trim();
 
 /** Passendes Icon für ein Hobby */
 export function hobbyIcon(text) {
