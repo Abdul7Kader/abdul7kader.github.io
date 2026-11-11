@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (inputHash === '9b8e060c591c2bd78bf08ae09879c5324c3e9a3d67026bfd8f5ac147a092afb5') {
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
-            buildForm(window.resumeData);
+            buildForm((window.RESUME || {}).de || {});
         } else {
             loginError.style.display = 'block';
         }
@@ -182,13 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     generateBtn.addEventListener('click', () => {
-        const code = `// Hier kannst du alle deine Lebenslauf-Daten anpassen!
-// Speichere diese Datei auf GitHub und dein Spiel aktualisiert sich automatisch.
-// Nutze die admin.html Seite, um diese Daten komfortabel zu bearbeiten.
-
-const resumeData = ${JSON.stringify(currentData, null, 4)};
-
-window.resumeData = resumeData;`;
+        const code = `// Lebenslauf-Inhalte auf Deutsch (Grundlage für alle Sprachen).
+// Bearbeiten am bequemsten über admin.html – die Seite erzeugt diese Datei neu.
+// Englische Fassung: data/resume.en.js (fehlende Felder werden von hier übernommen).
+window.RESUME = window.RESUME || {};
+window.RESUME.de = ${JSON.stringify(currentData, null, 4)};
+`;
         
         outputCode.value = code;
         outputArea.style.display = 'block';

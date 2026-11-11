@@ -1,8 +1,6 @@
-// Erzeugt js/worldmap-data.js: vereinfachte Ländergrenzen (Natural Earth 1:50m über world-atlas),
-// projiziert mit Deutschland in der Mitte, als fertige SVG-Pfade mit deutschen Namen.
-// Nur nötig, wenn sich Ausschnitt oder Namen ändern sollen. Ausführen (in einem leeren Ordner mit Kopie dieses Scripts):
-//   npm i world-atlas@2.0.2 topojson-client@3.1.0 topojson-simplify@3.0.3 d3-geo@3.1.1
-//   node build-worldmap.mjs ../js/worldmap-data.js
+// Erzeugt assets/data/worldmap.json: vereinfachte Ländergrenzen (Natural Earth 1:50m über world-atlas),
+// projiziert mit Deutschland in der Mitte, als fertige SVG-Pfade mit deutschen (n) und englischen (en) Namen.
+// Aufruf: node tools/build-worldmap.mjs assets/data/worldmap.json  (braucht die devDependencies aus package.json)
 import fs from 'fs';
 import * as topo from 'topojson-client';
 import { presimplify, simplify, quantile } from 'topojson-simplify';
@@ -47,6 +45,8 @@ const mx = Math.max(...pts.map(p => Math.abs(proj(p)[0]))), my = Math.max(...pts
 proj.scale(Math.min((W / 2 - 12) / mx, (H / 2 - 12) / my)).translate([W / 2, H / 2]).clipExtent([[0, 0], [W, H]]);
 const path = geoPath(proj).digits(1);
 
+const EN_FULL = { 'W. Sahara': 'Western Sahara', 'Macedonia': 'North Macedonia', 'Faeroe Is.': 'Faroe Islands', 'N. Cyprus': 'Northern Cyprus', 'Bosnia and Herz.': 'Bosnia and Herzegovina', 'Vatican': 'Vatican City' };
+DE['Canada'] = DE['Canada'] || 'Kanada';
 const out = [];
 fc.features.forEach((f, i) => {
   const d = path(f);
@@ -56,19 +56,17 @@ fc.features.forEach((f, i) => {
   const exact = full.features[i];
   const c = proj(geoCentroid(exact));
   const a = geoArea(exact) * 6371 * 6371; // km² (ungefähr)
-  out.push({ n: de, d, c: c ? [Math.round(c[0]), Math.round(c[1])] : null, a: Math.round(a) });
+  out.push({ n: de, en: EN_FULL[en] || en, d, c: c ? [Math.round(c[0]), Math.round(c[1])] : null, a: Math.round(a) });
 });
 // Kleinstaaten: Pfad aus der genauen Geometrie, damit sie nicht wegfallen
 ['Liechtenstein', 'Luxembourg', 'Malta', 'Andorra', 'Monaco', 'San Marino', 'Vatican'].forEach(en => {
   const f = full.features.find(x => x.properties.name === en);
   const o = out.find(x => x.n === (DE[en] || en));
   if (f && o) o.d = path(f) || o.d;
-  else if (f) { const c = proj(geoCentroid(f)); out.push({ n: DE[en] || en, d: path(f), c: [Math.round(c[0]), Math.round(c[1])], a: 100 }); }
+  else if (f) { const c = proj(geoCentroid(f)); out.push({ n: DE[en] || en, en: EN_FULL[en] || en, d: path(f), c: [Math.round(c[0]), Math.round(c[1])], a: 100 }); }
 });
-const js = `// Automatisch erzeugt aus Natural Earth (1:50m, gemeinfrei) über das npm-Paket world-atlas.
-// Projektion: flächentreu, Deutschland in der Mitte. Bitte nicht von Hand bearbeiten.
-window.CV_WORLDMAP = ${JSON.stringify({ w: W, h: H, countries: out })};
-`;
+// Daten als JSON (assets/data/worldmap.json): n = deutscher Name, en = englischer Name (Natural Earth)
+const js = JSON.stringify({ source: 'Natural Earth 1:50m (public domain) via world-atlas; equal-area projection centred on Germany. Generated – do not edit.', w: W, h: H, countries: out });
 fs.writeFileSync(process.argv[2], js);
 console.log(out.length, 'Länder,', (js.length / 1024).toFixed(1), 'KB');
 console.log('ohne DE-Namen:', out.filter(o => !Object.values(DE).includes(o.n)).map(o => o.n).join(', '));

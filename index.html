@@ -8,7 +8,7 @@
     <meta name="description" content="Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als begehbare Spielwelt mit sechs Minispielen – oder kompakt in 30 Sekunden.">
     <meta property="og:title" content="Abdul Kader Sabouni – Interaktiver Lebenslauf">
     <meta property="og:description" content="Vom Neuanfang 2014 zum Softwareentwickler bei PSI Software SE – als begehbare Spielwelt mit sechs Minispielen.">
-    <meta property="og:image" content="profilbild.jpg">
+    <meta property="og:image" content="assets/img/profilbild.jpg">
     <meta name="theme-color" content="#0d1530">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,50 +19,50 @@
 
 <body>
     <!-- Die Spielwelt -->
-    <canvas id="world" aria-label="Begehbare Lebenslauf-Welt"></canvas>
+    <canvas id="world" data-i18n-aria="hud.worldAria" aria-label="Begehbare Lebenslauf-Welt"></canvas>
     <div id="vignette" aria-hidden="true"></div>
     <div id="bubbles" aria-hidden="true"></div>
 
     <!-- HUD -->
     <header id="hud" class="hidden">
         <div class="hud-left">
-            <button id="hud-profile" class="glass" title="Kapitelübersicht (M)">
+            <button id="hud-profile" class="glass" data-i18n-title="hud.journeyKey" title="Kapitelübersicht (M)">
                 <span class="ring" id="hud-ring"><img id="hud-photo" alt=""></span>
                 <span class="hud-id">
                     <strong id="hud-name"></strong>
                     <span id="hud-progress-label">Kapitel 0 / 6</span>
                 </span>
             </button>
-            <button id="objective" class="glass quest hidden" title="Automatisch hinlaufen (Enter)">
-                <span class="q-kicker"><i></i>Nächstes Ziel</span>
+            <button id="objective" class="glass quest hidden" data-i18n-title="hud.autoWalk" title="Automatisch hinlaufen (G)">
+                <span class="q-kicker"><i></i><span data-i18n="hud.nextGoal">Nächstes Ziel</span></span>
                 <span class="q-title" id="objective-text"></span>
-                <span class="q-go">Hinlaufen <kbd>G</kbd></span>
+                <span class="q-go"><span data-i18n="hud.walkThere">Hinlaufen</span> <kbd>G</kbd></span>
             </button>
         </div>
         <div class="hud-right">
-            <button id="btn-search" class="glass hbtn search" title="Suchen &amp; springen (Strg+K)"><span class="ic" data-ic="search"></span><span class="lbl">Suchen</span><kbd class="lbl">Strg K</kbd></button>
-            <button id="btn-contact" class="hbtn accent" title="Kontakt aufnehmen"><span class="ic" data-ic="send"></span><span class="lbl">Jetzt kontaktieren</span><span class="lbl-s">Kontakt</span></button>
-            <button id="btn-cv" class="hbtn dark" title="Lebenslauf kompakt (L)"><span class="ic" data-ic="file"></span><span class="lbl">Lebenslauf</span></button>
-            <button id="btn-map" class="glass hbtn icon" title="Kapitelübersicht (M)" aria-label="Kapitelübersicht" data-ic="map"></button>
-            <button id="btn-sound" class="glass hbtn icon" title="Soundeffekte an/aus" aria-label="Soundeffekte an/aus"></button>
-            <button id="btn-music" class="glass hbtn icon off" title="Musik an/aus" aria-label="Musik an/aus" data-ic="music"></button>
+            <button id="btn-search" class="glass hbtn search" data-i18n-title="hud.searchKey" title="Suchen &amp; springen (Strg+K)"><span class="ic" data-ic="search"></span><span class="lbl" data-i18n="hud.search">Suchen</span><kbd class="lbl" data-i18n="hud.ctrlK">Strg K</kbd></button>
+            <button id="btn-contact" class="hbtn accent" data-i18n-title="hud.contactTitle" title="Kontakt aufnehmen"><span class="ic" data-ic="send"></span><span class="lbl" data-i18n="hud.contactNow">Jetzt kontaktieren</span><span class="lbl-s" data-i18n="hud.contactShort">Kontakt</span></button>
+            <button id="btn-cv" class="hbtn dark" data-i18n-title="hud.cvKey" title="Lebenslauf kompakt (L)"><span class="ic" data-ic="file"></span><span class="lbl" data-i18n="hud.cv">Lebenslauf</span></button>
+            <button id="btn-map" class="glass hbtn icon" data-i18n-title="hud.journeyKey" title="Kapitelübersicht (M)" aria-label="Kapitelübersicht" data-ic="map"></button>
+            <button id="btn-sound" class="glass hbtn icon" data-i18n-title="hud.sound" title="Soundeffekte an/aus" aria-label="Soundeffekte an/aus"></button>
+            <button id="btn-music" class="glass hbtn icon off" data-i18n-title="hud.music" title="Musik an/aus" aria-label="Musik an/aus" data-ic="music"></button>
         </div>
     </header>
 
     <!-- Minimap -->
-    <aside id="minimap" class="glass hidden" title="Karte – klicken zum Hinlaufen">
+    <aside id="minimap" class="glass hidden" data-i18n-title="hud.minimap" title="Karte – klicken zum Hinlaufen">
         <canvas id="minimap-cnv" width="220" height="152"></canvas>
     </aside>
 
     <!-- Dock unten links: Sterne & Stärken -->
     <div id="dock" class="glass hidden">
-        <div id="tokens" title="Gesammelte Skill-Sterne"><span class="tk-ic">⭐</span><b id="tokens-val">0</b><span>/<span id="tokens-max">0</span></span></div>
-        <div id="hud-badges" title="Entdeckte Stärken"></div>
+        <div id="tokens" data-i18n-title="hud.tokens" title="Gesammelte Skill-Sterne"><span class="tk-ic">⭐</span><b id="tokens-val">0</b><span>/<span id="tokens-max">0</span></span></div>
+        <div id="hud-badges" data-i18n-title="hud.badges" title="Entdeckte Stärken"></div>
     </div>
 
     <div id="controls-hint" class="hidden"></div>
 
-    <button id="action-btn" class="hidden">Betreten</button>
+    <button id="action-btn" class="hidden"></button>
     <div id="joystick" class="hidden"><div id="joystick-knob"></div></div>
 
     <div id="toasts" aria-live="polite"></div>
@@ -78,12 +78,12 @@
                 <div class="start-buttons">
                     <button id="start-play" class="cta-btn primary">
                         <span class="cta-ic">▶</span>
-                        <span class="cta-txt"><b>Spiel starten</b><small>ca. 3 Min. · jedes Spiel überspringbar</small></span>
+                        <span class="cta-txt"><b data-i18n="start.play">Spiel starten</b><small data-i18n="start.playSub">ca. 3 Min. · jedes Spiel überspringbar</small></span>
                         <kbd>Enter</kbd>
                     </button>
                     <button id="start-cv" class="cta-btn ghost">
                         <span class="cta-ic">⚡</span>
-                        <span class="cta-txt"><b>Lebenslauf in 30 Sek.</b><small>klassisch · als PDF speicherbar</small></span>
+                        <span class="cta-txt"><b data-i18n="start.cv">Lebenslauf in 30 Sek.</b><small data-i18n="start.cvSub">klassisch · als PDF speicherbar</small></span>
                         <kbd>L</kbd>
                     </button>
                 </div>
@@ -91,7 +91,7 @@
             </div>
             <div class="pcard" id="pcard" aria-hidden="true">
                 <div class="pcard-in">
-                    <div class="pc-top"><span class="pc-badge">Spieler 1</span><span class="pc-status"><i></i><span id="pc-status"></span></span></div>
+                    <div class="pc-top"><span class="pc-badge" data-i18n="start.player1">Spieler 1</span><span class="pc-status"><i></i><span id="pc-status"></span></span></div>
                     <div class="pc-photo"><img id="start-photo" alt=""><span class="wave">👋</span></div>
                     <div class="pc-name"><strong id="pc-name"></strong><span id="pc-class"></span></div>
                     <div class="pc-stats" id="start-stats"></div>
@@ -106,7 +106,7 @@
     <section id="station" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="station-title">
         <div class="panel station-panel">
             <header class="sp-hero">
-                <button class="close" id="station-close" aria-label="Schließen">✕</button>
+                <button class="close" id="station-close" data-i18n-title="common.close" aria-label="Schließen">✕</button>
                 <div class="sp-meta"><span id="station-chapter"></span><span id="station-era"></span></div>
                 <div class="sp-title"><span id="station-emoji" class="sp-emoji"></span><h2 id="station-title"></h2></div>
                 <div class="sp-steps" id="station-steps"></div>
@@ -116,12 +116,12 @@
     </section>
 
     <!-- Kapitelübersicht -->
-    <section id="journey" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Kapitelübersicht">
+    <section id="journey" class="overlay hidden" role="dialog" aria-modal="true" data-i18n-aria="journey.title" aria-label="Kapitelübersicht">
         <div class="panel narrow">
-            <button class="close" data-close="journey" aria-label="Schließen">✕</button>
+            <button class="close" data-close="journey" data-i18n-title="common.close" aria-label="Schließen">✕</button>
             <header class="plain-head">
-                <span class="kicker">Mein Weg in 7 Stationen</span>
-                <h2>Kapitelübersicht</h2>
+                <span class="kicker" data-i18n="journey.kicker">Mein Weg in 7 Stationen</span>
+                <h2 data-i18n="journey.title">Kapitelübersicht</h2>
                 <p class="muted" id="journey-sub"></p>
             </header>
             <ol id="journey-list"></ol>
@@ -129,33 +129,33 @@
     </section>
 
     <!-- Befehlspalette -->
-    <section id="palette" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Suchen und springen">
+    <section id="palette" class="overlay hidden" role="dialog" aria-modal="true" data-i18n-aria="palette.aria" aria-label="Suchen und springen">
         <div class="palette">
             <label class="pal-input">
                 <span aria-hidden="true">🔎</span>
-                <input id="pal-q" type="text" autocomplete="off" spellcheck="false" placeholder="Wonach suchen Sie? z. B. Java, PSI, Englisch …">
+                <input id="pal-q" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="palette.placeholder" placeholder="Wonach suchen Sie? z. B. Java, PSI, Englisch …">
                 <kbd>Esc</kbd>
             </label>
             <ul id="pal-list" role="listbox"></ul>
-            <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> auswählen</span><span><kbd>↵</kbd> öffnen</span><span><kbd>M</kbd> Karte · <kbd>L</kbd> Lebenslauf</span></div>
+            <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="palette.select">auswählen</span></span><span><kbd>↵</kbd> <span data-i18n="palette.open">öffnen</span></span><span><kbd>M</kbd> <span data-i18n="palette.map">Karte</span> · <kbd>L</kbd> <span data-i18n="palette.cvShort">Lebenslauf</span></span></div>
         </div>
     </section>
 
     <!-- Kontaktformular -->
     <section id="contact" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="contact-title">
         <div class="panel narrow contact-panel">
-            <button class="close" data-close="contact" aria-label="Schließen">✕</button>
+            <button class="close" data-close="contact" data-i18n-title="common.close" aria-label="Schließen">✕</button>
             <header class="plain-head">
-                <span class="kicker">Kontakt</span>
-                <h2 id="contact-title">Lassen Sie uns sprechen</h2>
-                <p class="muted">Schreiben Sie mir kurz – die Nachricht landet direkt in meinem Postfach.</p>
+                <span class="kicker" data-i18n="contact.kicker">Kontakt</span>
+                <h2 id="contact-title" data-i18n="contact.title">Lassen Sie uns sprechen</h2>
+                <p class="muted" data-i18n="contact.intro">Schreiben Sie mir kurz – die Nachricht landet direkt in meinem Postfach.</p>
             </header>
             <div id="contact-body"></div>
         </div>
     </section>
 
     <!-- Kompakter Lebenslauf (auch Druck/PDF) -->
-    <section id="cv" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Lebenslauf kompakt">
+    <section id="cv" class="overlay hidden" role="dialog" aria-modal="true" data-i18n-aria="cv.aria" aria-label="Lebenslauf kompakt">
         <div class="cv-sheet" id="cv-sheet"></div>
     </section>
 
@@ -167,21 +167,12 @@
         </div>
     </noscript>
 
-    <a href="admin.html" id="admin-link" title="Admin">⚙︎</a>
+    <a href="admin.html" id="admin-link" title="Admin" aria-label="Admin">⚙︎</a>
 
-    <script src="data.js"></script>
-    <script src="js/util.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/world.js"></script>
-    <script src="js/minigames.js"></script>
-    <script src="js/projects.js"></script>
-    <script src="js/worldmap-data.js"></script>
-    <script src="js/worldmap.js"></script>
-    <script src="js/contact.js"></script>
-    <script src="js/pdf.js"></script>
-    <script src="js/github.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Inhalte (klassische Skripte, damit admin.html sie genauso lesen kann), danach die App als ES-Modul -->
+    <script src="data/resume.de.js"></script>
+    <script src="data/resume.en.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

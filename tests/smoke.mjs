@@ -25,7 +25,10 @@ for (const [label, opts] of VIEWPORTS) {
     const page = await ctx.newPage();
     const errors = [];
     page.on('pageerror', e => errors.push('pageerror: ' + e.message));
-    page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
+    page.on('console', m => {
+        if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text());
+        if (m.type() === 'warning' && /\[i18n\]/.test(m.text())) errors.push('i18n: ' + m.text());
+    });
     await isolate(page, { activity: sampleActivity() });
     await page.goto(`${server.url}/index.html?lang=${lang}`, { waitUntil: 'networkidle' });
     const app = (fn, ...a) => page.evaluate(`(${fn})(${APP}, ...${JSON.stringify(a)})`);

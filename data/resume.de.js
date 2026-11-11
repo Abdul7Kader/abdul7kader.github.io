@@ -1,12 +1,13 @@
-// Hier kannst du alle deine Lebenslauf-Daten anpassen!
-// Speichere diese Datei auf GitHub und dein Spiel aktualisiert sich automatisch.
-// Nutze die admin.html Seite, um diese Daten komfortabel zu bearbeiten.
-
-const resumeData = {
+// Lebenslauf-Inhalte auf Deutsch (Grundlage für alle Sprachen).
+// Bearbeiten am bequemsten über admin.html – die Seite erzeugt diese Datei neu.
+// Englische Fassung: data/resume.en.js (fehlende Felder werden von hier übernommen).
+window.RESUME = window.RESUME || {};
+window.RESUME.de = {
     "name": "Abdul Kader Sabouni",
     "firstName": "Abdul",
     "title": "Informatikstudent · Softwareentwicklung mit KI-Agenten",
     "cardRole": "Full-Stack-Entwickler · Informatikstudent",
+    "cardStatus": "offen für neue Herausforderungen",
     "location": "Dortmund",
     "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen Projekten – erleben Sie meinen Weg als kleine, begehbare Welt.",
     "availability": "Offen für neue Herausforderungen",
@@ -388,9 +389,7 @@ const resumeData = {
         "Neugier",
         "Eigeninitiative"
     ],
-    "profileImage": "profilbild.jpg",
-    "congratsImage": "jubelbild.jpg",
-    "finaleImage": "jubelbild-nah.jpg"
+    "profileImage": "assets/img/profilbild.jpg",
+    "congratsImage": "assets/img/jubelbild.jpg",
+    "finaleImage": "assets/img/jubelbild-nah.jpg"
 };
-
-window.resumeData = resumeData;
