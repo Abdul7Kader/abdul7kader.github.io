@@ -31,6 +31,8 @@
         return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
     }
     const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
+    const MAX_DPR = 1.5;          // höhere Pixeldichte bringt sichtbar nichts, kostet aber viel Rechenzeit
+    const IDLE_FRAME_MS = 1000 / 30; // Start- und Ergebniskarte: 30 Bilder/s genügen
 
     const CTRL = {
         hold: ['🖱️', 'Gedrückt halten'], click: ['🖱️', 'Klicken'], tap: ['👆', 'Tippen'], swipe: ['👆', 'Wischen'],
@@ -64,7 +66,7 @@
             const maxH = Math.max(230, window.innerHeight - (small ? 170 : 290));
             const cssW = Math.floor(Math.min(avail, maxH * W / H, 860));
             const cssH = Math.round(cssW * H / W);
-            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
             cnv.width = Math.round(cssW * dpr); cnv.height = Math.round(cssH * dpr);
             cnv.style.width = cssW + 'px'; cnv.style.height = cssH + 'px';
             wrap.style.width = cssW + 'px'; wrap.style.height = cssH + 'px';
@@ -351,11 +353,13 @@
         }
         function frame(ts) {
             if (!alive) return;
+            raf = requestAnimationFrame(frame);
+            const active = g.state === 'play' || g.state === 'count' || parts.length > 0;
+            if (!active && ts - last < IDLE_FRAME_MS) return;
             const dt = Math.min(0.05, Math.max(0, (ts - last) / 1000));
             last = ts;
             step(dt);
             render();
-            raf = requestAnimationFrame(frame);
         }
 
         game = spec.make(g);

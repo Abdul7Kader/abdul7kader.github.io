@@ -34,6 +34,26 @@
     const RUNWAY = { x: 90, y: 1612, w: 940, h: 74 };
     const SPAWN = { x: 340, y: 1565 };
 
+    // Leistung: Diese Werte bestimmen, wie viel Rechenzeit die Welt braucht.
+    const PERF = {
+        MAX_DPR: 1.5,          // höchste Pixeldichte der Welt (Retina-Bildschirme rechnen sonst die 4-fache Fläche)
+        MIN_DPR: 1,            // so weit wird bei Überlast automatisch heruntergeregelt
+        DPR_STEP: 0.25,
+        IDLE_FPS: 15,          // Bildrate, wenn sich nichts Wichtiges bewegt (Bewohner, Wolken, Wasser)
+        ATTRACT_FPS: 30,       // Bildrate der Vorschau hinter dem Startbildschirm
+        SLOW_GAP_MS: 26,       // gemessener Bildabstand, ab dem die Welt als überlastet gilt
+        ADAPT_FRAMES: 90,      // so viele bewegte Bilder werden gemittelt, bevor heruntergeregelt wird
+        WAKE_MS: 400,          // nach einer Eingabe so lange mit voller Bildrate zeichnen
+        GROUND_RES_DESKTOP: 1.25, // Auflösung der vorgerenderten Bodenebene (Pixel pro Welteinheit)
+        GROUND_RES_TOUCH: 1,
+        GROUND_TILE: 256,      // Bodenkachel in Welteinheiten; Kacheln liegen in Bildschirm-Auflösung vor
+        GROUND_TILE_MAX: 56,   // höchstens so viele Kacheln im Speicher (älteste werden verworfen)
+        COVER_BLUR_PX: 6       // Unschärfe der angehaltenen Welt hinter Dialogen (einmal berechnet)
+    };
+    // Wie oft das zwischengespeicherte Bild eines Gebäudes neu gezeichnet wird (Sekunden; 0 = nur einmal).
+    // Nur kleine Details (Blinklichter, Uhr, Fahnen) bewegen sich – dafür reichen wenige Bilder pro Sekunde.
+    const BUILDING_REFRESH = { airport: 0.25, school: 1, career: 0.5, lab: 0.2, construction: 0, boathouse: 0, finale: 0.25 };
+
     const World = CV.World = {
         W, H, stations: [], paused: true, attract: true,
         onEnterStation: null, onCollect: null, onFirstMove: null
@@ -52,6 +72,9 @@
     let hoverStation = null;
     let firstMoveDone = false;
     let plane = { t: -1, next: 6 };
+    let covered = false, frozen = false, lastDraw = 0, wakeUntil = 0, camMoving = false, liveParticles = 0;
+    let dprCap = PERF.MAX_DPR, gapEma = 0, busyFrames = 0, prevTs = 0;
+    let groundRes = 1, RS = 1;   // RS = Render-Maßstab (Bildschirmpixel pro Welteinheit)
 
     // ------------------------------------------------------------------ Hilfen
     function rr(c, x, y, w, h, r) {
@@ -264,8 +287,10 @@
 
     function buildGround() {
         const g = document.createElement('canvas');
-        g.width = W; g.height = H;
+        groundRes = CV.isTouch ? PERF.GROUND_RES_TOUCH : PERF.GROUND_RES_DESKTOP;
+        g.width = Math.round(W * groundRes); g.height = Math.round(H * groundRes);
         const c = g.getContext('2d');
+        c.scale(groundRes, groundRes);
         const rnd = CV.rng(77);
         c.fillStyle = '#8cce6c';
         c.fillRect(0, 0, W, H);
@@ -308,16 +333,46 @@
             for (let k = 0; k < 4; k++) { ellipse(c, x + Math.cos(k * 1.57) * 2.4, y + Math.sin(k * 1.57) * 2.4, 2.1, 2.1); c.fill(); }
             c.fillStyle = '#ffcf33'; ellipse(c, x, y, 1.4, 1.4); c.fill();
         }
+        // Unbewegliche Teile der Welt: einmal hier zeichnen statt in jedem Bild
+        // Landebahn
+        c.fillStyle = '#5b6170'; rr(c, RUNWAY.x, RUNWAY.y, RUNWAY.w, RUNWAY.h, 8); c.fill();
+        c.fillStyle = '#ffffff';
+        for (let x = RUNWAY.x + 30; x < RUNWAY.x + RUNWAY.w - 30; x += 60) c.fillRect(x, RUNWAY.y + RUNWAY.h / 2 - 2, 32, 4);
+        for (let i = 0; i < 6; i++) { c.fillRect(RUNWAY.x + 10, RUNWAY.y + 8 + i * 10, 18, 5); }
+
+        // Wege
+        c.lineCap = 'round'; c.lineJoin = 'round';
+        c.strokeStyle = '#c4ab7b'; c.lineWidth = ROAD_W + 8;
+        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
+        c.fillStyle = '#c4ab7b'; ellipse(c, PLAZA.x, PLAZA.y, PLAZA.r + 4, PLAZA.r + 4); c.fill();
+        c.strokeStyle = '#ead9ae'; c.lineWidth = ROAD_W;
+        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
+        c.strokeStyle = 'rgba(255,255,255,0.25)'; c.lineWidth = 4; c.setLineDash([2, 22]);
+        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
+        c.setLineDash([]);
+        // Platz
+        c.fillStyle = '#e6dfcf'; ellipse(c, PLAZA.x, PLAZA.y, PLAZA.r, PLAZA.r); c.fill();
+        c.strokeStyle = '#d2c7b0'; c.lineWidth = 2;
+        for (let r = 30; r < PLAZA.r; r += 26) { ellipse(c, PLAZA.x, PLAZA.y, r, r); c.stroke(); }
+
+        // See
+        c.fillStyle = '#e8d8a4'; ellipse(c, LAKE.x, LAKE.y, LAKE.rx + 16, LAKE.ry + 14); c.fill();
+        const lg = c.createRadialGradient(LAKE.x, LAKE.y, 20, LAKE.x, LAKE.y, LAKE.rx);
+        lg.addColorStop(0, '#2f8fc4'); lg.addColorStop(1, '#5cc0e6');
+        c.fillStyle = lg; ellipse(c, LAKE.x, LAKE.y, LAKE.rx, LAKE.ry); c.fill();
         return g;
     }
 
     // ------------------------------------------------------------------ Größen & Kamera
     function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        dpr = Math.min(window.devicePixelRatio || 1, dprCap);
         vw = window.innerWidth; vh = window.innerHeight;
         canvas.width = Math.round(vw * dpr); canvas.height = Math.round(vh * dpr);
         canvas.style.width = vw + 'px'; canvas.style.height = vh + 'px';
         zoom = CV.clamp(Math.sqrt(vw * vh) / 1000, 0.55, 1.12);
+        RS = dpr * zoom;
+        frozen = false;
+        World.wake();
     }
     function viewW() { return vw / zoom; }
     function viewH() { return vh / zoom; }
@@ -335,6 +390,7 @@
     function setupInput() {
         window.addEventListener('keydown', (e) => {
             if (World.paused) return;
+            World.wake();
             const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
             keys[k] = true;
@@ -360,7 +416,9 @@
             if (!down || down.id !== e.pointerId) {
                 if (e.pointerType === 'mouse') {
                     const p = World.screenToWorld(e.clientX, e.clientY);
-                    hoverStation = stationAt(p.x, p.y);
+                    const h = stationAt(p.x, p.y);
+                    if (h !== hoverStation) World.wake();
+                    hoverStation = h;
                     canvas.style.cursor = hoverStation ? 'pointer' : 'default';
                 }
                 return;
@@ -516,6 +574,7 @@
             const c = clampCam(player.x - viewW() / 2, player.y - 40 - viewH() / 2);
             const k = Math.min(1, dt * 5);
             cam.x = CV.lerp(cam.x, c.x, k); cam.y = CV.lerp(cam.y, c.y, k);
+            camMoving = Math.abs(cam.x - c.x) + Math.abs(cam.y - c.y) > 0.5;
         }
 
         // Roboter-Begleiter
@@ -586,6 +645,7 @@
         }
 
         // Umgebung
+        for (const d of ducks) d.a += d.speed * dt;
         for (const cl of clouds) { cl.x += cl.v * dt; if (cl.x - cl.rx > W) cl.x = -cl.rx; }
         if (Math.random() < dt * 0.05 && birds.length < 2) {
             const y = 200 + Math.random() * (H - 400);
@@ -604,14 +664,16 @@
             spawn({ type: 'spark', x: fin.x + Math.random() * fin.w, y: fin.base - Math.random() * (fin.height + fin.depth), vx: 0, vy: -30, life: 0, max: 1 });
         }
 
+        liveParticles = 0;
         for (let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
             p.life += dt;
-            if (p.life > p.max) { particles.splice(i, 1); continue; }
+            if (p.life > p.max) { particles[i] = particles[particles.length - 1]; particles.pop(); continue; }
+            if (p.type !== 'drop') liveParticles++;
             if (p.vx !== undefined) { p.x += p.vx * dt; p.y += p.vy * dt; }
             if (p.g) p.vy += p.g * dt;
             if (p.type === 'confetti') { p.vx *= 0.985; p.rot += p.vr * dt; if (p.vy > 90) p.vy = 90; }
-            if (p.type === 'drop' && p.y > p.floor && p.vy > 0) { particles.splice(i, 1); }
+            if (p.type === 'drop' && p.y > p.floor && p.vy > 0) { particles[i] = particles[particles.length - 1]; particles.pop(); }
         }
 
         updateBubbles();
@@ -756,26 +818,40 @@
         c.fillStyle = Math.sin(time * 4) > 0 ? '#ff8a3d' : '#ffc24d'; ellipse(c, x, by - 18, 2.6, 2.6); c.fill();
     }
 
-    function drawTree(c, t) {
-        const s = t.size, x = t.x, y = t.y;
-        const sway = Math.sin(time * 1.2 + t.phase) * 1.5;
+    // Baum zeichnen (ohne Wind) – wird nur für die Sprite-Vorlagen benutzt
+    const TREE_SPRITE_SIZE = 1.3;                       // Bezugsgröße für den Umriss TREE_BOX
+    const TREE_BOX = { x0: -48, y0: -130, x1: 48, y1: 16 };
+    function paintTree(c, x, y, s, kind, hue) {
         c.fillStyle = 'rgba(25,55,20,0.24)'; ellipse(c, x + 8 * s, y + 2, 26 * s, 9 * s); c.fill();
         c.fillStyle = '#7a5235'; rr(c, x - 5 * s, y - 24 * s, 10 * s, 26 * s, 3); c.fill();
-        if (t.kind === 'pine') {
+        if (kind === 'pine') {
             const cols = ['#2f7d4a', '#3a9158', '#47a465'];
             for (let i = 0; i < 3; i++) {
                 const ty = y - 22 * s - i * 20 * s, w = (34 - i * 8) * s;
                 c.fillStyle = cols[i];
-                c.beginPath(); c.moveTo(x - w + sway * (i + 1) * 0.3, ty); c.lineTo(x + w + sway * (i + 1) * 0.3, ty); c.lineTo(x + sway * (i + 1) * 0.5, ty - 34 * s); c.closePath(); c.fill();
+                c.beginPath(); c.moveTo(x - w, ty); c.lineTo(x + w, ty); c.lineTo(x, ty - 34 * s); c.closePath(); c.fill();
             }
         } else {
-            const g = t.hue < 0.33 ? ['#3f8f45', '#55a957', '#73c26a'] : t.hue < 0.66 ? ['#468f3e', '#5fa84a', '#80c45e'] : ['#3b8a55', '#4fa36a', '#6dbb80'];
-            c.fillStyle = g[0]; ellipse(c, x + sway * 0.5, y - 44 * s, 30 * s, 26 * s); c.fill();
-            c.fillStyle = g[1]; ellipse(c, x - 8 * s + sway * 0.7, y - 52 * s, 22 * s, 20 * s); c.fill();
-            ellipse(c, x + 11 * s + sway * 0.7, y - 48 * s, 18 * s, 17 * s); c.fill();
-            c.fillStyle = g[2]; ellipse(c, x - 6 * s + sway, y - 60 * s, 13 * s, 10 * s); c.fill();
-            if (t.hue > 0.82) { c.fillStyle = '#ff5d5d'; [[-12, -40], [8, -55], [14, -38], [-2, -48]].forEach(([dx, dy]) => { ellipse(c, x + dx * s, y + dy * s, 3, 3); c.fill(); }); }
+            const g = hue < 0.33 ? ['#3f8f45', '#55a957', '#73c26a'] : hue < 0.66 ? ['#468f3e', '#5fa84a', '#80c45e'] : ['#3b8a55', '#4fa36a', '#6dbb80'];
+            c.fillStyle = g[0]; ellipse(c, x, y - 44 * s, 30 * s, 26 * s); c.fill();
+            c.fillStyle = g[1]; ellipse(c, x - 8 * s, y - 52 * s, 22 * s, 20 * s); c.fill();
+            ellipse(c, x + 11 * s, y - 48 * s, 18 * s, 17 * s); c.fill();
+            c.fillStyle = g[2]; ellipse(c, x - 6 * s, y - 60 * s, 13 * s, 10 * s); c.fill();
+            if (hue > 0.82) { c.fillStyle = '#ff5d5d'; [[-12, -40], [8, -55], [14, -38], [-2, -48]].forEach(([dx, dy]) => { ellipse(c, x + dx * s, y + dy * s, 3, 3); c.fill(); }); }
         }
+    }
+    // Nur wenige Vorlagen (Art × Farbton), jeder Baum benutzt eine davon
+    const treeVariant = (t) => t.kind === 'pine' ? 'pine' : t.hue > 0.82 ? 'fruit' : t.hue < 0.33 ? 'r0' : t.hue < 0.66 ? 'r1' : 'r2';
+    const TREE_HUE = { pine: 0, fruit: 0.9, r0: 0.1, r1: 0.5, r2: 0.7 };
+    // Größen werden auf Stufen gerundet, damit jede Vorlage 1:1 kopiert werden kann (ohne Umrechnen der Pixel)
+    const TREE_SIZE_STEP = 0.1;
+    function drawTree(c, t) {
+        const v = treeVariant(t);
+        const size = Math.round(t.size / TREE_SIZE_STEP) * TREE_SIZE_STEP;
+        const k = size / TREE_SPRITE_SIZE;
+        const sp = sprite(`tree:${v}:${size.toFixed(1)}`, TREE_BOX.x0 * k, TREE_BOX.y0 * k, TREE_BOX.x1 * k, TREE_BOX.y1 * k,
+            (cc) => paintTree(cc, 0, 0, size, v === 'pine' ? 'pine' : 'round', TREE_HUE[v]));
+        blit(c, sp, t.x, t.y);
     }
 
     // ------------------------------------------------------------------ Zeichnen: Gebäude
@@ -814,6 +890,44 @@
         c.font = `${weight} ${size}px Outfit, system-ui, sans-serif`;
         c.textAlign = 'center'; c.textBaseline = 'middle';
         c.fillStyle = col; c.fillText(text, x, y);
+    }
+
+    // Kran der Projekt-Baustelle: einziges Gebäudeteil mit flüssiger Bewegung, deshalb in jedem Bild gezeichnet
+    function drawCrane(c, s) {
+        const yT = s.base - s.height, yR = yT - s.depth;
+        // Kran
+        const mx = s.x + s.w - 40, top = yR - 150;
+        c.strokeStyle = '#f2b705'; c.lineWidth = 4;
+        c.beginPath(); c.moveTo(mx - 8, s.base - 30); c.lineTo(mx - 8, top); c.moveTo(mx + 8, s.base - 30); c.lineTo(mx + 8, top); c.stroke();
+        c.lineWidth = 2;
+        for (let y = s.base - 30; y > top; y -= 18) { c.beginPath(); c.moveTo(mx - 8, y); c.lineTo(mx + 8, y - 18); c.stroke(); }
+        // Ausleger: fest an der Mastspitze, fährt teleskopartig aus und ein (nie kürzer als 110).
+        const jy = top - 4, BASE = 110;
+        const len = CV.reducedMotion ? 160 : 150 + Math.sin(time * 0.35) * 40;
+        // Gegenausleger mit Gegengewicht
+        c.strokeStyle = '#f2b705'; c.lineWidth = 6; c.lineCap = 'butt';
+        c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx + 56, jy); c.stroke();
+        c.fillStyle = '#6b7280'; rr(c, mx + 34, jy + 3, 22, 16, 2); c.fill();
+        // Grundteil (Gitter) + ausfahrbares Teil (etwas schmaler, liegt darin)
+        c.strokeStyle = '#f2b705'; c.lineWidth = 7;
+        c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx - BASE, jy); c.stroke();
+        c.strokeStyle = '#c99400'; c.lineWidth = 1.2;
+        for (let k = 0; k < BASE - 8; k += 12) { c.beginPath(); c.moveTo(mx - k, jy - 3); c.lineTo(mx - k - 12, jy + 3); c.stroke(); }
+        c.strokeStyle = '#ffd23f'; c.lineWidth = 4.5;
+        c.beginPath(); c.moveTo(mx - BASE + 14, jy); c.lineTo(mx - len, jy); c.stroke();
+        c.fillStyle = '#c99400'; c.fillRect(mx - len - 3, jy - 4, 5, 8);
+        // Abspannseile von der Turmspitze
+        c.strokeStyle = 'rgba(60,60,60,0.55)'; c.lineWidth = 1;
+        c.beginPath(); c.moveTo(mx, jy - 34); c.lineTo(mx - BASE * 0.95, jy - 2); c.moveTo(mx, jy - 34); c.lineTo(mx + 50, jy - 2); c.stroke();
+        c.strokeStyle = '#f2b705'; c.lineWidth = 3; c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx, jy - 36); c.stroke();
+        c.fillStyle = '#555'; rr(c, mx - 12, top - 22, 24, 18, 3); c.fill();
+        c.fillStyle = '#9fd4f5'; rr(c, mx - 9, top - 19, 10, 8, 2); c.fill();
+        // Laufkatze fährt auf dem Ausleger mit, Seil hängt senkrecht
+        const hx = mx - len + 12 + (len - 40) * (0.15 + 0.1 * Math.sin(time * 0.6)), hy = jy + 4;
+        c.fillStyle = '#374151'; rr(c, hx - 7, jy + 1, 14, 6, 2); c.fill();
+        const drop = 64 + Math.sin(time * 0.9) * 8;
+        c.strokeStyle = '#444'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy + drop); c.stroke();
+        c.fillStyle = '#ff8a3d'; rr(c, hx - 16, hy + drop, 32, 16, 3); c.fill();
     }
 
     const DRAW = {
@@ -928,39 +1042,6 @@
             // Materialstapel
             const cols = ['#ff8a3d', '#2ec4b6', '#ffca3a', '#6a4c93'];
             for (let i = 0; i < 4; i++) { c.fillStyle = cols[i]; rr(c, s.x + s.w * 0.68 + (i % 2) * 44, s.base - 22 - Math.floor(i / 2) * 20, 40, 18, 3); c.fill(); }
-            // Kran
-            const mx = s.x + s.w - 40, top = yR - 150;
-            c.strokeStyle = '#f2b705'; c.lineWidth = 4;
-            c.beginPath(); c.moveTo(mx - 8, s.base - 30); c.lineTo(mx - 8, top); c.moveTo(mx + 8, s.base - 30); c.lineTo(mx + 8, top); c.stroke();
-            c.lineWidth = 2;
-            for (let y = s.base - 30; y > top; y -= 18) { c.beginPath(); c.moveTo(mx - 8, y); c.lineTo(mx + 8, y - 18); c.stroke(); }
-            // Ausleger: fest an der Mastspitze, fährt teleskopartig aus und ein (nie kürzer als 110).
-            const jy = top - 4, BASE = 110;
-            const len = CV.reducedMotion ? 160 : 150 + Math.sin(time * 0.35) * 40;
-            // Gegenausleger mit Gegengewicht
-            c.strokeStyle = '#f2b705'; c.lineWidth = 6; c.lineCap = 'butt';
-            c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx + 56, jy); c.stroke();
-            c.fillStyle = '#6b7280'; rr(c, mx + 34, jy + 3, 22, 16, 2); c.fill();
-            // Grundteil (Gitter) + ausfahrbares Teil (etwas schmaler, liegt darin)
-            c.strokeStyle = '#f2b705'; c.lineWidth = 7;
-            c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx - BASE, jy); c.stroke();
-            c.strokeStyle = '#c99400'; c.lineWidth = 1.2;
-            for (let k = 0; k < BASE - 8; k += 12) { c.beginPath(); c.moveTo(mx - k, jy - 3); c.lineTo(mx - k - 12, jy + 3); c.stroke(); }
-            c.strokeStyle = '#ffd23f'; c.lineWidth = 4.5;
-            c.beginPath(); c.moveTo(mx - BASE + 14, jy); c.lineTo(mx - len, jy); c.stroke();
-            c.fillStyle = '#c99400'; c.fillRect(mx - len - 3, jy - 4, 5, 8);
-            // Abspannseile von der Turmspitze
-            c.strokeStyle = 'rgba(60,60,60,0.55)'; c.lineWidth = 1;
-            c.beginPath(); c.moveTo(mx, jy - 34); c.lineTo(mx - BASE * 0.95, jy - 2); c.moveTo(mx, jy - 34); c.lineTo(mx + 50, jy - 2); c.stroke();
-            c.strokeStyle = '#f2b705'; c.lineWidth = 3; c.beginPath(); c.moveTo(mx, jy); c.lineTo(mx, jy - 36); c.stroke();
-            c.fillStyle = '#555'; rr(c, mx - 12, top - 22, 24, 18, 3); c.fill();
-            c.fillStyle = '#9fd4f5'; rr(c, mx - 9, top - 19, 10, 8, 2); c.fill();
-            // Laufkatze fährt auf dem Ausleger mit, Seil hängt senkrecht
-            const hx = mx - len + 12 + (len - 40) * (0.15 + 0.1 * Math.sin(time * 0.6)), hy = jy + 4;
-            c.fillStyle = '#374151'; rr(c, hx - 7, jy + 1, 14, 6, 2); c.fill();
-            const drop = 64 + Math.sin(time * 0.9) * 8;
-            c.strokeStyle = '#444'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy + drop); c.stroke();
-            c.fillStyle = '#ff8a3d'; rr(c, hx - 16, hy + drop, 32, 16, 3); c.fill();
             // Hütchen
             [[s.x + 40, s.base + 16], [s.x + 120, s.base + 18], [s.x + 200, s.base + 14]].forEach(([x, y]) => {
                 c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(x - 7, y); c.lineTo(x + 7, y); c.lineTo(x, y - 18); c.closePath(); c.fill();
@@ -1021,7 +1102,17 @@
         }
     };
 
+    const PROP_BOX = { lamp: [-9, -68, 13, 6], bench: [-32, -22, 32, 8], sign: [-48, -84, 48, 6], dock: [-24, -72, 24, 42] };
     function drawProp(c, p) {
+        const box = PROP_BOX[p.type];
+        if (box) {
+            const sp = sprite('prop:' + p.type, box[0], box[1], box[2], box[3], (cc) => paintProp(cc, { type: p.type, x: 0, y: 0 }));
+            blit(c, sp, p.x, p.y);
+            return;
+        }
+        paintProp(c, p);
+    }
+    function paintProp(c, p) {
         if (p.type === 'lamp') {
             c.fillStyle = 'rgba(25,50,20,0.2)'; ellipse(c, p.x + 4, p.y + 2, 8, 3); c.fill();
             c.fillStyle = '#3d4a5c'; c.fillRect(p.x - 2, p.y - 56, 4, 56);
@@ -1074,46 +1165,154 @@
         c.restore();
     }
 
+    // ------------------------------------------------------------------ Sprite-Cache
+    // Unbewegliche Dinge werden einmal in ein kleines Bild gezeichnet und danach nur noch kopiert.
+    // Die Bilder haben genau die Bildschirm-Auflösung (RS); ändert sich die, wird der Cache geleert.
+    const sprites = new Map();
+    let spriteRS = 0;
+    function sprite(key, x0, y0, x1, y1, paint) {
+        if (spriteRS !== RS) { sprites.clear(); for (const s of World.stations) s.sprite = null; spriteRS = RS; }
+        let sp = sprites.get(key);
+        if (!sp) {
+            sp = { cv: document.createElement('canvas'), x0, y0, w: x1 - x0, h: y1 - y0 };
+            sp.cv.width = Math.max(1, Math.ceil(sp.w * RS)); sp.cv.height = Math.max(1, Math.ceil(sp.h * RS));
+            const c = sp.cv.getContext('2d');
+            c.setTransform(RS, 0, 0, RS, -x0 * RS, -y0 * RS);
+            paint(c);
+            sprites.set(key, sp);
+        }
+        return sp;
+    }
+    // Sprite an (x, y) kopieren – auf ganze Bildschirmpixel gerundet, damit der Browser nicht filtern muss
+    function blit(c, sp, x, y) {
+        c.drawImage(sp.cv, Math.round((x + sp.x0) * RS) / RS, Math.round((y + sp.y0) * RS) / RS, sp.cv.width / RS, sp.cv.height / RS);
+    }
+    // Gebäude: eigenes Bild je Station, das nur selten neu gezeichnet wird (BUILDING_REFRESH)
+    // Rand um jedes Gebäude (Welteinheiten): links/rechts neben s.x…s.x+w, oben über dem Dach (yR), unten unter s.base.
+    // Möglichst knapp, weil auch durchsichtige Pixel beim Kopieren Rechenzeit kosten.
+    const BUILDING_PAD = {
+        airport: { left: 28, right: 12, top: 186, bottom: 18 },      // Tower mit Blinklicht, Windsack links
+        school: { left: 12, right: 26, top: 158, bottom: 18 },       // Uhrturm mit Fahne
+        career: { left: 6, right: 26, top: 118, bottom: 18 },        // mittlerer Turm + Antenne
+        lab: { left: 12, right: 26, top: 34, bottom: 18 },           // Satellitenschüssel, Neon-Leuchten
+        construction: { left: 14, right: 26, top: 14, bottom: 24 },  // Kran wird separat gezeichnet
+        boathouse: { left: 18, right: 26, top: 14, bottom: 18 },
+        finale: { left: 70, right: 70, top: 48, bottom: 52 }         // langer Firmenname, Fahnen, Teppich
+    };
+    function buildingSprite(s) {
+        if (spriteRS !== RS) sprite('_', 0, 0, 1, 1, () => {});   // Cache auf aktuelle Auflösung bringen
+        const key = s.style === 'finale' ? ((CV.game && CV.game.firm) || '') : '';
+        const every = BUILDING_REFRESH[s.style] || 0;
+        let e = s.sprite;
+        if (!e) {
+            const pad = BUILDING_PAD[s.style];
+            const x0 = s.x - pad.left, y0 = s.base - s.height - s.depth - pad.top;
+            const w = s.w + pad.left + pad.right, h = s.height + s.depth + pad.top + pad.bottom;
+            const cv = document.createElement('canvas');
+            cv.width = Math.ceil(w * RS); cv.height = Math.ceil(h * RS);
+            e = s.sprite = { cv, x0, y0, w, h, t: -1e9, key: null };
+        }
+        if (e.key !== key || e.t < -1e8 || (every && time - e.t >= every)) {
+            const c = e.cv.getContext('2d');
+            c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, e.cv.width, e.cv.height);
+            c.setTransform(RS, 0, 0, RS, -e.x0 * RS, -e.y0 * RS);
+            DRAW[s.style](c, s);
+            e.t = time; e.key = key;
+        }
+        return e;
+    }
+    function drawBuilding(c, s, alpha) {
+        const e = buildingSprite(s);
+        if (alpha < 1) c.globalAlpha = alpha;
+        blit(c, { cv: e.cv, x0: e.x0, y0: e.y0 }, 0, 0);
+        if (s.style === 'construction') drawCrane(c, s);
+        if (alpha < 1) c.globalAlpha = 1;
+    }
+    // Beschriftung (Pille mit Text, optional mit Leuchten) als Sprite
+    function labelSprite(text, fs, bg, fg, glow, weight = 700) {
+        const key = `label:${text}|${fs}|${bg}|${fg}|${glow}|${weight}`;
+        if (spriteRS === RS && sprites.has(key)) return sprites.get(key);
+        ctx.font = `${weight} ${fs}px Outfit, system-ui, sans-serif`;
+        const tw = ctx.measureText(text).width + fs * 1.4, th = fs * 2, pad = glow ? 22 : 2;
+        return sprite(key, -tw / 2 - pad, -th / 2 - pad, tw / 2 + pad, th / 2 + pad, (c) => {
+            if (glow) { c.shadowColor = 'rgba(255,160,40,0.9)'; c.shadowBlur = 18 * RS; }
+            c.fillStyle = bg; rr(c, -tw / 2, -th / 2, tw, th, th / 2); c.fill();
+            c.shadowBlur = 0;
+            signText(c, text, 0, 1, fs, fg, weight);
+        });
+    }
+    function textSprite(text, fs, col, weight) {
+        const key = `text:${text}|${fs}|${col}|${weight}`;
+        if (spriteRS === RS && sprites.has(key)) return sprites.get(key);
+        ctx.font = `${weight} ${fs}px Outfit, system-ui, sans-serif`;
+        const w = ctx.measureText(text).width + 4;
+        return sprite(key, -w / 2, -fs, w / 2, fs, (c) => signText(c, text, 0, 0, fs, col, weight));
+    }
+    const STAR_BOX = 18;
+    function starSprite() {
+        return sprite('star', -STAR_BOX, -STAR_BOX, STAR_BOX, STAR_BOX, (c) => {
+            c.fillStyle = 'rgba(255,220,80,0.3)'; ellipse(c, 0, 0, 16, 16); c.fill();
+            c.fillStyle = '#ffcd3c'; c.strokeStyle = '#e09b00'; c.lineWidth = 1.5;
+            c.beginPath();
+            for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.6 : 11, a = i / 10 * TAU - Math.PI / 2; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+            c.closePath(); c.fill(); c.stroke();
+        });
+    }
+    const CLOUD_R = 100;
+    function cloudSprite() {
+        return sprite('cloud', -CLOUD_R, -CLOUD_R, CLOUD_R, CLOUD_R, (c) => {
+            const cg = c.createRadialGradient(0, 0, 0, 0, 0, CLOUD_R);
+            cg.addColorStop(0, 'rgba(20,40,60,0.07)'); cg.addColorStop(0.6, 'rgba(20,40,60,0.04)'); cg.addColorStop(1, 'rgba(20,40,60,0)');
+            c.fillStyle = cg; ellipse(c, 0, 0, CLOUD_R, CLOUD_R); c.fill();
+        });
+    }
+
+    // Boden in Kacheln: jede Kachel wird einmal aus der Bodenebene in Bildschirm-Auflösung erzeugt
+    // und danach nur 1:1 kopiert – das Skalieren des ganzen Bildschirms in jedem Bild entfällt.
+    const groundTiles = new Map();
+    let tilesRS = 0;
+    function groundTile(tx, ty) {
+        if (tilesRS !== RS) { groundTiles.clear(); tilesRS = RS; }
+        const key = tx + ',' + ty;
+        let t = groundTiles.get(key);
+        if (t) { groundTiles.delete(key); groundTiles.set(key, t); return t; }   // als zuletzt benutzt markieren
+        const T = PERF.GROUND_TILE, x0 = tx * T, y0 = ty * T, w = Math.min(T, W - x0), h = Math.min(T, H - y0);
+        const px0 = Math.round(x0 * RS), py0 = Math.round(y0 * RS), px1 = Math.round((x0 + w) * RS), py1 = Math.round((y0 + h) * RS);
+        const cv = document.createElement('canvas');
+        cv.width = px1 - px0; cv.height = py1 - py0;
+        const g = cv.getContext('2d');
+        g.imageSmoothingQuality = 'high';
+        g.drawImage(ground, x0 * groundRes, y0 * groundRes, w * groundRes, h * groundRes, 0, 0, cv.width, cv.height);
+        t = { cv, px0, py0 };
+        groundTiles.set(key, t);
+        if (groundTiles.size > PERF.GROUND_TILE_MAX) groundTiles.delete(groundTiles.keys().next().value);
+        return t;
+    }
+    function drawGround(c) {
+        const T = PERF.GROUND_TILE;
+        const tx0 = Math.max(0, Math.floor(cam.x / T)), ty0 = Math.max(0, Math.floor(cam.y / T));
+        const tx1 = Math.min(Math.ceil(W / T) - 1, Math.floor((cam.x + viewW()) / T)), ty1 = Math.min(Math.ceil(H / T) - 1, Math.floor((cam.y + viewH()) / T));
+        // in Gerätepixeln zeichnen: exakt ausgerichtet, ohne Filter
+        c.save();
+        c.setTransform(1, 0, 0, 1, -Math.round(cam.x * RS), -Math.round(cam.y * RS));
+        for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) {
+            const t = groundTile(tx, ty);
+            c.drawImage(t.cv, t.px0, t.py0);
+        }
+        c.restore();
+    }
+
     // ------------------------------------------------------------------ Render
     function render() {
         const c = ctx;
         c.setTransform(1, 0, 0, 1, 0, 0);
         c.fillStyle = '#4f8a45'; c.fillRect(0, 0, canvas.width, canvas.height);
-        c.setTransform(dpr * zoom, 0, 0, dpr * zoom, -cam.x * dpr * zoom, -cam.y * dpr * zoom);
+        c.setTransform(RS, 0, 0, RS, -Math.round(cam.x * RS), -Math.round(cam.y * RS));
         const vx0 = cam.x - 80, vy0 = cam.y - 80, vx1 = cam.x + viewW() + 80, vy1 = cam.y + viewH() + 260;
 
-        {
-            const sx = Math.max(0, Math.floor(cam.x)), sy = Math.max(0, Math.floor(cam.y));
-            const sw = Math.min(W - sx, Math.ceil(viewW()) + 2), sh = Math.min(H - sy, Math.ceil(viewH()) + 2);
-            if (sw > 0 && sh > 0) c.drawImage(ground, sx, sy, sw, sh, sx, sy, sw, sh);
-        }
+        drawGround(c);
 
-        // Landebahn
-        c.fillStyle = '#5b6170'; rr(c, RUNWAY.x, RUNWAY.y, RUNWAY.w, RUNWAY.h, 8); c.fill();
-        c.fillStyle = '#ffffff';
-        for (let x = RUNWAY.x + 30; x < RUNWAY.x + RUNWAY.w - 30; x += 60) c.fillRect(x, RUNWAY.y + RUNWAY.h / 2 - 2, 32, 4);
-        for (let i = 0; i < 6; i++) { c.fillRect(RUNWAY.x + 10, RUNWAY.y + 8 + i * 10, 18, 5); }
-
-        // Wege
-        c.lineCap = 'round'; c.lineJoin = 'round';
-        c.strokeStyle = '#c4ab7b'; c.lineWidth = ROAD_W + 8;
-        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
-        c.fillStyle = '#c4ab7b'; ellipse(c, PLAZA.x, PLAZA.y, PLAZA.r + 4, PLAZA.r + 4); c.fill();
-        c.strokeStyle = '#ead9ae'; c.lineWidth = ROAD_W;
-        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
-        c.strokeStyle = 'rgba(255,255,255,0.25)'; c.lineWidth = 4; c.setLineDash([2, 22]);
-        ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
-        c.setLineDash([]);
-        // Platz
-        c.fillStyle = '#e6dfcf'; ellipse(c, PLAZA.x, PLAZA.y, PLAZA.r, PLAZA.r); c.fill();
-        c.strokeStyle = '#d2c7b0'; c.lineWidth = 2;
-        for (let r = 30; r < PLAZA.r; r += 26) { ellipse(c, PLAZA.x, PLAZA.y, r, r); c.stroke(); }
-
-        // See
-        c.fillStyle = '#e8d8a4'; ellipse(c, LAKE.x, LAKE.y, LAKE.rx + 16, LAKE.ry + 14); c.fill();
-        const lg = c.createRadialGradient(LAKE.x, LAKE.y, 20, LAKE.x, LAKE.y, LAKE.rx);
-        lg.addColorStop(0, '#2f8fc4'); lg.addColorStop(1, '#5cc0e6');
-        c.fillStyle = lg; ellipse(c, LAKE.x, LAKE.y, LAKE.rx, LAKE.ry); c.fill();
+        // See: Wellen (Ufer und Wasserfläche liegen in der Bodenebene)
         c.strokeStyle = 'rgba(255,255,255,0.45)'; c.lineWidth = 2;
         for (let i = 0; i < 9; i++) {
             const a = i * 0.7 + 1, rx = LAKE.rx * (0.25 + (i % 4) * 0.17), ry = LAKE.ry * (0.25 + (i % 3) * 0.2);
@@ -1121,7 +1320,6 @@
             c.beginPath(); c.moveTo(wx - 12, wy); c.quadraticCurveTo(wx - 6, wy - 4, wx, wy); c.quadraticCurveTo(wx + 6, wy + 4, wx + 12, wy); c.stroke();
         }
         for (const d of ducks) {
-            d.a += d.speed * 0.016;
             const x = LAKE.x + Math.cos(d.a) * LAKE.rx * d.r, y = LAKE.y + Math.sin(d.a) * LAKE.ry * d.r;
             const dir = -Math.sin(d.a) > 0 ? 1 : -1;
             c.fillStyle = 'rgba(255,255,255,0.35)'; ellipse(c, x, y + 4, 14, 4); c.fill();
@@ -1154,14 +1352,8 @@
             if (t.got || t.x < vx0 || t.x > vx1 || t.y < vy0 || t.y > vy1) continue;
             const b = Math.sin(time * 3 + t.phase) * 4;
             c.fillStyle = 'rgba(25,50,20,0.18)'; ellipse(c, t.x, t.y + 2, 9, 3); c.fill();
-            c.save(); c.translate(t.x, t.y - 16 + b); c.rotate(Math.sin(time * 2 + t.phase) * 0.2);
-            c.fillStyle = 'rgba(255,220,80,0.3)'; ellipse(c, 0, 0, 16, 16); c.fill();
-            c.fillStyle = '#ffcd3c'; c.strokeStyle = '#e09b00'; c.lineWidth = 1.5;
-            c.beginPath();
-            for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.6 : 11, a = i / 10 * TAU - Math.PI / 2; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
-            c.closePath(); c.fill(); c.stroke();
-            c.restore();
-            signText(c, t.label, t.x, t.y + 12, 10 / Math.max(zoom, 0.8), 'rgba(40,60,30,0.75)', 700);
+            blit(c, starSprite(), t.x, t.y - 16 + b);
+            blit(c, textSprite(t.label, Math.round(10 / Math.max(zoom, 0.8) * 10) / 10, 'rgba(40,60,30,0.75)', 700), t.x, t.y + 12);
         }
 
         // Tiefensortierte Objekte
@@ -1171,7 +1363,7 @@
             const hides = player.y < s.base + 4 && player.y > top && player.x > s.x - 24 && player.x < s.x + s.w + 24;
             if (hides) s.fade = Math.min(1, (s.fade || 0) + 0.12); else s.fade = Math.max(0, (s.fade || 0) - 0.08);
             const a = 1 - (s.fade || 0) * 0.62;
-            list.push({ y: s.base, d: () => { if (a < 1) { c.save(); c.globalAlpha = a; DRAW[s.style](c, s); c.restore(); } else DRAW[s.style](c, s); }, x0: s.x - 60, x1: s.x + s.w + 60 });
+            list.push({ y: s.base, d: () => drawBuilding(c, s, a), x0: s.x - BUILDING_PAD[s.style].left - 200, x1: s.x + s.w + BUILDING_PAD[s.style].right });
         }
         for (const t of trees) if (t.x > vx0 && t.x < vx1 && t.y > vy0 && t.y < vy1) list.push({ y: t.y, d: () => drawTree(c, t) });
         for (const p of props) if (p.x > vx0 - 100 && p.x < vx1 + 100 && p.y > vy0 && p.y < vy1) list.push({ y: p.y, d: () => drawProp(c, p) });
@@ -1207,11 +1399,8 @@
         // Wolkenschatten & Vögel
         for (const cl of clouds) {
             if (cl.x + cl.rx < vx0 || cl.x - cl.rx > vx1) continue;
-            c.save(); c.translate(cl.x, cl.y); c.scale(1, cl.ry / cl.rx);
-            const cg = c.createRadialGradient(0, 0, 0, 0, 0, cl.rx);
-            cg.addColorStop(0, 'rgba(20,40,60,0.07)'); cg.addColorStop(0.6, 'rgba(20,40,60,0.04)'); cg.addColorStop(1, 'rgba(20,40,60,0)');
-            c.fillStyle = cg; ellipse(c, 0, 0, cl.rx, cl.rx); c.fill();
-            c.restore();
+            const cs = cloudSprite();
+            c.drawImage(cs.cv, cl.x - cl.rx, cl.y - cl.ry, cl.rx * 2, cl.ry * 2);
         }
         c.strokeStyle = '#2b2b33'; c.lineWidth = 2;
         for (const b of birds) for (let i = 0; i < b.n; i++) {
@@ -1227,15 +1416,9 @@
             const topY = s.base - s.height - s.depth - (s.style === 'career' ? 100 : s.style === 'airport' ? 30 : s.style === 'school' ? 136 : s.style === 'construction' ? 60 : 34) - (isNext ? Math.abs(Math.sin(time * 3)) * 8 : 0);
             const locked = World.isLocked && World.isLocked(s.id);
             const label = locked ? `🔒 ${s.title}` : `${s.emoji} ${s.title}${visited ? '  ✓' : ''}`;
-            c.font = `700 ${fs}px Outfit, system-ui, sans-serif`;
-            const tw = c.measureText(label).width + fs * 1.4, th = fs * 2;
-            const lx = s.x + s.w / 2;
-            c.save();
-            if (isNext || hoverStation === s) { c.shadowColor = 'rgba(255,160,40,0.9)'; c.shadowBlur = 18; }
-            c.fillStyle = locked ? 'rgba(90,98,120,0.92)' : visited ? 'rgba(34,139,94,0.94)' : isNext ? 'rgba(255,138,61,0.96)' : 'rgba(27,42,74,0.9)';
-            rr(c, lx - tw / 2, topY - th / 2, tw, th, th / 2); c.fill();
-            c.restore();
-            signText(c, label, lx, topY + 1, fs, '#fff', 700);
+            const bg = locked ? 'rgba(90,98,120,0.92)' : visited ? 'rgba(34,139,94,0.94)' : isNext ? 'rgba(255,138,61,0.96)' : 'rgba(27,42,74,0.9)';
+            const ls = labelSprite(label, Math.round(fs * 10) / 10, bg, '#fff', isNext || hoverStation === s);
+            blit(c, ls, s.x + s.w / 2, topY);
         }
 
         // Interaktionshinweis
@@ -1269,13 +1452,57 @@
         }
     }
 
+    // Eine Bildrate je Lage: verdeckt → gar nicht zeichnen, Vorschau → 30, Leerlauf → 20, Bewegung → 60 Bilder/s.
+    function busy(ts) {
+        return player.moving || !!player.path || !!joy || liveParticles > 0 || camMoving || ts < wakeUntil;
+    }
     function frame(ts) {
+        requestAnimationFrame(frame);
+        if (covered) {                       // Dialog offen: ein letztes Bild, dann Pause
+            if (!frozen) { draw(ts, 0); blurFrozenFrame(); frozen = true; }
+            last = ts; prevTs = 0;
+            return;
+        }
+        const moving = busy(ts);
+        const fps = World.attract ? PERF.ATTRACT_FPS : moving ? 0 : PERF.IDLE_FPS;
+        if (fps && ts - lastDraw < 1000 / fps - 2) return;
+        if (moving && !World.attract) adapt(ts); else prevTs = 0;
         const dt = Math.min(0.05, (ts - last) / 1000 || 0.016);
         last = ts;
+        draw(ts, dt);
+    }
+    // Das letzte Bild einmal weichzeichnen (statt einer CSS-Unschärfe, die der Browser ständig neu rechnet)
+    function blurFrozenFrame() {
+        if (!('filter' in ctx)) return;            // ältere Browser: ohne Unschärfe
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.filter = `blur(${PERF.COVER_BLUR_PX * dpr}px) saturate(1.1)`;
+        ctx.drawImage(canvas, 0, 0);
+        ctx.restore();
+    }
+    function draw(ts, dt) {
+        lastDraw = ts;
+        World.frames++;
         update(dt);
         render();
-        requestAnimationFrame(frame);
+        if (World.onFrame) World.onFrame(ts);
     }
+    // Läuft die Welt trotz Bewegung dauerhaft unter ~38 Bildern/s, wird die Auflösung schrittweise gesenkt.
+    function adapt(ts) {
+        if (prevTs) {
+            gapEma = gapEma ? gapEma * 0.95 + (ts - prevTs) * 0.05 : ts - prevTs;
+            if (++busyFrames > PERF.ADAPT_FRAMES && gapEma > PERF.SLOW_GAP_MS && dprCap > PERF.MIN_DPR) {
+                dprCap = Math.max(PERF.MIN_DPR, dprCap - PERF.DPR_STEP);
+                busyFrames = 0; gapEma = 0;
+                resize();
+            }
+        }
+        prevTs = ts;
+    }
+    World.frames = 0;
+    // Von der Oberfläche gemeldet: Ist die Welt von einem Dialog verdeckt?
+    World.setCovered = function (v) { covered = !!v; if (!covered) { frozen = false; World.wake(); } };
+    World.wake = function (ms = PERF.WAKE_MS) { wakeUntil = performance.now() + ms; };
 
     World.init = function (cnv) {
         canvas = cnv;
@@ -1306,5 +1533,5 @@
     World.tokenList = () => tokens.map(t => ({ x: t.x, y: t.y, got: t.got }));
     World.tokenCount = () => tokens.length;
     World.tokensGot = () => tokens.filter(t => t.got).map(t => t.label);
-    World.debug = { findPath, blocked, cam, drawPerson, get zoom() { return zoom; } };
+    World.debug = { findPath, blocked, cam, drawPerson, get zoom() { return zoom; }, get dpr() { return dpr; }, get spriteCount() { return sprites.size; }, buildingCanvas: (id) => buildingSprite(World.stations.find(s => s.id === id)).cv, perf: PERF, setDprCap: (v) => { dprCap = v; resize(); } };
 })();

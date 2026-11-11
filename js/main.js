@@ -134,12 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         idleReset();
     };
 
-    // Minimap (ca. 12 fps reichen)
+    // Minimap: hängt an der Render-Schleife der Welt, 5 Bilder pro Sekunde reichen für den Positionspunkt
+    const MINIMAP_INTERVAL_MS = 200;
     let mmLast = 0;
-    (function mm(ts) {
-        if (ts - mmLast > 80 && G.started && !CV.World.paused) { mmLast = ts; CV.UI.drawMinimap(); }
-        requestAnimationFrame(mm);
-    })(0);
+    CV.World.onFrame = (ts) => {
+        if (ts - mmLast > MINIMAP_INTERVAL_MS && G.started && !CV.World.paused) { mmLast = ts; CV.UI.drawMinimap(); }
+    };
     $('#minimap').addEventListener('click', (e) => CV.UI.minimapClick(e));
 
     // ------------------------------------------------------------- Buttons
@@ -233,6 +233,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 22000);
     }
     ['keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, idleReset, { passive: true }));
+
+    // Schnittstelle für automatische Tests und Fehlersuche (tests/*.mjs)
+    window.cvApp = {
+        start: () => G.start(),
+        openStation: (id, o) => CV.UI.openStation(id, o), closeStation: () => CV.UI.closeStation(),
+        openCv: (r) => CV.UI.openCv(r || 'world'), closeCv: () => CV.UI.closeCv(),
+        openJourney: () => CV.UI.openJourney(), openPalette: () => CV.UI.openPalette(),
+        openContact: (p) => CV.Contact.open(p), hide: (id) => CV.UI.hideOverlay(id),
+        walkTo: (id) => CV.World.walkToStation(id), order: () => G.order.slice(),
+        state: () => ({ visited: G.visited.size, all: G.allVisited(), locked: CV.World.isLocked('finale') }),
+        frameCount: () => CV.World.frames, setLang: () => {}, setTheme: () => {}
+    };
 
     // Direktlinks: ?cv=1 oder #lebenslauf öffnet direkt die Kompaktansicht
     if (CV.param('cv') || /lebenslauf|cv/i.test(location.hash)) cvNow();

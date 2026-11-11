@@ -124,11 +124,20 @@
 
     // ------------------------------------------------------------------ Overlays
     const OVERLAYS = ['contact', 'station', 'journey', 'cv', 'palette'];
-    function showOverlay(id) { CV.$('#' + id).classList.remove('hidden'); CV.World.paused = true; }
+    // Solange ein Dialog die Welt verdeckt, zeichnet die Welt nicht weiter (spart fast die ganze Rechenzeit).
+    const isOpen = (o) => !CV.$('#' + o).classList.contains('hidden');
+    function showOverlay(id) {
+        CV.$('#' + id).classList.remove('hidden');
+        CV.World.paused = true;
+        CV.World.setCovered(true);
+        document.body.classList.add('is-covered');
+    }
     function hideOverlay(id) {
         CV.$('#' + id).classList.add('hidden');
-        const anyOpen = OVERLAYS.concat('start').some(o => !CV.$('#' + o).classList.contains('hidden'));
-        if (!anyOpen && CV.game.started) CV.World.paused = false;
+        const covered = OVERLAYS.some(isOpen);
+        CV.World.setCovered(covered);
+        document.body.classList.toggle('is-covered', covered);
+        if (!covered && !isOpen('start') && CV.game.started) CV.World.paused = false;
     }
     UI.hideOverlay = hideOverlay;
     UI.showOverlay = showOverlay;

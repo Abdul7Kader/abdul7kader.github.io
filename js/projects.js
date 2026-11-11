@@ -5,6 +5,8 @@
     const TAU = Math.PI * 2;
     const VW = 960, VH = 350, GROUND = 236, PLOT = 150, X0 = 30;
     const FONT = 'Outfit, system-ui, sans-serif';
+    const FRAME_MS = 1000 / 30;     // 30 Bilder/s reichen für die kleinen Animationen
+    const GHOST_ALPHA = 0.16;       // Deckkraft des „Bauplans“ (fertiges Gebäude in Grau)
 
     function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
     function ell(c, x, y, rx, ry) { c.beginPath(); c.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), 0, 0, TAU); }
@@ -152,7 +154,28 @@
         [[cx - w / 2 + 6, y + 10], [cx, y + 12]].forEach(([x, yy]) => { c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(x - 5, yy); c.lineTo(x + 5, yy); c.lineTo(x, yy - 12); c.closePath(); c.fill(); });
     }
 
-    function drawPlot(c, p, i, t, pct, hover, sel) {
+    // Bauplan = fertiges Gebäude in Graustufen. Wird je Gebäudetyp einmal erzeugt (statt eines teuren Filters pro Bild).
+    const ghosts = new Map();
+    let ghostScale = 0;
+    function ghost(type, draw, k) {
+        if (ghostScale !== k) { ghosts.clear(); ghostScale = k; }
+        let g = ghosts.get(type);
+        if (!g) {
+            const cv = document.createElement('canvas');
+            cv.width = Math.ceil(PLOT * k); cv.height = Math.ceil((GROUND + 10) * k);
+            const gc = cv.getContext('2d');
+            gc.setTransform(k, 0, 0, k, (PLOT / 2) * k, 0);
+            const full = draw(gc, 0, 0);
+            const img = gc.getImageData(0, 0, cv.width, cv.height), d = img.data;
+            for (let n = 0; n < d.length; n += 4) { const y = d[n] * 0.3 + d[n + 1] * 0.59 + d[n + 2] * 0.11; d[n] = d[n + 1] = d[n + 2] = y; }
+            gc.putImageData(img, 0, 0);
+            g = { cv, full };
+            ghosts.set(type, g);
+        }
+        return g;
+    }
+
+    function drawPlot(c, p, i, t, pct, hover, sel, k) {
         const x0 = X0 + i * PLOT, cx = x0 + PLOT / 2, type = p.building || 'shop';
         const desert = type === 'refinery';
         // Grundstück
@@ -164,7 +187,9 @@
         } else {
             const draw = B[type] || B.shop;
             // Plan (Umriss) des fertigen Gebäudes, darüber der gebaute Teil
-            c.save(); c.globalAlpha = 0.16; c.filter = 'grayscale(1)'; const full = draw(c, cx, t); c.restore();
+            const gh = ghost(type, draw, k);
+            const full = gh.full;
+            c.globalAlpha = GHOST_ALPHA; c.drawImage(gh.cv, x0, 0, PLOT, GROUND + 10); c.globalAlpha = 1;
             const visH = pct >= 100 ? full + 10 : Math.max(14, full * pct / 100);
             c.save(); c.beginPath(); c.rect(x0, GROUND - visH, PLOT, visH + 30); c.clip(); draw(c, cx, t); c.restore();
             if (pct < 100) {
@@ -197,7 +222,7 @@
         rr(c, x0 + 22, GROUND + 74, Math.max(6, (PLOT - 44) * pct / 100), 6, 3); c.fill();
     }
 
-    function drawScene(c, list, t, prog, hover, sel) {
+    function drawScene(c, list, t, prog, hover, sel, k) {
         const sky = c.createLinearGradient(0, 0, 0, GROUND);
         sky.addColorStop(0, '#bfe6ff'); sky.addColorStop(1, '#eaf7ff');
         c.fillStyle = sky; c.fillRect(0, 0, VW, VH);
@@ -208,7 +233,7 @@
         });
         c.fillStyle = '#8cce6c'; c.fillRect(0, GROUND - 4, VW, VH - GROUND + 4);
         c.fillStyle = '#d8dde6'; c.fillRect(0, GROUND + 22, VW, 2);
-        list.forEach((p, i) => drawPlot(c, p, i, t, prog[i], hover === i, sel === i));
+        list.forEach((p, i) => drawPlot(c, p, i, t, prog[i], hover === i, sel === i, k));
     }
 
     // ---------------------------------------------------------------- Einbinden
@@ -243,14 +268,20 @@
             cnv.addEventListener('pointerleave', () => { hover = -1; });
             cnv.addEventListener('click', (e) => { const i = plotAt(e); if (i >= 0) { sel = i; opts.onSelect && opts.onSelect(i); } });
             const api = { select(i) { sel = i; } };
+            // Nur zeichnen, solange das Viertel sichtbar ist
+            let visible = true, lastDraw = 0;
+            const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { visible = es[0].isIntersecting; }) : null;
+            if (io) io.observe(cnv);
             (function frame(ts) {
-                if (!cnv.isConnected) { window.removeEventListener('resize', fit); return; }
+                if (!cnv.isConnected) { window.removeEventListener('resize', fit); if (io) io.disconnect(); return; }
+                requestAnimationFrame(frame);
+                if (!visible || ts - lastDraw < FRAME_MS) return;
+                lastDraw = ts;
                 const t = (ts - t0) / 1000;
                 // Belohnung nach dem Spiel: Gebäude wachsen nacheinander auf ihren Stand
                 const prog = target.map((p, i) => animate ? p * Math.min(1, Math.max(0, (t - i * 0.25) / 1.6)) : p);
                 c.setTransform(k, 0, 0, k, 0, 0);
-                drawScene(c, list, CV.reducedMotion ? 0 : t, prog.map(Math.round), hover, sel);
-                requestAnimationFrame(frame);
+                drawScene(c, list, CV.reducedMotion ? 0 : t, prog.map(Math.round), hover, sel, k);
             })(t0);
             return api;
         }
