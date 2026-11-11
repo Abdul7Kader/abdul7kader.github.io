@@ -114,6 +114,13 @@ for (const [label, opts] of VIEWPORTS) {
     await page.click('#login-btn');
     await page.waitForTimeout(300);
     check(await page.locator('.form-group').count() > 20, 'Admin: Formular aufgebaut');
+    await page.click('#generate-btn');
+    check(/window\.RESUME\.de = \{/.test(await page.inputValue('#output-code')), 'Admin: erzeugt data/resume.de.js');
+    await page.selectOption('#lang-select', 'en');
+    await page.waitForTimeout(200);
+    await page.click('#generate-btn');
+    const enCode = await page.inputValue('#output-code');
+    check(/window\.RESUME\.en = \{/.test(enCode) && /Arrival & Travel/.test(enCode) && !/"profileImage"/.test(enCode), 'Admin: erzeugt data/resume.en.js (nur abweichende Felder)');
     check(errors.length === 0, 'Admin: keine Fehler' + (errors.length ? ': ' + errors.join(' | ') : ''));
 }
 

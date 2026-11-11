@@ -950,3 +950,21 @@ body.is-covered #dock *, body.is-covered #minimap, body.is-covered #bubbles *, b
         linear-gradient(100deg, rgba(8, 13, 32, 0.95) 0%, rgba(8, 13, 32, 0.86) 42%, rgba(8, 13, 32, 0.55) 100%); }
 .close { backdrop-filter: none; }
 .cta-btn.primary::after { animation-iteration-count: 3; }
+
+/* ---------------------------------------------------------------- Sprachwahl */
+.lang-btn .lang-code { font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; }
+.start-tools {
+    position: absolute; top: calc(16px + var(--safe-t)); right: 18px; z-index: 2; display: flex; padding: 4px; gap: 2px;
+    border-radius: 999px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.seg-btn {
+    min-width: 44px; height: 34px; padding: 0 12px; border-radius: 999px; color: rgba(225, 232, 255, 0.78);
+    font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; transition: background 0.2s, color 0.2s;
+}
+.seg-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.seg-btn[aria-pressed="true"] { background: #fff; color: var(--ink); }
+@media (max-width: 900px) {
+    .start-tools { top: calc(12px + var(--safe-t)); right: 16px; }
+    .seg-btn { height: 30px; min-width: 40px; }
+    .start-wrap { padding-top: calc(64px + var(--safe-t)); }
+}

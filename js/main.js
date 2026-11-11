@@ -131,6 +131,7 @@ function setupButtons() {
     $('#btn-sound').onclick = () => { audio.setSfx(!audio.state.sfx); syncAudioButtons(); audio.play('click'); };
     $('#btn-music').onclick = () => { audio.setMusic(!audio.state.music); syncAudioButtons(); };
     $$('[data-set-lang]').forEach(b => { b.onclick = () => { audio.play('click'); setLang(b.dataset.setLang); }; });
+    $$('[data-toggle-lang]').forEach(b => { b.onclick = () => { audio.play('click'); emit('lang:toggle'); }; });
     $('#action-btn').onclick = () => { if (World.nearStation) { audio.play('click'); World.enter(World.nearStation); } };
     setInterval(updateActionButton, ACTION_POLL_MS);
     // Klick neben das Fenster schließt es

@@ -3,7 +3,7 @@
 import { $, $$, esc } from '../core/dom.js';
 import { isTouch, isNarrow } from '../core/env.js';
 import { icon } from '../core/icons.js';
-import { t } from '../core/i18n.js';
+import { t, lang } from '../core/i18n.js';
 import { audio } from '../core/audio.js';
 import { stationColors } from '../config/theme.js';
 import { World } from '../world/world.js';
@@ -35,8 +35,13 @@ export function updateHud() {
 export function translateHud() {
     $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     $$('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); el.setAttribute('aria-label', el.title); });
+    $$('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
     $$('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.title = t('meta.title');
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc) desc.content = t('meta.description');
     $$('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
+    $$('[data-set-lang]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.setLang === lang())));
     syncAudioButtons();
 }
 
