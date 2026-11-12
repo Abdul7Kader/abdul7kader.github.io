@@ -15,6 +15,7 @@ const MAX_DPR = 2;
 const GHOST_ALPHA = 0.16;       // Deckkraft des „Bauplans“ (fertiges Gebäude in Grau)
 const GROW = { stagger: 0.25, duration: 1.6 };                   // Belohnung: Gebäude wachsen nacheinander
 const SCROLL_LEAD = 60;
+const ZOOM = { max: 2.6, step: 1.35, wheelStep: 1.1, maxBackingPx: 2600, dragPx: 5 };   // Zoom im Dialog
 // Farben bei Tag und bei Nacht (Dark Mode)
 const SCENE = {
     day: { sky: ['#bfe6ff', '#eaf7ff'], cloud: 'rgba(255,255,255,0.85)', ground: '#8cce6c', road: '#d8dde6', title: '#16213f', stars: 0, shade: null },
@@ -269,10 +270,11 @@ export function mountQuarter(wrap, projects, opts = {}) {
     cnv.setAttribute('aria-label', tr('projects.quarterAria', { list: list.map(p => `${p.title} (${projStage(p).label})`).join(', ') }));
     wrap.appendChild(cnv);
     const c = cnv.getContext('2d');
-    let k = 1, hover = -1, sel = -1;
+    let k = 1, hover = -1, sel = -1, zoom = 1;
     const fit = () => {
-        const cssW = Math.max(MIN_CSS_WIDTH, wrap.clientWidth || VW);
-        const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
+        const cssW = Math.round(Math.max(MIN_CSS_WIDTH, wrap.clientWidth || VW) * zoom);
+        // Pixeldichte so begrenzen, dass die Leinwand auch stark gezoomt klein genug bleibt
+        const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1, ZOOM.maxBackingPx / cssW);
         cnv.style.width = cssW + 'px'; cnv.style.height = Math.round(cssW * VH / VW) + 'px';
         cnv.width = Math.round(cssW * dpr); cnv.height = Math.round(cssW * VH / VW * dpr);
         k = cnv.width / VW;
@@ -281,6 +283,52 @@ export function mountQuarter(wrap, projects, opts = {}) {
     let lastWidth = wrap.clientWidth;
     const ro = new ResizeObserver(() => { if (wrap.clientWidth !== lastWidth) { lastWidth = wrap.clientWidth; fit(); } });
     ro.observe(wrap);
+
+    // Zoom (Knöpfe, Strg+Mausrad, zwei Finger) und Verschieben mit der Maus; die Mitte des Ausschnitts bleibt stehen
+    const setZoom = (nz) => {
+        nz = clamp(nz, 1, ZOOM.max);
+        if (nz === zoom) return;
+        const mid = (wrap.scrollLeft + wrap.clientWidth / 2) / cnv.clientWidth, midY = (wrap.scrollTop + wrap.clientHeight / 2) / cnv.clientHeight;
+        zoom = nz; fit(); lastDraw = 0;
+        wrap.scrollLeft = mid * cnv.clientWidth - wrap.clientWidth / 2;
+        wrap.scrollTop = midY * cnv.clientHeight - wrap.clientHeight / 2;
+        tools.querySelector('[data-pz="0"]').disabled = zoom === 1;
+    };
+    const tools = document.createElement('div');
+    tools.className = 'pv-tools';
+    tools.innerHTML = `<button type="button" data-pz="-1" aria-label="${tr('worldmap.zoomOut')}">−</button><button type="button" data-pz="0" aria-label="${tr('worldmap.zoomAllLabel')}" disabled>${tr('worldmap.zoomAll')}</button><button type="button" data-pz="1" aria-label="${tr('worldmap.zoomIn')}">+</button>`;
+    wrap.parentElement.insertBefore(tools, wrap);
+    tools.querySelectorAll('[data-pz]').forEach(b => {
+        b.onclick = () => { const d = +b.dataset.pz; setZoom(d === 0 ? 1 : zoom * (d > 0 ? ZOOM.step : 1 / ZOOM.step)); };
+    });
+    wrap.addEventListener('wheel', (e) => {
+        if (!e.ctrlKey && !e.metaKey) return;
+        e.preventDefault();
+        setZoom(zoom * (e.deltaY < 0 ? ZOOM.wheelStep : 1 / ZOOM.wheelStep));
+    }, { passive: false });
+    const touches = new Map();
+    let pinch = null, drag = null, dragged = false;
+    wrap.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'touch') { touches.set(e.pointerId, e); return; }
+        drag = { x: e.clientX, y: e.clientY, sl: wrap.scrollLeft, st: wrap.scrollTop }; dragged = false;
+    });
+    wrap.addEventListener('pointermove', (e) => {
+        if (touches.has(e.pointerId)) {
+            touches.set(e.pointerId, e);
+            if (touches.size !== 2) return;
+            const [a, b] = [...touches.values()], d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+            if (!pinch) pinch = { d, z: zoom }; else setZoom(pinch.z * d / pinch.d);
+            return;
+        }
+        if (!drag || !(e.buttons & 1)) return;
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!dragged && Math.hypot(dx, dy) < ZOOM.dragPx) return;
+        dragged = true;
+        wrap.scrollLeft = drag.sl - dx; wrap.scrollTop = drag.st - dy;
+    });
+    const endPointer = (e) => { touches.delete(e.pointerId); if (touches.size < 2) pinch = null; drag = null; };
+    wrap.addEventListener('pointerup', endPointer);
+    wrap.addEventListener('pointercancel', endPointer);
     const target = list.map(p => clamp(+p.progress || 0, 0, 100));
     const animate = opts.animate && !reducedMotion;
     const t0 = performance.now();
@@ -291,7 +339,7 @@ export function mountQuarter(wrap, projects, opts = {}) {
     };
     cnv.addEventListener('pointermove', (e) => { hover = plotAt(e); cnv.style.cursor = hover >= 0 ? 'pointer' : 'default'; });
     cnv.addEventListener('pointerleave', () => { hover = -1; });
-    cnv.addEventListener('click', (e) => { const i = plotAt(e); if (i >= 0) { sel = i; if (opts.onSelect) opts.onSelect(i); } });
+    cnv.addEventListener('click', (e) => { if (dragged) { dragged = false; return; } const i = plotAt(e); if (i >= 0) { sel = i; if (opts.onSelect) opts.onSelect(i); } });
     // Nur zeichnen, solange das Viertel sichtbar ist
     let visible = true, lastDraw = 0;
     const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { visible = es[0].isIntersecting; }) : null;

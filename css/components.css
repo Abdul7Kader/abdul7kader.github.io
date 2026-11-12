@@ -70,3 +70,10 @@
 
 /* GitHub-Werkstatt */
 .workshop-intro { color: var(--muted); margin-bottom: 12px; line-height: 1.55; }
+
+/* Projekt-Viertel: Zoom-Knöpfe */
+.pv-tools { display: flex; justify-content: flex-end; gap: 4px; margin: -4px 0 6px; }
+.pv-tools button { min-width: 34px; height: 30px; padding: 0 10px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); font-weight: 800; color: var(--ink); }
+.pv-tools button:disabled { opacity: 0.45; cursor: default; }
+.pv-wrap { overflow: auto; max-height: 400px; cursor: grab; touch-action: pan-x pan-y; }
+.pv-wrap:active { cursor: grabbing; }
