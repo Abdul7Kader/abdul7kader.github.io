@@ -24,7 +24,7 @@ window.RESUME.de = {
         {
             "icon": "cpu",
             "title": "Softwareentwicklung mit KI",
-            "text": "Eigene Software mit Claude Code und OpenAI Codex – mit Plan, menschlichem Review und Tests."
+            "text": "Eigene Software mit KI-Agenten – mit Plan, menschlichem Review und Tests."
         },
         {
             "icon": "code",
@@ -87,7 +87,7 @@ window.RESUME.de = {
             "title": "Tech-Lab",
             "era": "seit 11.2023",
             "badge": "Problemlöser",
-            "story": "Hier entsteht Code – im Team bei PSI ganz klassisch, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt."
+            "story": "Hier entsteht Code – bei PSI im Team mit Java und SQL, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt."
         },
         "projects": {
             "title": "Projekt-Baustelle",
@@ -376,7 +376,7 @@ window.RESUME.de = {
     "links": [
         {
             "title": "Interaktiver Lebenslauf",
-            "note": "Mein Weg als begehbare Spielwelt",
+            "note": "Mein Weg in sieben Kapiteln",
             "url": "../",
             "icon": "globe"
         },
@@ -388,7 +388,7 @@ window.RESUME.de = {
         },
         {
             "title": "KI-Videos",
-            "note": "Eigene Kanäle mit KI-generierten Videos",
+            "note": "Videos, die ich mit KI erstelle",
             "url": "",
             "icon": "play"
         },

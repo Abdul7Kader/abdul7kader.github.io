@@ -11,7 +11,7 @@ window.RESUME.en = {
     "summary": "Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I build software with AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away.",
     "intro": "Welcome to my world! Walk with WASD/arrow keys or by clicking. Every building is a station of my CV.",
     "strengths": [
-        { "icon": "cpu", "title": "Software development with AI", "text": "My own software built with Claude Code and OpenAI Codex – with a plan, human review and tests." },
+        { "icon": "cpu", "title": "Software development with AI", "text": "My own software built with AI agents, backed by a plan, human review and tests." },
         { "icon": "code", "title": "Hands-on since 2023", "text": "Working student at PSI: Java, SQL and a warehouse management system for logistics customers." },
         { "icon": "users", "title": "Communication & customer focus", "text": "Customer service and sales for Telekom and Samsung, customer meetings at PSI." },
         { "icon": "trending", "title": "Steep learning curve", "text": "Fresh start in 2014 – today German at C2 level, university entrance qualification and a computer science degree." }
@@ -52,7 +52,7 @@ window.RESUME.en = {
             "title": "Tech Lab",
             "era": "since 11.2023",
             "badge": "Problem solver",
-            "story": "This is where code is written – the classic way in the team at PSI, and together with AI agents in my own company. Both have their place, and I know when to use which."
+            "story": "This is where code gets written – with my team at PSI in Java and SQL, and together with AI agents in my own company. Both have their place, and I know when to use which."
         },
         "projects": {
             "title": "Project Site",
@@ -190,7 +190,7 @@ window.RESUME.en = {
     "links": [
         {
             "title": "Interactive CV",
-            "note": "My journey as a walkable game world",
+            "note": "My journey in seven chapters",
             "url": "../",
             "icon": "globe"
         },
@@ -202,7 +202,7 @@ window.RESUME.en = {
         },
         {
             "title": "AI videos",
-            "note": "Own channels with AI-generated videos",
+            "note": "Videos I create with AI",
             "url": "",
             "icon": "play"
         },
