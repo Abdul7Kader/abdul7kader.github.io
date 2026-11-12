@@ -1,0 +1,90 @@
+/* Fakten in den Stationen
+   Zeitleisten, Sprachen, Kenntnisse, Projekte, Freizeit. */
+
+/* ---------------------------------------------------------------- Infos */
+.achv {
+    position: relative; display: flex; gap: 16px; align-items: center; padding: 16px 18px; border-radius: 20px; margin-bottom: 20px; overflow: hidden;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 12%, #fff), color-mix(in srgb, var(--c2) 10%, #fff));
+    border: 1.5px solid color-mix(in srgb, var(--c1) 30%, #fff);
+}
+.achv.new { animation: rise 0.5s var(--ease); }
+.achv.new::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%); transform: translateX(-100%); animation: shine 1.2s 0.4s; }
+.achv .b-icon { font-size: 2.2rem; flex: none; width: 64px; height: 64px; display: grid; place-items: center; background: #fff; border-radius: 20px; box-shadow: 0 8px 20px -6px var(--c1); }
+.achv.new .b-icon { animation: spinpop 0.8s 0.1s var(--spring) both; }
+.achv small { display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: color-mix(in srgb, var(--c1) 80%, #000); }
+.achv strong { font-family: var(--display); font-size: 1.35rem; color: var(--ink); letter-spacing: -0.01em; }
+.achv p { margin-top: 3px; color: #4a5268; line-height: 1.45; font-size: 0.93rem; }
+.achv .a-stars { color: #f59e0b; letter-spacing: 2px; font-size: 1rem; margin-left: 6px; }
+
+.info > * { animation: rise 0.45s var(--ease) both; }
+.info > *:nth-child(2) { animation-delay: 0.05s; }
+.info > *:nth-child(3) { animation-delay: 0.1s; }
+.info > *:nth-child(4) { animation-delay: 0.15s; }
+.info > *:nth-child(n+5) { animation-delay: 0.2s; }
+.info h3 { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 22px 0 10px; }
+.info h3:first-child { margin-top: 0; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.fact { background: var(--soft); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 3px; }
+.fact b { font-family: var(--display); font-size: 1.35rem; color: var(--ink); letter-spacing: -0.01em; }
+.fact span { color: var(--muted); font-size: 0.86rem; }
+.flags { display: flex; flex-wrap: wrap; gap: 8px; }
+.flagchip { background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.9rem; font-weight: 600; transition: transform 0.2s var(--spring); }
+.flagchip:hover { transform: translateY(-2px); }
+
+.timeline { list-style: none; position: relative; padding-left: 26px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 12px; bottom: 12px; width: 2px; background: linear-gradient(var(--c1), var(--line)); border-radius: 2px; }
+.timeline > li { position: relative; padding: 12px 16px; margin-bottom: 8px; background: var(--soft); border-radius: 16px; display: flex; flex-direction: column; gap: 2px; transition: transform 0.2s var(--ease); }
+.timeline > li:hover { transform: translateX(3px); }
+.timeline > li::before { content: ''; position: absolute; left: -24px; top: 17px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #c3c9d6; }
+.timeline > li.current { background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 10%, #fff), #fff); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c1) 45%, #fff); }
+.timeline > li.current::before { border-color: var(--c1); background: var(--c1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c1) 22%, transparent); }
+.tl-date { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.tl-date em { font-style: normal; background: var(--c1); color: #fff; border-radius: 6px; padding: 1px 7px; margin-left: 6px; font-size: 0.7rem; }
+.timeline strong { font-size: 1.05rem; }
+.tl-sub { color: var(--muted); }
+.tl-bullets { margin: 8px 0 2px 18px; display: grid; gap: 4px; color: #3d4560; font-size: 0.92rem; line-height: 1.45; }
+.tl-bullets li::marker { color: var(--c1); }
+.gh-card { display: flex; align-items: center; gap: 14px; margin-top: 20px; padding: 14px 16px; border-radius: 18px; background: #12183a; color: #fff; text-decoration: none; transition: transform 0.2s var(--spring); }
+.gh-card:hover { transform: translateY(-2px); }
+.gh-ic { width: 44px; height: 44px; display: grid; place-items: center; font-size: 1.5rem; border-radius: 12px; background: rgba(255, 255, 255, 0.1); }
+.gh-card > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.gh-card small { color: #b6bfe8; }
+.gh-go { font-weight: 800; font-size: 0.9rem; background: #fff; color: #12183a; padding: 7px 12px; border-radius: 999px; white-space: nowrap; }
+.ai-grid { display: grid; gap: 8px; }
+.ai-item { display: grid; grid-template-columns: 150px 1fr; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--soft); }
+.ai-item strong { font-size: 0.95rem; }
+.ai-item span { color: #3d4560; font-size: 0.92rem; line-height: 1.45; }
+.h-note { font-size: 0.72rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: #8a93a8; margin-left: 6px; }
+.role-card ul { margin: 10px 0 0 18px; display: grid; gap: 4px; font-size: 0.9rem; line-height: 1.45; opacity: 0.9; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; gap: 6px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 7px 12px; font-weight: 600; font-size: 0.92rem; box-shadow: var(--shadow-sm); transition: transform 0.2s var(--spring), border-color 0.2s; }
+.chip:hover { transform: translateY(-2px); border-color: var(--c1); }
+.role-card { position: relative; overflow: hidden; background: linear-gradient(135deg, #12183a, #24306a); color: #fff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.role-card::after { content: '</>'; position: absolute; right: 18px; bottom: -14px; font-family: var(--display); font-size: 5rem; font-weight: 800; color: rgba(255, 255, 255, 0.06); }
+.role-card .kicker { color: #ffd166; }
+.role-card strong { font-family: var(--display); font-size: 1.4rem; letter-spacing: -0.01em; }
+.role-card span:last-child { opacity: 0.8; }
+
+.langs { display: flex; flex-direction: column; gap: 14px; }
+.lang-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.lang-top span { color: var(--muted); font-size: 0.9rem; }
+.bar { height: 10px; background: var(--soft-2); border-radius: 9px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--c1), var(--c2)); border-radius: 9px; transition: width 1.2s var(--ease); }
+
+.projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.project { position: relative; background: var(--soft); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 4px; transition: transform 0.2s var(--spring), box-shadow 0.2s; }
+.project:hover { transform: translateY(-3px); box-shadow: var(--shadow); background: #fff; }
+.project strong { font-size: 1.08rem; padding-right: 80px; }
+.project p { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+.tag { position: absolute; top: 14px; right: 14px; font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 999px; }
+.hobbies { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.hobby { background: var(--soft); border-radius: 18px; padding: 20px 14px; text-align: center; display: flex; flex-direction: column; gap: 8px; font-weight: 600; transition: transform 0.2s var(--spring); }
+.hobby:hover { transform: translateY(-3px) rotate(-1deg); }
+.hobby b { font-size: 2.3rem; }
+
+.panel-foot {
+    position: sticky; bottom: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 16px 0 22px; margin-top: 20px; background: linear-gradient(transparent, #fff 32%);
+}
+.panel-foot .spacer { flex: 1; }

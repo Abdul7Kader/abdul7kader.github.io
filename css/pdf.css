@@ -1,0 +1,16 @@
+/* PDF-Erzeugung
+   A4-breite Kopie des Lebenslaufs im Druck-Layout, unabhängig von der Bildschirmbreite. */
+
+/* PDF-Erzeugung: A4-breite Kopie des Lebenslaufs im Druck-Layout (unabhängig von der Bildschirmbreite) */
+.pdf-host { position: fixed; left: -10000px; top: 0; width: 794px; background: #fff; z-index: -1; pointer-events: none; }
+.cv-page.pdf-mode { width: 794px; border-radius: 0; box-shadow: none; padding: 0; animation: none; }
+.pdf-mode .cv-head { flex-direction: row; text-align: left; gap: 22px; }
+.pdf-mode .cv-head img { width: 112px; height: 112px; box-shadow: none; }
+.pdf-mode .cv-contact { justify-content: flex-start; }
+.pdf-mode .cv-contact .only-print { display: inline-flex; }
+.pdf-mode .cv-grid { grid-template-columns: 1.55fr 1fr; gap: 24px; }
+.pdf-mode .cv-tl > li { grid-template-columns: 112px 1fr; gap: 10px; }
+.pdf-mode .cv-dl { grid-template-columns: 130px 1fr; }
+.pdf-mode .cv-strengths { grid-template-columns: repeat(4, 1fr); }
+.pdf-mode .bar i { transition: none; }
+.pdf-mode .cv-contact a, .pdf-mode .cv-contact span { display: inline-flex; align-items: center; gap: 4px; }

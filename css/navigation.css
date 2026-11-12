@@ -1,0 +1,40 @@
+/* Kapitelübersicht und Suche
+   Strg+K-Befehlspalette. */
+
+/* ---------------------------------------------------------------- Kapitelübersicht */
+.plain-head { margin-bottom: 14px; padding-right: 44px; }
+.plain-head h2 { font-family: var(--display); font-size: 1.9rem; letter-spacing: -0.02em; line-height: 1.1; margin: 2px 0 4px; }
+#journey-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+#journey-list button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px; background: var(--soft); text-align: left; transition: background 0.2s, transform 0.2s var(--spring); }
+#journey-list button:hover { background: var(--soft-2); transform: translateX(4px); }
+#journey-list li.is-next button { background: #fff4ec; box-shadow: inset 0 0 0 1.5px #ffc9a8; }
+.je { width: 44px; height: 44px; flex: none; display: grid; place-items: center; font-size: 1.4rem; border-radius: 13px; background: #fff; box-shadow: var(--shadow-sm); }
+.jt { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.jt strong { font-size: 1rem; }
+.jt small { color: var(--muted); font-size: 0.8rem; }
+.js { font-size: 0.75rem; font-weight: 800; color: var(--muted); white-space: nowrap; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.js .st { color: #f59e0b; letter-spacing: 1px; font-size: 0.8rem; }
+.js .st .off { color: #d5dae4; }
+.js.done { color: var(--green); }
+.js.next .pill { color: #fff; background: var(--accent); padding: 3px 9px; border-radius: 999px; }
+
+/* ---------------------------------------------------------------- Befehlspalette */
+#palette { align-items: flex-start; padding-top: calc(12vh + var(--safe-t)); }
+.palette { width: 100%; max-width: 600px; background: #fff; border-radius: 22px; box-shadow: var(--shadow-lg); overflow: hidden; animation: palin 0.28s var(--ease); }
+.pal-input { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); font-size: 1.1rem; }
+.pal-input input { flex: 1; font: inherit; font-size: 1.1rem; border: 0; outline: none; color: var(--ink); background: transparent; min-width: 0; }
+.pal-input input::placeholder { color: #a0a7b8; }
+#pal-list { list-style: none; max-height: min(52vh, 420px); overflow: auto; padding: 8px; }
+.pal-group { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa2b5; padding: 10px 10px 6px; }
+.pal-item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 12px; cursor: pointer; }
+.pal-item .pi-ic { width: 36px; height: 36px; flex: none; display: grid; place-items: center; font-size: 1.15rem; border-radius: 10px; background: var(--soft); }
+.pal-item .pi-t { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.pal-item .pi-t strong { font-weight: 600; font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pal-item .pi-t small { color: var(--muted); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pal-item .pi-k { font-size: 0.75rem; color: var(--muted); font-weight: 700; }
+.pal-item mark { background: #ffe8d6; color: inherit; border-radius: 3px; padding: 0 1px; }
+.pal-item.sel { background: #f1efff; }
+.pal-item.sel .pi-ic { background: #fff; box-shadow: var(--shadow-sm); }
+.pal-empty { padding: 26px; text-align: center; color: var(--muted); }
+.pal-foot { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.78rem; color: var(--muted); background: var(--soft); }
+.pal-foot kbd { margin-right: 2px; }

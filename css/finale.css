@@ -1,0 +1,25 @@
+/* Finale
+   T-Shirt mit Aufkleber, Firmenname, Urkunde. */
+
+/* ---------------------------------------------------------------- Finale */
+.finale { text-align: center; padding-bottom: 22px; }
+.tshirt { position: relative; width: min(100%, 440px); margin: 4px auto 14px; }
+.tshirt-cnv { display: block; width: 100%; height: auto; aspect-ratio: 838 / 944; border-radius: 26px; background: #dfe3e8; box-shadow: 0 0 0 5px #fff, 0 0 0 8px var(--gold), 0 22px 50px -12px rgba(245, 158, 11, 0.55); }
+.tshirt .trophy { position: absolute; right: -10px; bottom: -10px; font-size: 3rem; animation: spinpop 0.9s var(--spring) both; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25)); }
+.finale-title { font-family: var(--display); font-weight: 800; font-size: 1.8rem; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 6px; }
+.finale-text { color: var(--muted); max-width: 540px; margin: 0 auto 18px; line-height: 1.6; }
+.cert { text-align: left; border: 1.5px solid #fde3a7; background: linear-gradient(180deg, #fffaf0, #fff); border-radius: 22px; padding: 18px; margin-bottom: 18px; }
+.cert-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cert-head .total { font-weight: 800; color: #b45309; font-size: 0.9rem; }
+.cert-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 12px; }
+.cert-list li { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 9px 11px; box-shadow: var(--shadow-sm); }
+.cert-list li b { font-size: 1.5rem; }
+.cert-list li span { display: flex; flex-direction: column; min-width: 0; }
+.cert-list li small { color: var(--muted); font-size: 0.75rem; }
+.cert-list li .st { color: #f59e0b; font-size: 0.75rem; letter-spacing: 1px; }
+.firm { display: grid; gap: 6px; max-width: 440px; margin: 0 auto 20px; text-align: left; }
+.firm > span { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c1); }
+.firm input { font: inherit; font-family: var(--display); font-size: 1.3rem; padding: 12px 16px; border-radius: 16px; border: 2px solid var(--line); font-weight: 800; color: var(--ink); width: 100%; }
+.firm input:focus { outline: none; border-color: var(--c1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c1) 18%, transparent); }
+.firm small { color: var(--muted); font-size: 0.82rem; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 12px; }

@@ -1,0 +1,46 @@
+/* GitHub-Aktivität
+   Beitrags-Kacheln, Kennzahlen, letzte Commits. */
+
+/* GitHub-Aktivität (Commit-Kacheln) */
+.gh-act { --gh-c: 13px; background: #0f1630; color: #e8ecff; border-radius: 20px; padding: 16px 18px; margin-top: 4px; }
+.gh-act.loading { background: var(--soft); color: var(--muted); }
+.gh-head { display: flex; align-items: center; gap: 12px; }
+.gh-head > div { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.gh-head small { color: #9aa6d6; font-size: 0.78rem; }
+.gh-logo { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); }
+.gh-logo .ico { width: 22px; height: 22px; }
+.gh-out { display: inline-flex; align-items: center; gap: 5px; color: #c9d3ff; font-size: 0.82rem; font-weight: 700; text-decoration: none; padding: 6px 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.07); }
+.gh-out:hover { background: rgba(255, 255, 255, 0.14); }
+.gh-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 14px 0 12px; }
+.gh-stats div { background: rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 9px 11px; display: flex; flex-direction: column; }
+.gh-stats b { font-family: var(--display); font-size: 1.35rem; color: #6ee7a0; line-height: 1.1; }
+.gh-stats span { font-size: 0.74rem; color: #aab4de; }
+.gh-cal-wrap { overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.gh-cal { width: max-content; }
+.gh-months { display: grid; gap: 3px; font-size: 0.68rem; color: #8f9bcc; height: 15px; }
+.gh-months span { white-space: nowrap; overflow: visible; }
+.gh-grid { display: flex; gap: 3px; }
+.gh-w { display: grid; grid-template-rows: repeat(7, var(--gh-c)); gap: 3px; }
+.gh-act i { display: block; width: var(--gh-c); height: var(--gh-c); border-radius: 3px; }
+.gh-act i.e { background: transparent; }
+.gh-act .l0 { background: rgba(255, 255, 255, 0.07); }
+.gh-act .l1 { background: #0e4429; }
+.gh-act .l2 { background: #006d32; }
+.gh-act .l3 { background: #26a641; }
+.gh-act .l4 { background: #39d353; }
+.gh-legend { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 8px; font-size: 0.7rem; color: #8f9bcc; }
+.gh-legend span { margin: 0 4px; }
+.gh-legend i { width: 11px; height: 11px; }
+.gh-act h4 { margin: 14px 0 6px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; color: #9aa6d6; }
+.gh-commits { list-style: none; display: grid; gap: 6px; }
+.gh-commits a { display: flex; flex-direction: column; gap: 1px; padding: 8px 11px; border-radius: 11px; background: rgba(255, 255, 255, 0.05); color: #e8ecff; text-decoration: none; }
+.gh-commits a:hover { background: rgba(255, 255, 255, 0.1); }
+.gh-msg { font-weight: 600; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gh-meta { font-size: 0.75rem; color: #9aa6d6; }
+.gh-act.compact { --gh-c: 10px; padding: 12px 14px; }
+.gh-act.compact .gh-stats b { font-size: 1.1rem; }
+.pdf-mode .no-print { display: none; }
+@media (max-width: 640px) { .gh-stats { grid-template-columns: 1fr 1fr; } .gh-stats div:nth-child(3) { grid-column: 1 / -1; } }
+
+.gh-ic .ico { width: 24px; height: 24px; }
+.panel-foot .btn .ico { width: 15px; height: 15px; margin-right: 2px; }

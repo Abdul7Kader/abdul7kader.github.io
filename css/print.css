@@ -1,0 +1,20 @@
+/* Druck
+   Strg+P druckt nur den kompakten Lebenslauf, immer hell. */
+
+/* ---------------------------------------------------------------- Druck / PDF */
+@media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff; overflow: visible; height: auto; }
+    body > *:not(#cv) { display: none !important; }
+    #cv { display: block !important; position: static; padding: 0; background: #fff; backdrop-filter: none; overflow: visible; animation: none; }
+    .cv-sheet { max-width: none; animation: none; margin: 0; }
+    .cv-page { box-shadow: none; border-radius: 0; padding: 0; }
+    .no-print { display: none !important; }
+    .cv-grid { grid-template-columns: 1.55fr 1fr; gap: 24px; }
+    .cv-tl > li, .cv-projects li, .cv-strengths div, .cv-lang, .cv-dl dd { break-inside: avoid; }
+    .cv-strengths { grid-template-columns: repeat(4, 1fr); }
+    .cv-grid h2, .cv-grid h4 { break-after: avoid; }
+    .bar i { transition: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cv-contact .only-print { display: inline-flex; }
+}

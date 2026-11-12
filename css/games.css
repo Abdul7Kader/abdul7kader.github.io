@@ -1,0 +1,38 @@
+/* Minispiele
+   Rahmen, Start- und Ergebniskarte. */
+
+/* ---------------------------------------------------------------- Arcade-Rahmen */
+.mg-stage { display: flex; flex-direction: column; align-items: center; user-select: none; -webkit-user-select: none; }
+.arc { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 16px 36px -12px rgba(12, 20, 40, 0.45); background: #111; }
+.arc-cnv { display: block; touch-action: none; cursor: pointer; }
+.arc-ov { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; padding: 14px; background: radial-gradient(ellipse at center, rgba(10, 16, 36, 0.55), rgba(10, 16, 36, 0.78)); backdrop-filter: blur(2px); }
+.arc-ov.show { display: flex; animation: fade 0.25s; }
+.arc-card { width: 100%; max-width: 380px; text-align: center; color: #fff; animation: pop 0.45s var(--spring); }
+.arc-icon { font-size: 3.2rem; line-height: 1; margin-bottom: 6px; animation: bob 2.2s ease-in-out infinite; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35)); }
+.arc-card h3 { font-family: var(--display); font-size: 1.9rem; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 6px; }
+.arc-card p { color: rgba(235, 240, 255, 0.85); font-size: 0.92rem; line-height: 1.45; margin-bottom: 12px; }
+.arc-keys { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 14px; }
+.arc-key { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.18); }
+.arc-go {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 999px; font-size: 1.15rem; font-weight: 800; color: #fff;
+    background: linear-gradient(135deg, var(--arc), color-mix(in srgb, var(--arc) 60%, #ff4f6d)); box-shadow: 0 12px 28px -8px var(--arc), inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+    animation: pulse 1.6s ease-in-out infinite; transition: transform 0.2s var(--spring);
+}
+.arc-go:hover { transform: scale(1.06); }
+.arc-meta { display: block; margin-top: 10px; font-size: 0.78rem; color: rgba(235, 240, 255, 0.65); font-weight: 600; }
+.arc-stars { display: flex; justify-content: center; gap: 4px; margin-bottom: 2px; }
+.arc-stars i { font-style: normal; font-size: 2.8rem; line-height: 1; color: rgba(255, 255, 255, 0.18); transform: scale(0.6); animation: starin 0.5s var(--d) var(--spring) forwards; }
+.arc-stars i:nth-child(2) { font-size: 3.4rem; transform: translateY(-6px) scale(0.6); }
+.arc-stars i.on { color: #ffd166; text-shadow: 0 0 22px rgba(255, 209, 102, 0.7); }
+.arc-score { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 2px; }
+.arc-score b { font-family: var(--display); font-size: 2.8rem; line-height: 1; }
+.arc-score span { font-weight: 700; opacity: 0.7; }
+.arc-best { font-size: 0.82rem; font-weight: 700; color: rgba(235, 240, 255, 0.7); margin-bottom: 10px; }
+.arc-best.new { color: #ffd166; animation: pop 0.6s 0.9s var(--spring) both; }
+.arc-card .arc-msg { font-size: 0.9rem; }
+.arc-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.arc-btns button { padding: 11px 18px; border-radius: 999px; font-weight: 800; font-size: 0.95rem; transition: transform 0.2s var(--spring); }
+.arc-btns button:hover { transform: translateY(-2px); }
+.arc-again { background: rgba(255, 255, 255, 0.14); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25); }
+.arc-next { background: #fff; color: var(--ink); box-shadow: 0 10px 22px -8px rgba(0, 0, 0, 0.5); }
+.mg-foot { text-align: center; padding: 8px 0 14px; }

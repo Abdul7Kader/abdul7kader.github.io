@@ -1,0 +1,33 @@
+/* Animationen
+   Keyframes, Puls-Punkte, Pause hinter Dialogen, weniger Bewegung auf Wunsch. */
+
+/* ---------------------------------------------------------------- Animationen */
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(22px) scale(0.985); } }
+@keyframes dropin { from { opacity: 0; transform: translateY(-16px); } }
+@keyframes questin { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes cardin { from { opacity: 0; transform: translateY(40px) rotate(4deg) scale(0.94); } }
+@keyframes palin { from { opacity: 0; transform: translateY(-10px) scale(0.98); } }
+@keyframes pop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes spinpop { 0% { transform: scale(0) rotate(-180deg); } 70% { transform: scale(1.15) rotate(10deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes starin { to { transform: scale(1); } }
+@keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(16deg); } 20%, 40% { transform: rotate(-10deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes shine { to { transform: translateX(100%); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------------------------------------------------------------- Puls-Punkte und Pause hinter Dialogen
+   Puls-Effekte nur mit transform/opacity (kein Neuzeichnen der Umgebung); solange ein Dialog die Welt verdeckt,
+   pausieren alle Animationen im HUD. */
+.q-kicker i::after, .pc-status i::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%; background: currentColor;
+    animation: pingT 1.8s ease-out infinite; will-change: transform, opacity;
+}
+@keyframes pingT { from { transform: scale(1); opacity: 0.55; } 70%, to { transform: scale(2.6); opacity: 0; } }
+body.is-covered #hud *, body.is-covered #hud *::before, body.is-covered #hud *::after,
+body.is-covered #dock *, body.is-covered #minimap, body.is-covered #bubbles *, body.is-covered #toasts * { animation-play-state: paused; }

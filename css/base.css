@@ -1,0 +1,28 @@
+/* Grundlagen
+   Reset, Schrift, Fokus, Hilfsklassen, Welt-Leinwand. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+    font-family: var(--font);
+    color: var(--ink);
+    background: #4f8a45;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:not([tabindex="-1"]):focus-visible { outline: 3px solid rgba(123, 92, 255, 0.55); outline-offset: 2px; }
+img { display: block; }
+kbd {
+    font-family: var(--font); font-size: 0.7rem; font-weight: 700; line-height: 1;
+    padding: 3px 6px; border-radius: 6px; background: rgba(20, 27, 45, 0.07); border: 1px solid rgba(20, 27, 45, 0.12);
+    border-bottom-width: 2px; color: inherit; opacity: 0.8; white-space: nowrap;
+}
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+
+#world { position: fixed; inset: 0; width: 100vw; height: 100vh; touch-action: none; user-select: none; -webkit-user-select: none; }
+#vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 58%, rgba(8, 24, 18, 0.32) 100%); }
