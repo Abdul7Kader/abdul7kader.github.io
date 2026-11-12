@@ -149,7 +149,9 @@ export default {
         legend: { done: 'Finished', build: 'Under construction', base: 'Foundation' },
         signs: { shop: 'TOOL RENTAL' },
         expandable: '+ expandable',
-        quarterAria: 'Project quarter: {list}'
+        quarterAria: 'Project quarter: {list}',
+        walkHint: 'Tap a building – {name} walks there · arrow keys walk, Enter shows the project',
+        walkRole: 'walkable project quarter'
     },
 
     worldmap: {

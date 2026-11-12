@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (545 Texte)
+## Deutsch (547 Texte)
 
 ### Doppelungen
 
@@ -156,6 +156,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.signs.shop` | WERKZEUGVERLEIH |
 | `ui.projects.expandable` | + erweiterbar |
 | `ui.projects.quarterAria` | Projekt-Viertel: {list} |
+| `ui.projects.walkHint` | Gebäude antippen – {name} läuft hin · Pfeiltasten laufen, Enter zeigt das Projekt |
+| `ui.projects.walkRole` | begehbares Projekt-Viertel |
 | `ui.worldmap.stat` | {n} Länder bereist · Ausgangspunkt Deutschland |
 | `ui.worldmap.zoomIn` | Hineinzoomen |
 | `ui.worldmap.zoomOut` | Herauszoomen |
@@ -574,7 +576,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (545 Texte)
+## Englisch (547 Texte)
 
 ### Doppelungen
 
@@ -724,6 +726,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.signs.shop` | TOOL RENTAL |
 | `ui.projects.expandable` | + expandable |
 | `ui.projects.quarterAria` | Project quarter: {list} |
+| `ui.projects.walkHint` | Tap a building – {name} walks there · arrow keys walk, Enter shows the project |
+| `ui.projects.walkRole` | walkable project quarter |
 | `ui.worldmap.stat` | {n} countries visited · starting point Germany |
 | `ui.worldmap.zoomIn` | Zoom in |
 | `ui.worldmap.zoomOut` | Zoom out |

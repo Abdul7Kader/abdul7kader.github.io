@@ -150,7 +150,9 @@ export default {
         legend: { done: 'Fertig', build: 'Im Bau', base: 'Fundament' },
         signs: { shop: 'WERKZEUGVERLEIH' },
         expandable: '+ erweiterbar',
-        quarterAria: 'Projekt-Viertel: {list}'
+        quarterAria: 'Projekt-Viertel: {list}',
+        walkHint: 'Gebäude antippen – {name} läuft hin · Pfeiltasten laufen, Enter zeigt das Projekt',
+        walkRole: 'begehbares Projekt-Viertel'
     },
 
     worldmap: {

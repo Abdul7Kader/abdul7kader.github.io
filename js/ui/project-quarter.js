@@ -1,5 +1,7 @@
-// Projekt-Viertel: eigene Projekte als kleine Stadt. Jedes Gebäude steht im Bauzustand,
+// Projekt-Viertel: eigene Projekte als kleine, begehbare Stadt. Jedes Gebäude steht im Bauzustand,
 // der zum Fortschritt passt (projects[].progress), sodass Fertiges und Laufendes sofort unterscheidbar sind.
+// Abdul läuft als Spielfigur auf der Straße: Gebäude antippen → er läuft hin → die Projektkarte wird gezeigt.
+// Tastatur: Pfeile/A–D laufen, Enter zeigt das Projekt, vor dem er steht.
 import { TAU, clamp } from '../core/math.js';
 import { rr, ellipse as ell, FONT } from '../core/canvas.js';
 import { reducedMotion } from '../core/env.js';
@@ -7,6 +9,8 @@ import { t as tr, lang } from '../core/i18n.js';
 import { projStage } from '../core/derive.js';
 import { theme } from '../core/theme.js';
 import { WIDGET_FRAME_MS } from '../config/performance.js';
+import { PLAYER_LOOK } from '../config/theme.js';
+import { drawPerson } from '../world/sprites/people.js';
 
 const VW = 960, VH = 350, GROUND = 236, PLOT = 150, X0 = 30;   // Szene in festen Einheiten, wird skaliert
 const MAX_PROJECTS = 6;
@@ -15,6 +19,9 @@ const MAX_DPR = 2;
 const GHOST_ALPHA = 0.16;       // Deckkraft des „Bauplans“ (fertiges Gebäude in Grau)
 const GROW = { stagger: 0.25, duration: 1.6 };                   // Belohnung: Gebäude wachsen nacheinander
 const SCROLL_LEAD = 60;
+// Spielfigur im Viertel: Größe, Tempo, Standlinie, Randabstand, Dauer des Hinweises
+const WALKER = { scale: 0.62, speed: 280, y: GROUND + 16, edge: 14, hintS: 7, stepRate: 0.09 };
+const plotCenter = (i) => X0 + i * PLOT + PLOT / 2;
 const ZOOM = { max: 2.6, step: 1.35, wheelStep: 1.1, maxBackingPx: 2600, dragPx: 5 };   // Zoom im Dialog
 // Farben bei Tag und bei Nacht (Dark Mode)
 const SCENE = {
@@ -236,6 +243,23 @@ function drawPlot(c, p, i, t, pct, hover, sel, k, info) {
     rr(c, x0 + 22, GROUND + 74, Math.max(6, (PLOT - 44) * pct / 100), 6, 3); c.fill();
 }
 
+/** Abdul auf der Straße (wird nach der Nacht-Abdunklung gezeichnet und bleibt hell) */
+function drawWalker(c, w, t) {
+    c.save(); c.translate(w.x, WALKER.y); c.scale(WALKER.scale, WALKER.scale);
+    drawPerson(c, 0, 0, w, t);
+    c.restore();
+}
+/** Bedienhinweis oben links, verblasst nach ein paar Sekunden oder beim ersten Schritt */
+function drawHint(c, s, alpha) {
+    if (alpha <= 0) return;
+    c.save(); c.globalAlpha = alpha;
+    c.font = `700 12px ${FONT}`;
+    const w = c.measureText(s).width + 20;
+    c.fillStyle = 'rgba(11,18,40,0.62)'; rr(c, 10, 10, w, 24, 12); c.fill();
+    text(c, s, 20, 22.5, 12, '#fff', 700, 'left');
+    c.restore();
+}
+
 function drawScene(c, list, t, prog, hover, sel, k, info) {
     const S = info.scene;
     const sky = c.createLinearGradient(0, 0, 0, GROUND);
@@ -339,7 +363,55 @@ export function mountQuarter(wrap, projects, opts = {}) {
     };
     cnv.addEventListener('pointermove', (e) => { hover = plotAt(e); cnv.style.cursor = hover >= 0 ? 'pointer' : 'default'; });
     cnv.addEventListener('pointerleave', () => { hover = -1; });
-    cnv.addEventListener('click', (e) => { if (dragged) { dragged = false; return; } const i = plotAt(e); if (i >= 0) { sel = i; if (opts.onSelect) opts.onSelect(i); } });
+    // Spielfigur: läuft zum angetippten Gebäude und zeigt dann dessen Projektkarte
+    const walker = { x: WALKER.edge + 6, target: null, arrive: -1, dir: 'right', walk: 0, moving: false, look: PLAYER_LOOK, moved: false };
+    const keys = { left: false, right: false };
+    const goTo = (i, show) => {
+        sel = i; walker.target = plotCenter(i); walker.arrive = show ? i : -1; walker.moved = true;
+        if (reducedMotion) walker.x = walker.target;
+    };
+    const plotUnderWalker = () => { const i = Math.floor((walker.x - X0) / PLOT); return i >= 0 && i < list.length ? i : -1; };
+    cnv.addEventListener('click', (e) => { if (dragged) { dragged = false; return; } const i = plotAt(e); if (i >= 0) goTo(i, true); });
+    cnv.tabIndex = 0;
+    cnv.setAttribute('role', 'application');
+    cnv.setAttribute('aria-roledescription', tr('projects.walkRole'));
+    cnv.addEventListener('keydown', (e) => {
+        const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (k === 'ArrowLeft' || k === 'a') { keys.left = true; walker.target = null; walker.moved = true; e.preventDefault(); }
+        else if (k === 'ArrowRight' || k === 'd') { keys.right = true; walker.target = null; walker.moved = true; e.preventDefault(); }
+        else if (k === 'Enter' || k === ' ') { const i = plotUnderWalker(); if (i >= 0) { sel = i; if (opts.onSelect) opts.onSelect(i); } e.preventDefault(); }
+    });
+    cnv.addEventListener('keyup', (e) => {
+        const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (k === 'ArrowLeft' || k === 'a') keys.left = false;
+        if (k === 'ArrowRight' || k === 'd') keys.right = false;
+    });
+    cnv.addEventListener('blur', () => { keys.left = keys.right = false; });
+    let lastStep = 0;
+    function stepWalker(ts) {
+        const dt = lastStep ? Math.min(0.1, (ts - lastStep) / 1000) : 0;
+        lastStep = ts;
+        let dx = 0;
+        if (keys.left || keys.right) dx = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+        else if (walker.target != null) {
+            const d = walker.target - walker.x;
+            if (Math.abs(d) <= WALKER.speed * dt + 0.5) {
+                walker.x = walker.target; walker.target = null;
+                if (walker.arrive >= 0 && opts.onSelect) opts.onSelect(walker.arrive);
+                walker.arrive = -1;
+            } else dx = Math.sign(d);
+        }
+        walker.moving = dx !== 0;
+        if (dx) {
+            walker.x = clamp(walker.x + dx * WALKER.speed * dt, WALKER.edge, VW - WALKER.edge);
+            walker.dir = dx > 0 ? 'right' : 'left';
+            walker.walk += dt / WALKER.stepRate;
+            // Gezoomt: Ausschnitt folgt der Figur
+            const px = walker.x / VW * cnv.clientWidth, margin = wrap.clientWidth * 0.2;
+            if (px < wrap.scrollLeft + margin) wrap.scrollLeft = px - margin;
+            else if (px > wrap.scrollLeft + wrap.clientWidth - margin) wrap.scrollLeft = px - wrap.clientWidth + margin;
+        } else if (walker.target == null) walker.dir = 'down';
+    }
     // Nur zeichnen, solange das Viertel sichtbar ist
     let visible = true, lastDraw = 0;
     const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { visible = es[0].isIntersecting; }) : null;
@@ -354,9 +426,12 @@ export function mountQuarter(wrap, projects, opts = {}) {
         info.scene = theme() === 'dark' ? SCENE.night : SCENE.day;
         c.setTransform(k, 0, 0, k, 0, 0);
         drawScene(c, list, reducedMotion ? 0 : t, prog.map(Math.round), hover, sel, k, info);
+        stepWalker(ts);
+        drawWalker(c, walker, t);
+        drawHint(c, tr('projects.walkHint', { name: opts.name || '' }), walker.moved ? 0 : clamp(WALKER.hintS - t, 0, 1));
     })(t0);
     return {
-        select(i) { sel = i; },
+        select(i) { goTo(i, false); },
         scrollTo(i) { wrap.scrollTo({ left: Math.max(0, (X0 + i * PLOT) / VW * wrap.scrollWidth - SCROLL_LEAD), behavior: reducedMotion ? 'auto' : 'smooth' }); }
     };
 }

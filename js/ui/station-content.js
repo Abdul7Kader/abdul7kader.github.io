@@ -116,6 +116,7 @@ export function mountExtras(body, result) {
         const mark = (i) => cards.forEach((el, k) => el.classList.toggle('sel', k === i));
         const q = mountQuarter(pv, data().projects, {
             animate: !!(result && result.stars),
+            name: derived().firstName,
             onSelect: (i) => { audio.play('click'); mark(i); if (cards[i]) cards[i].scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest' }); }
         });
         cards.forEach((el, i) => {
