@@ -163,8 +163,11 @@ export default {
         origin: 'Country of origin',
         visited: 'visited',
         notVisited: 'not visited yet',
-        hintTouch: 'Swipe to pan · tap a country to see its name',
-        hintMouse: 'Hover over a coloured country'
+        hintTouch: 'Swipe to pan · pinch to zoom · tap a country to see its name',
+        hintMouse: 'Hover over a coloured country · Ctrl + mouse wheel zooms',
+        views: 'Map view',
+        europe: 'Europe',
+        world: 'World'
     },
 
     github: {

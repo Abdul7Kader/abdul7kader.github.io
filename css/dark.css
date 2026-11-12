@@ -66,7 +66,7 @@
 
 /* Weltkarte */
 [data-theme="dark"] .wm { background: #10233a; }
-[data-theme="dark"] .wm-sea { fill: #10233a; }
+[data-theme="dark"] .wm-sea, [data-theme="dark"] .wm-world .wm-sea { fill: #10233a; }
 [data-theme="dark"] .wm-c:not(.v):not(.home) { fill: #2a3352; }
 [data-theme="dark"] .wm-c { stroke: #10233a; }
 [data-theme="dark"] .wm-bar { background: rgba(21, 28, 51, 0.9); }

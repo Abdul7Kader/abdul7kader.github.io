@@ -164,8 +164,11 @@ export default {
         origin: 'Herkunftsland',
         visited: 'bereist',
         notVisited: 'noch nicht bereist',
-        hintTouch: 'Wischen zum Verschieben · Land antippen für den Namen',
-        hintMouse: 'Mit der Maus über ein farbiges Land fahren'
+        hintTouch: 'Wischen zum Verschieben · mit zwei Fingern zoomen · Land antippen für den Namen',
+        hintMouse: 'Mit der Maus über ein farbiges Land fahren · Strg + Mausrad zoomt',
+        views: 'Kartenausschnitt',
+        europe: 'Europa',
+        world: 'Welt'
     },
 
     github: {

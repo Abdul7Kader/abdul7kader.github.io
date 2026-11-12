@@ -36,3 +36,13 @@
 .wm-hint { padding: 7px 12px; font-size: 0.76rem; color: var(--muted); background: rgba(255, 255, 255, 0.85); border-top: 1px solid var(--line); }
 @keyframes wmdash { to { stroke-dashoffset: -26; } }
 @keyframes wmpulse { from { transform: scale(0.8); opacity: 1; } to { transform: scale(2.4); opacity: 0; } }
+
+/* Umschalter Europa / Welt */
+.wm-views { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: var(--soft-2); }
+.wm-views button { height: 26px; padding: 0 12px; border-radius: 9px; font-weight: 700; font-size: 0.8rem; color: var(--muted); }
+.wm-views button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: var(--shadow-sm); }
+.wm-world .wm-sea { fill: #d4e6f3; }
+.wm.wm-world { background: var(--soft); }
+.wm-world .wm-c { stroke-width: 0.4; }
+.wm-world .wm-c.v { stroke-width: 0.5; }
+.wm-world .wm-route { stroke-width: 1.2; stroke-dasharray: 4 3; }
