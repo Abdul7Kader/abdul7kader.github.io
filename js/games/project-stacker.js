@@ -129,6 +129,7 @@ export default {
                 c.fillStyle = '#6b7280'; c.fillRect(0, H - 40 + cam, W, 60);
                 c.fillStyle = '#facc15'; for (let x = 0; x < W; x += 60) c.fillRect(x, H - 34 + cam, 30, 5);
                 g.nightShade(c);
+                g.nightSky(c);
                 stack.forEach((b, i) => {
                     const y = yOf(i) + cam + (b.land ? -Math.sin(b.land * Math.PI) * 4 : 0);
                     if (y >= -BH * 2 && y <= H + 20) block(c, b, y);

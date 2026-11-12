@@ -12,6 +12,7 @@ const JACKPOT = 5;
 export default {
     id: 'lab', icon: '💡', color: '#16a34a', time: 15, stars: [8, 20, 34],
     controls: ['mouse', 'tap', 'arrows'],
+    moon: [90, 80],   // nachts steht der Mond, wo tagsüber die Sonne ist
     bg(c) {   // Himmel, Sonne, Hügel und Wiese bewegen sich nicht
         const sky = c.createLinearGradient(0, 0, 0, H);
         sky.addColorStop(0, '#8fd3ff'); sky.addColorStop(1, '#e6f7ff');

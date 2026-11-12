@@ -77,8 +77,9 @@ tools/, tests/     Entwicklungswerkzeuge und Tests (siehe README)
 
 ## Offene Punkte
 
-- **Projekt-Viertel als eigene begehbare Mini-Welt:** Es ist jetzt zoom- und verschiebbar, aber keine eigene Szene mit Spielfigur.
-- **Minispiele bei Nacht:** Die Hintergründe werden abgedunkelt, Hinweise werden hell; eigene Nacht-Grafiken (Sterne, Mond) gibt es nicht.
+- Keine Punkte aus dem Plan offen. Nachgetragen am Morgen des 12.11.: Das Projekt-Viertel ist begehbar (Abdul läuft zum
+  angetippten Gebäude, Pfeiltasten/Enter), und die Minispiele haben nachts Sterne, Mond und dunklere Landschaft.
+- Das Projekt-Viertel ist eine begehbare Straße im Dialog, keine zweite große Welt; das hält Bedienung und Rechenlast klein.
 - Messung ohne Grafikkarte ist ein ungünstiger Fall; auf echten Geräten mit GPU liegt die Last deutlich niedriger.
 
 ## Was Abdul prüfen sollte

@@ -14,6 +14,7 @@ export default {
     id: 'arrival', icon: '✈️', color: '#3a86ff', time: 15, stars: [6, 16, 30],
     controls: ['hold', 'space', 'tap'],
     // Himmel und Sonne bewegen sich nicht → einmal zeichnen
+    moon: [W - 90, 80],   // nachts steht der Mond, wo tagsüber die Sonne ist
     bg(c) {
         const sky = c.createLinearGradient(0, 0, 0, H);
         sky.addColorStop(0, SKY[0]); sky.addColorStop(0.7, SKY[1]); sky.addColorStop(1, SKY[2]);
@@ -100,10 +101,11 @@ export default {
                 items = items.filter(it => !it.dead && it.x > -90);
             },
             draw(c) {
-                clouds.forEach(cl => cl.far && cloud(c, cl, 0.55));
-                hills(c, 1, 26, H - 70, '#9fd88a', 0.25);
-                hills(c, 4, 18, H - 40, '#6fbf5a', 0.6);
-                clouds.forEach(cl => !cl.far && cloud(c, cl, 0.9));
+                const night = g.night();   // nachts dunklere Hügel und blassere Wolken
+                clouds.forEach(cl => cl.far && cloud(c, cl, night ? 0.18 : 0.55));
+                hills(c, 1, 26, H - 70, night ? '#4d6f4a' : '#9fd88a', 0.25);
+                hills(c, 4, 18, H - 40, night ? '#3e6a3c' : '#6fbf5a', 0.6);
+                clouds.forEach(cl => !cl.far && cloud(c, cl, night ? 0.3 : 0.9));
                 for (const it of items) {
                     if (it.kind === 'stamp') {
                         c.save(); c.translate(it.x, it.y + Math.sin(g.now * 3 + it.x * 0.02) * 3); c.rotate(it.rot);

@@ -67,7 +67,7 @@ Branch `abdul7kader/refactoring`. Kein Merge auf `main` ohne Freigabe.
 - ✅ **Dark Mode:** System/Hell/Dunkel ohne Aufblitzen. Oberfläche, Spielwelt bei Nacht (leuchtende Laternen), Projekt-Viertel mit Sternenhimmel, Weltkarte, GitHub, Admin, Unterseiten. PDF und Druck bleiben hell. Kontrast in beiden Modi nach WCAG AA geprüft.
 - ✅ **Lücken aus Runde 2:** GitHub-Werkstatt mit Leuchtwand (#3, #16), Weltkarte mit Weltansicht und Pinch-/Strg-Zoom (#7), Projekt-Viertel zoom- und verschiebbar (#11), Datenschutz-Seite (#14), Linkseite `/links/` mit Admin (#18), Abzeichen als Icons (#17), Textliste ohne Doppelungen (#10).
 - ✅ **Qualität:** Tests für Smoke (DE/EN, Hell/Dunkel), Sprachen, Kontrast, Screenshots, Leistung; CI auf GitHub mit Chromium, Firefox und WebKit; README.
-- ☐ **Noch offen:** Das Projekt-Viertel ist zoombar, aber keine eigene begehbare Mini-Welt. Die Minispiele sind nachts abgedunkelt, haben aber keine eigenen Nacht-Grafiken.
+- ✅ **Nachtrag 12.11. morgens:** Projekt-Viertel begehbar – Abdul läuft zum angetippten Gebäude und zeigt das Projekt, Pfeiltasten und Enter gehen auch (#11). Minispiele nachts mit Sternen, Mond und dunklerer Landschaft.
 
 ## Wartet auf Abdul
 

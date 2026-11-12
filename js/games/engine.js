@@ -23,6 +23,26 @@ const RESULT_DELAY_MS = 750, SCORE_COUNT_MS = 900;
 const LAST_SECONDS = 3;
 // Dunkelmodus: Hintergründe der Spiele werden einmal abgedunkelt (multiplizieren), Spielobjekte und Texte bleiben hell
 const NIGHT_SHADE = 'rgb(118,132,190)';
+// Nachthimmel: Sterne an festen Plätzen, Mond an der Stelle der Sonne (moon = [x, y] in Spielkoordinaten)
+const NIGHT_SKY = { stars: 46, top: 0.62, moonR: 26, moonGlow: 52, moon: '#f6f1dc', glow: 'rgba(246,241,220,0.16)', crater: 'rgba(170,165,140,0.35)' };
+function nightSky(c, moon) {
+    if (theme() !== 'dark') return;
+    c.save();
+    for (let i = 0; i < NIGHT_SKY.stars; i++) {
+        c.globalAlpha = 0.35 + (i % 5) * 0.12;
+        c.fillStyle = '#fff'; c.fillRect((i * 131) % W, (i * 71) % (H * NIGHT_SKY.top), i % 7 ? 1.6 : 2.6, i % 7 ? 1.6 : 2.6);
+    }
+    c.globalAlpha = 1;
+    if (moon) {
+        const [x, y] = moon;
+        c.fillStyle = NIGHT_SKY.glow; c.beginPath(); c.arc(x, y, NIGHT_SKY.moonGlow, 0, Math.PI * 2); c.fill();
+        c.fillStyle = NIGHT_SKY.moon; c.beginPath(); c.arc(x, y, NIGHT_SKY.moonR, 0, Math.PI * 2); c.fill();
+        c.fillStyle = NIGHT_SKY.crater;
+        [[-8, -6, 5], [7, 4, 6], [-3, 10, 3.5]].forEach(([dx, dy, r]) => { c.beginPath(); c.arc(x + dx, y + dy, r, 0, Math.PI * 2); c.fill(); });
+    }
+    c.restore();
+}
+
 /** Nacht: Fläche abdunkeln (ohne Wirkung im hellen Modus) */
 function nightShade(c, h = H) {
     if (theme() !== 'dark') return;
@@ -67,7 +87,7 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
         bg = null;
         if (spec.bg) {
             bg = document.createElement('canvas'); bg.width = cnv.width; bg.height = cnv.height;
-            const b = bg.getContext('2d'); b.setTransform(k, 0, 0, k, 0, 0); spec.bg(b); nightShade(b);
+            const b = bg.getContext('2d'); b.setTransform(k, 0, 0, k, 0, 0); spec.bg(b); nightShade(b); if (spec.moon) nightSky(b, spec.moon);
         }
     }
     fit();
@@ -83,6 +103,8 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
 
     // ----------------------------------------------------- Werkzeuge für die Spiele
     g.nightShade = nightShade;
+    g.nightSky = nightSky;
+    g.night = () => theme() === 'dark';
     /** Schriftfarbe direkt auf dem Hintergrund: nachts hell statt dunkel */
     g.ink = (dayColor) => (theme() === 'dark' ? '#e7ebf7' : dayColor);
     g.mult = () => Math.min(MAX_MULT, 1 + Math.floor(g.combo / COMBO_STEP));
