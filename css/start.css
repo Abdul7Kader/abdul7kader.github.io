@@ -96,4 +96,7 @@
     font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; transition: background 0.2s, color 0.2s;
 }
 .seg-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
-.seg-btn[aria-pressed="true"] { background: #fff; color: var(--ink); }
+.seg-btn[aria-pressed="true"] { background: #fff; color: #141b2d; }
+.seg-btn.icon { min-width: 36px; padding: 0 9px; display: inline-grid; place-items: center; }
+.seg-btn .ico { width: 16px; height: 16px; }
+.seg-sep { width: 1px; margin: 6px 4px; background: rgba(255, 255, 255, 0.18); }

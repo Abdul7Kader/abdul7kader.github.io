@@ -13,6 +13,8 @@
     --soft-2: #eceff6;
     --accent: #ff7a3d;
     --accent-2: #ff4f6d;
+    --accent-text: #c2410c;     /* Akzent für Schrift auf hellem Grund (Kontrast ≥ 4,5 : 1) */
+    --ok-text: #15803d;
     --violet: #7b5cff;
     --teal: #14b8a6;
     --green: #16a34a;

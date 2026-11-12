@@ -102,7 +102,7 @@
 @keyframes actin { from { opacity: 0; transform: translate(-50%, 14px) scale(0.92); } }
 #joystick { position: fixed; z-index: 8; width: 108px; height: 108px; margin: -54px 0 0 -54px; border-radius: 50%; background: rgba(255, 255, 255, 0.22); border: 2px solid rgba(255, 255, 255, 0.6); pointer-events: none; display: grid; place-items: center; }
 #joystick-knob { width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 255, 255, 0.92); box-shadow: var(--shadow); }
-#admin-link { position: fixed; right: 4px; top: 50%; z-index: 4; color: rgba(255, 255, 255, 0.3); text-decoration: none; font-size: 0.85rem; }
+#admin-link { position: fixed; right: 4px; top: 50%; z-index: 4; padding: 2px 5px; border-radius: 6px; background: rgba(11, 18, 40, 0.5); color: rgba(255, 255, 255, 0.9); text-decoration: none; font-size: 0.85rem; }
 
 /* ---------------------------------------------------------------- Toasts / Erfolge */
 #toasts { position: fixed; top: calc(16px + var(--safe-t)); left: 50%; transform: translateX(-50%); z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }

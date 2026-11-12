@@ -5,6 +5,7 @@ import { rr, ellipse as ell, FONT } from '../core/canvas.js';
 import { reducedMotion } from '../core/env.js';
 import { t as tr, lang } from '../core/i18n.js';
 import { projStage } from '../core/derive.js';
+import { theme } from '../core/theme.js';
 import { WIDGET_FRAME_MS } from '../config/performance.js';
 
 const VW = 960, VH = 350, GROUND = 236, PLOT = 150, X0 = 30;   // Szene in festen Einheiten, wird skaliert
@@ -14,6 +15,11 @@ const MAX_DPR = 2;
 const GHOST_ALPHA = 0.16;       // Deckkraft des „Bauplans“ (fertiges Gebäude in Grau)
 const GROW = { stagger: 0.25, duration: 1.6 };                   // Belohnung: Gebäude wachsen nacheinander
 const SCROLL_LEAD = 60;
+// Farben bei Tag und bei Nacht (Dark Mode)
+const SCENE = {
+    day: { sky: ['#bfe6ff', '#eaf7ff'], cloud: 'rgba(255,255,255,0.85)', ground: '#8cce6c', road: '#d8dde6', title: '#16213f', stars: 0, shade: null },
+    night: { sky: ['#1a2a5c', '#3a5390'], cloud: 'rgba(200,210,255,0.12)', ground: '#3e6a3c', road: '#55607a', title: '#e7ebf7', stars: 34, shade: 'rgb(150,160,214)' }
+};
 
 function text(c, s, x, y, size, col, weight = 800, align = 'center') {
     c.font = `${weight} ${size}px ${FONT}`; c.textAlign = align; c.textBaseline = 'middle'; c.fillStyle = col; c.fillText(s, x, y);
@@ -218,7 +224,7 @@ function drawPlot(c, p, i, t, pct, hover, sel, k, info) {
     c.font = `800 ${fs}px ${FONT}`;
     while (c.measureText(name).width > PLOT - 12 && fs > 10.5) { fs -= 0.5; c.font = `800 ${fs}px ${FONT}`; }
     while (c.measureText(name).width > PLOT - 12 && name.length > 4) { name = name.slice(0, -2).trim() + '…'; }
-    text(c, name, cx, GROUND + 34, fs, '#16213f');
+    text(c, name, cx, GROUND + 34, fs, info.scene.title);
     const col = st.cls === 'done' ? ['#d9f7e8', '#0f6b44'] : st.cls === 'base' ? ['#eceff6', '#5f6880'] : ['#fff1d6', '#a15c00'];
     const lab = st.short;
     c.font = `800 11px ${FONT}`; const tw = c.measureText(lab).width + 20;
@@ -230,23 +236,33 @@ function drawPlot(c, p, i, t, pct, hover, sel, k, info) {
 }
 
 function drawScene(c, list, t, prog, hover, sel, k, info) {
+    const S = info.scene;
     const sky = c.createLinearGradient(0, 0, 0, GROUND);
-    sky.addColorStop(0, '#bfe6ff'); sky.addColorStop(1, '#eaf7ff');
+    sky.addColorStop(0, S.sky[0]); sky.addColorStop(1, S.sky[1]);
     c.fillStyle = sky; c.fillRect(0, 0, VW, VH);
-    c.fillStyle = 'rgba(255,255,255,0.85)';
+    for (let i = 0; i < S.stars; i++) {                      // Sterne: feste Plätze, leichtes Funkeln
+        c.globalAlpha = 0.45 + 0.4 * Math.abs(Math.sin(t * 1.3 + i));
+        c.fillStyle = '#fff'; c.fillRect((i * 137) % VW, (i * 53) % (GROUND - 90), 2, 2);
+    }
+    c.globalAlpha = 1;
+    c.fillStyle = S.cloud;
     [[120, 50, 1], [520, 36, 0.8], [820, 60, 1.1]].forEach(([x, y, s], k) => {
         const xx = (x + t * 6 * (k + 1)) % (VW + 120) - 60;
         ell(c, xx, y, 34 * s, 12 * s); c.fill(); ell(c, xx + 16 * s, y - 8 * s, 20 * s, 12 * s); c.fill();
     });
-    c.fillStyle = '#8cce6c'; c.fillRect(0, GROUND - 4, VW, VH - GROUND + 4);
-    c.fillStyle = '#d8dde6'; c.fillRect(0, GROUND + 22, VW, 2);
+    c.fillStyle = S.ground; c.fillRect(0, GROUND - 4, VW, VH - GROUND + 4);
+    c.fillStyle = S.road; c.fillRect(0, GROUND + 22, VW, 2);
     list.forEach((p, i) => drawPlot(c, p, i, t, prog[i], hover === i, sel === i, k, info));
+    if (S.shade) {   // Nacht: Himmel, Gebäude und Kräne abdunkeln; die Beschriftungen darunter bleiben hell
+        c.save(); c.globalCompositeOperation = 'multiply'; c.fillStyle = S.shade;
+        c.fillRect(0, 0, VW, GROUND + 14); c.restore();
+    }
 }
 
 /** Viertel in wrap zeichnen; liefert { select(i), scrollTo(i) } */
 export function mountQuarter(wrap, projects, opts = {}) {
     const list = (projects || []).slice(0, MAX_PROJECTS);
-    const info = { t: tr };
+    const info = { t: tr, scene: SCENE.day };
     const cnv = document.createElement('canvas');
     cnv.className = 'pv-cnv';
     cnv.setAttribute('role', 'img');
@@ -287,6 +303,7 @@ export function mountQuarter(wrap, projects, opts = {}) {
         lastDraw = ts;
         const t = (ts - t0) / 1000;
         const prog = target.map((p, i) => (animate ? p * clamp((t - i * GROW.stagger) / GROW.duration, 0, 1) : p));
+        info.scene = theme() === 'dark' ? SCENE.night : SCENE.day;
         c.setTransform(k, 0, 0, k, 0, 0);
         drawScene(c, list, reducedMotion ? 0 : t, prog.map(Math.round), hover, sel, k, info);
     })(t0);

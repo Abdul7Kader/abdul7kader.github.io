@@ -22,7 +22,7 @@ kbd {
 .hidden { display: none !important; }
 .muted { color: var(--muted); }
 .small { font-size: 0.85rem; }
-.kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text); }
 
 #world { position: fixed; inset: 0; width: 100vw; height: 100vh; touch-action: none; user-select: none; -webkit-user-select: none; }
 #vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 58%, rgba(8, 24, 18, 0.32) 100%); }

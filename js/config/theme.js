@@ -49,7 +49,35 @@ export const WORLD_DAY = {
     tokenLabel: 'rgba(40,60,30,0.75)',
     pickupText: '#e08a00',
     edgeArrow: '#ff8a3d',
-    night: 0                         // 0 = Tag; der Nachtmodus legt eine Abdunklung darüber
+    night: null                      // Tag: keine Abdunklung
+};
+
+/**
+ * Welt bei Nacht (Dark Mode). Boden und Wege bekommen eigene Farben; Bäume, Gebäude und Requisiten werden beim
+ * Erzeugen ihrer Sprites einmal blau abgedunkelt (night.tint) – das kostet pro Bild nichts. Laternen leuchten
+ * (night.lampGlow), Beschriftungen bleiben hell und gut lesbar.
+ */
+export const WORLD_NIGHT = {
+    ...WORLD_DAY,
+    void: '#14261b',
+    grass: '#3e6a3c',
+    grassPatches: ['52,96,56', '72,120,70'],
+    grassSpeckles: ['rgba(26,56,34,0.4)', 'rgba(120,160,120,0.2)'],
+    grassBlades: ['#33603a', '#3c6b40'],
+    flowers: ['#c9d2e6', '#c9a93a', '#b45478', '#8c6cc8', '#b8693a'],
+    flowerCenter: '#c9a42a',
+    hill: ['rgba(80,120,78,0.95)', 'rgba(70,110,70,0.6)', 'rgba(60,100,64,0)'],
+    hillEdge: 'rgba(0,10,0,0.25)',
+    roadEdge: '#6d6250', road: '#857b64', roadDash: 'rgba(255,255,255,0.12)',
+    plaza: '#77736a', plazaRings: '#66625a',
+    runway: '#2c303b', runwayMarks: '#c8cdd8',
+    shore: '#7f775f', waterDeep: '#173f63', waterShallow: '#24618a', waves: 'rgba(190,220,255,0.3)',
+    shadow: 'rgba(0,0,12,0.35)',
+    cloudShadow: '0,0,24',
+    bird: '#c9d1e6',
+    hint: { bg: '#1c2442', text: '#e7ebf7' },
+    tokenLabel: 'rgba(225,232,255,0.8)',
+    night: { tint: 'rgba(14,22,64,0.42)', lampGlow: '255,214,120' }
 };
 
 /** Minimap */

@@ -18,7 +18,7 @@ import { rr, ellipse, signText, FONT, EMOJI_FONT } from './draw.js';
 import { state } from './state.js';
 import { BUILDINGS, buildingTop } from './sprites/buildings.js';
 import { paintTree, treeVariant, TREE_BOX_UNIT, TREE_SIZE_STEP, buildGround } from './sprites/nature.js';
-import { paintProp, drawFountain, drawPlane, PROP_BOX, PLANE_BOX } from './sprites/props.js';
+import { paintProp, drawFountain, drawPlane, PROP_BOX, PLANE_BOX, LAMP_LIGHT } from './sprites/props.js';
 import { drawPerson, drawRobot, PERSON_BOX, ROBOT_BOX } from './sprites/people.js';
 import { drawParticles } from './particles.js';
 
@@ -74,6 +74,26 @@ export function lowerResolution() {
 }
 export function setInfo(i) { info = i; }
 export function setPalette(p) { palette = p; ground = buildGround(groundRes, p); invalidate(); return ground; }
+
+/** Nacht: Sprite einmal blau abdunkeln (nur dort, wo schon gemalt ist) */
+function nightTint(c, cv) {
+    if (!palette.night) return;
+    c.save();
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.globalCompositeOperation = 'source-atop';
+    c.fillStyle = palette.night.tint;
+    c.fillRect(0, 0, cv.width, cv.height);
+    c.restore();
+}
+/** Nacht: Laterne leuchtet (Lichtschein um die Lampe, nach der Abdunklung aufgemalt) */
+const LAMP_GLOW_R = 26;
+function lampGlow(c) {
+    if (!palette.night) return;
+    const g = c.createRadialGradient(LAMP_LIGHT.dx, LAMP_LIGHT.dy, 0, LAMP_LIGHT.dx, LAMP_LIGHT.dy, LAMP_GLOW_R);
+    g.addColorStop(0, `rgba(${palette.night.lampGlow},0.9)`); g.addColorStop(0.35, `rgba(${palette.night.lampGlow},0.35)`); g.addColorStop(1, `rgba(${palette.night.lampGlow},0)`);
+    c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = g;
+    c.beginPath(); c.arc(LAMP_LIGHT.dx, LAMP_LIGHT.dy, LAMP_GLOW_R, 0, TAU); c.fill(); c.restore();
+}
 export const groundCanvas = () => ground;
 
 // ------------------------------------------------------------------ Sprite-Cache
@@ -99,6 +119,8 @@ function sprite(key, x0, y0, x1, y1, paint) {
         const c = sp.cv.getContext('2d');
         c.setTransform(RS, 0, 0, RS, -x0 * RS, -y0 * RS);
         paint(c);
+        if (!/^(text:|label:|star$)/.test(key)) nightTint(c, sp.cv);
+        if (key.startsWith('prop:lamp')) lampGlow(c);
         sprites.set(key, sp);
     }
     return sp;
@@ -151,6 +173,7 @@ function buildingSprite(s) {
     const c = cv.getContext('2d');
     c.setTransform(RS, 0, 0, RS, -x0 * RS, -y0 * RS);
     B.paint(c, s, info);
+    nightTint(c, cv);
     e = { key, sp: { cv, x0, y0 } };
     buildingSprites.set(s.id, e);
     staticLayer.valid = false;

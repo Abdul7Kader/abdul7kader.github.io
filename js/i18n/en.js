@@ -6,6 +6,7 @@ export default {
         description: 'Abdul Kader Sabouni – software developer and computer science student (FH Dortmund). My CV as a walkable game world with six mini-games – or as a compact page in 30 seconds.'
     },
     common: { close: 'Close' },
+    theme: { system: 'Same as system', light: 'Light', dark: 'Dark' },
     time: { justNow: 'just now', today: 'today' },
 
     start: {
@@ -54,6 +55,7 @@ export default {
         tokens: 'Skill stars collected',
         badges: 'Strengths discovered',
         langSwitch: 'Auf Deutsch umschalten',
+        theme: 'Colour mode: {mode} – click to change',
         langOther: 'DE',
         enter: 'Enter',
         lockedOpen: '{n} chapters still open',

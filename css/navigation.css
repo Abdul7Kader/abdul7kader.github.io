@@ -14,8 +14,8 @@
 .jt small { color: var(--muted); font-size: 0.8rem; }
 .js { font-size: 0.75rem; font-weight: 800; color: var(--muted); white-space: nowrap; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .js .st { color: #f59e0b; letter-spacing: 1px; font-size: 0.8rem; }
-.js .st .off { color: #d5dae4; }
-.js.done { color: var(--green); }
+.js .st .off { color: #767e94; }
+.js.done { color: var(--ok-text); }
 .js.next .pill { color: #fff; background: var(--accent); padding: 3px 9px; border-radius: 999px; }
 
 /* ---------------------------------------------------------------- Befehlspalette */
@@ -25,7 +25,7 @@
 .pal-input input { flex: 1; font: inherit; font-size: 1.1rem; border: 0; outline: none; color: var(--ink); background: transparent; min-width: 0; }
 .pal-input input::placeholder { color: #a0a7b8; }
 #pal-list { list-style: none; max-height: min(52vh, 420px); overflow: auto; padding: 8px; }
-.pal-group { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa2b5; padding: 10px 10px 6px; }
+.pal-group { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 10px 10px 6px; }
 .pal-item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 12px; cursor: pointer; }
 .pal-item .pi-ic { width: 36px; height: 36px; flex: none; display: grid; place-items: center; font-size: 1.15rem; border-radius: 10px; background: var(--soft); }
 .pal-item .pi-t { flex: 1; display: flex; flex-direction: column; min-width: 0; }

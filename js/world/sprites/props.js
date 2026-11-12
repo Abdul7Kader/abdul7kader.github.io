@@ -9,7 +9,8 @@ const SIGNPOST = { post: '#7a5235', stations: '#2ec4b6', start: '#ff8a3d', text:
 const DOCK = { planks: '#9b6b40', gaps: 'rgba(70,40,15,0.5)', posts: '#6b4a2f' };
 
 /** Umrisse relativ zum Fußpunkt [x0, y0, x1, y1] – für Sprite-Größe und Verdeckung */
-export const PROP_BOX = { lamp: [-9, -68, 13, 6], bench: [-32, -22, 32, 8], sign: [-48, -84, 48, 6], dock: [-24, -72, 24, 42] };
+export const PROP_BOX = { lamp: [-28, -88, 28, 6],   // Laterne mit Platz für den Lichtschein bei Nacht
+    bench: [-32, -22, 32, 8], sign: [-48, -84, 48, 6], dock: [-24, -72, 24, 42] };
 /** Lichtpunkt der Laterne (für den Nachtmodus) relativ zum Fußpunkt */
 export const LAMP_LIGHT = { dx: 0, dy: -60 };
 

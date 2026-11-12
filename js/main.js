@@ -6,6 +6,8 @@ import { t, lang, setLang, LANGS } from './core/i18n.js';
 import { on, emit } from './core/events.js';
 import { audio } from './core/audio.js';
 import { store } from './core/store.js';
+import { theme, setThemePref, cycleTheme } from './core/theme.js';
+import { WORLD_DAY, WORLD_NIGHT } from './config/theme.js';
 import { FINALE } from './config/layout.js';
 import { TIMING } from './config/timing.js';
 import { WORLD_PERF } from './config/performance.js';
@@ -14,8 +16,8 @@ import { progress } from './app/progress.js';
 import { data, derived, station } from './app/content.js';
 import { isOpen, topOverlay, hideOverlay, setupFocusTrap } from './ui/overlays.js';
 import { achieve } from './ui/toasts.js';
-import { updateHud, translateHud, syncAudioButtons, showControlsHint, hideControlsHint, updateActionButton, robotCorner } from './ui/hud.js';
-import { drawMinimap, minimapClick } from './ui/minimap.js';
+import { updateHud, translateHud, syncAudioButtons, syncThemeButtons, showControlsHint, hideControlsHint, updateActionButton, robotCorner } from './ui/hud.js';
+import { drawMinimap, minimapClick, resetMinimap } from './ui/minimap.js';
 import { openStation, closeStation, rerenderStation } from './ui/station.js';
 import { openJourney, renderJourney } from './ui/journey.js';
 import { openPalette, setupPalette } from './ui/palette.js';
@@ -67,6 +69,13 @@ function idleReset() {
 }
 
 // ------------------------------------------------------------------ Welt
+/** Tag- oder Nacht-Palette der Welt (Sprites und Boden werden dabei einmal neu gezeichnet) */
+function applyWorldTheme() {
+    World.setPalette(theme() === 'dark' ? WORLD_NIGHT : WORLD_DAY);
+    resetMinimap();
+    if (progress.started) drawMinimap();
+}
+
 function setupWorld() {
     let lockSaid = 0, minimapLast = 0;
     World.init($('#world'), {
@@ -111,6 +120,7 @@ function setupWorld() {
             unlockAudio: () => audio.unlock()
         }
     });
+    if (theme() === 'dark') applyWorldTheme();
     $('#tokens-max').textContent = World.tokenCount();
     $('#tokens-val').textContent = World.tokensGot().length;
     $('#minimap').addEventListener('click', minimapClick);
@@ -132,6 +142,8 @@ function setupButtons() {
     $('#btn-music').onclick = () => { audio.setMusic(!audio.state.music); syncAudioButtons(); };
     $$('[data-set-lang]').forEach(b => { b.onclick = () => { audio.play('click'); setLang(b.dataset.setLang); }; });
     $$('[data-toggle-lang]').forEach(b => { b.onclick = () => { audio.play('click'); emit('lang:toggle'); }; });
+    $$('[data-cycle-theme]').forEach(b => { b.onclick = () => { audio.play('click'); cycleTheme(); }; });
+    $$('[data-set-theme]').forEach(b => { b.onclick = () => { audio.play('click'); setThemePref(b.dataset.setTheme); }; });
     $('#action-btn').onclick = () => { if (World.nearStation) { audio.play('click'); World.enter(World.nearStation); } };
     setInterval(updateActionButton, ACTION_POLL_MS);
     // Klick neben das Fenster schließt es
@@ -191,6 +203,10 @@ function setupEvents() {
     on('game:start', () => startGame());
     on('lang:toggle', () => setLang(LANGS[(LANGS.indexOf(lang()) + 1) % LANGS.length]));
     on('firm:changed', () => World.refresh());
+    on('theme:set', (p) => setThemePref(p));
+    on('theme:cycle', () => cycleTheme());
+    on('theme:pref', () => syncThemeButtons());
+    on('theme:changed', () => { syncThemeButtons(); applyWorldTheme(); });
     on('lang:changed', () => {
         translateHud();
         renderStart();
@@ -216,7 +232,7 @@ function exposeTestApi() {
         state: () => ({ visited: progress.visited.size, all: progress.allVisited(), locked: progress.isLocked(FINALE) }),
         frameCount: () => World.frames,
         setLang: (l) => setLang(l), lang: () => lang(),
-        setTheme: (m) => emit('theme:set', m)
+        setTheme: (m) => emit('theme:set', m), theme: () => theme()
     };
 }
 

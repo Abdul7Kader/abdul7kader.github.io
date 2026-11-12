@@ -31,7 +31,7 @@
 .cv-strengths strong { font-size: 0.98rem; color: var(--ink); }
 .cv-strengths span { font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
 .cv-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 34px; }
-.cv-grid h2 { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin: 26px 0 10px; }
+.cv-grid h2 { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-text); margin: 26px 0 10px; }
 .cv-grid h2::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 .cv-grid h4 { font-size: 0.9rem; margin: 12px 0 6px; color: var(--ink); }
 .cv-tl { list-style: none; }

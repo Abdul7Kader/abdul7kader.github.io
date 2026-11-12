@@ -4,6 +4,7 @@ import { $, $$, esc } from '../core/dom.js';
 import { isTouch, isNarrow } from '../core/env.js';
 import { icon } from '../core/icons.js';
 import { t, lang } from '../core/i18n.js';
+import { themePref } from '../core/theme.js';
 import { audio } from '../core/audio.js';
 import { stationColors } from '../config/theme.js';
 import { World } from '../world/world.js';
@@ -43,6 +44,18 @@ export function translateHud() {
     $$('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
     $$('[data-set-lang]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.setLang === lang())));
     syncAudioButtons();
+    syncThemeButtons();
+}
+
+const THEME_ICON = { system: 'monitor', light: 'sun', dark: 'moon' };
+/** Farbmodus-Knöpfe (HUD und Startseite) auf die aktuelle Wahl setzen */
+export function syncThemeButtons() {
+    const pref = themePref(), label = t('hud.theme', { mode: t('theme.' + pref) });
+    $$('[data-cycle-theme]').forEach(el => { el.innerHTML = icon(THEME_ICON[pref]); el.title = label; el.setAttribute('aria-label', label); });
+    $$('[data-set-theme]').forEach(el => {
+        el.innerHTML = icon(THEME_ICON[el.dataset.setTheme]);
+        el.setAttribute('aria-pressed', String(el.dataset.setTheme === pref));
+    });
 }
 
 export function syncAudioButtons() {

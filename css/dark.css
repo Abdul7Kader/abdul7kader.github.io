@@ -1,0 +1,126 @@
+/* Dunkelmodus
+   Aktiv über <html data-theme="dark"> (gesetzt im <head> und von js/core/theme.js).
+   Zuerst die Tokens, danach Flächen mit fest eingetragenen hellen Farben.
+   PDF-Vorlage und Druck bleiben immer hell (Abschnitt am Ende). */
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --ink: #e7ebf7;
+    --muted: #a7b0c8;
+    --line: #2c3554;
+    --paper: #151c33;
+    --soft: #1c2442;
+    --soft-2: #242d4f;
+    --navy-2: #a9bcff;
+    --accent-text: #ff9b66;
+    --ok-text: #4ade80;
+    --glass: rgba(21, 28, 51, 0.94);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] body { background: #14261b; }
+[data-theme="dark"] kbd { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.18); }
+
+/* HUD, Sprechblasen, Joystick */
+[data-theme="dark"] .glass { background: var(--glass); border-color: rgba(255, 255, 255, 0.08); color: var(--ink); }
+[data-theme="dark"] .bubble { background: var(--paper); color: var(--ink); }
+[data-theme="dark"] .bubble::after { border-top-color: var(--paper); }
+[data-theme="dark"] #joystick-knob { background: rgba(40, 50, 86, 0.92); }
+[data-theme="dark"] #tokens { background: rgba(255, 198, 61, 0.14); color: #ffd98a; }
+
+/* Knöpfe und Dialoge */
+[data-theme="dark"] .btn.ghost { background: var(--soft); color: var(--ink); }
+[data-theme="dark"] .panel.narrow .close { color: var(--muted); }
+[data-theme="dark"] .palette { background: var(--paper); }
+[data-theme="dark"] .pal-item.sel { background: #252d55; }
+[data-theme="dark"] .pal-item.sel .pi-ic { background: var(--soft-2); }
+[data-theme="dark"] .pal-item mark { background: rgba(255, 138, 61, 0.3); }
+[data-theme="dark"] #journey-list li.is-next button { background: rgba(255, 122, 61, 0.12); box-shadow: inset 0 0 0 1.5px rgba(255, 150, 90, 0.5); }
+
+/* Stations-Fakten */
+[data-theme="dark"] .achv .b-icon,
+[data-theme="dark"] .hobby b,
+[data-theme="dark"] .chip,
+[data-theme="dark"] .vol:hover,
+[data-theme="dark"] .project:hover,
+[data-theme="dark"] .pv-card.sel,
+[data-theme="dark"] .cert-list li { background: var(--soft-2); }
+[data-theme="dark"] .timeline > li::before { border-color: var(--paper); }
+[data-theme="dark"] .achv {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 22%, var(--paper)), color-mix(in srgb, var(--c2) 16%, var(--paper)));
+    border-color: color-mix(in srgb, var(--c1) 45%, var(--paper));
+}
+[data-theme="dark"] .achv small { color: color-mix(in srgb, var(--c1) 70%, #fff); }
+[data-theme="dark"] .achv p, [data-theme="dark"] .ai-item span { color: var(--muted); }
+[data-theme="dark"] .vol-meta { color: color-mix(in srgb, var(--c1) 55%, #fff); }
+[data-theme="dark"] .firm > span { color: color-mix(in srgb, var(--c1) 55%, #fff); }
+[data-theme="dark"] .js .st .off { color: #6c7593; }
+[data-theme="dark"] .panel-foot { background: linear-gradient(transparent, var(--paper) 32%); }
+[data-theme="dark"] .tag.build, [data-theme="dark"] .cv-projects .cv-stage.build { background: rgba(245, 158, 11, 0.16); color: #ffc46b; }
+[data-theme="dark"] .tag.base, [data-theme="dark"] .cv-projects .cv-stage.base { background: rgba(160, 170, 200, 0.14); color: #b9c1d8; }
+[data-theme="dark"] .tag.done, [data-theme="dark"] .cv-projects .cv-stage.done { background: rgba(34, 197, 94, 0.16); color: #7ee2a8; }
+[data-theme="dark"] .pv-bar { background: var(--line); }
+[data-theme="dark"] .pv-wrap { background: #16243d; }
+[data-theme="dark"] .cert { border-color: rgba(253, 227, 167, 0.25); background: linear-gradient(180deg, #221f2c, var(--paper)); }
+
+/* Weltkarte */
+[data-theme="dark"] .wm { background: #10233a; }
+[data-theme="dark"] .wm-sea { fill: #10233a; }
+[data-theme="dark"] .wm-c:not(.v):not(.home) { fill: #2a3352; }
+[data-theme="dark"] .wm-c { stroke: #10233a; }
+[data-theme="dark"] .wm-bar { background: rgba(21, 28, 51, 0.9); }
+[data-theme="dark"] .wm-labels text { fill: #8e9aba; stroke: rgba(16, 35, 58, 0.85); }
+[data-theme="dark"] .wm-labels text.v { fill: #0d1530; stroke: rgba(255, 255, 255, 0.7); }
+[data-theme="dark"] .wm-route { stroke: #dfe6ff; }
+[data-theme="dark"] .wm-home circle { fill: #ff8a3d; }
+[data-theme="dark"] .wm-tag rect { fill: #2b3d63; }
+[data-theme="dark"] .wm-zoom button { background: var(--soft); color: var(--ink); }
+[data-theme="dark"] .wm-hint { background: rgba(21, 28, 51, 0.85); }
+[data-theme="dark"] .wm-tip { background: var(--paper); color: var(--ink); }
+
+/* Kontakt, Finale */
+[data-theme="dark"] .cf-f input, [data-theme="dark"] .cf-f textarea,
+[data-theme="dark"] .firm input { background: var(--soft); color: var(--ink); }
+[data-theme="dark"] .cf-err { background: rgba(220, 38, 38, 0.14); color: #ffb4ab; }
+
+/* Lebenslauf (Bildschirm) */
+[data-theme="dark"] #cv { background: rgba(9, 13, 28, 0.97); }
+[data-theme="dark"] .cv-toolbar { background: linear-gradient(rgba(9, 13, 28, 0.98) 70%, rgba(9, 13, 28, 0)); }
+[data-theme="dark"] .cv-page { background: var(--paper); }
+[data-theme="dark"] .cv-summary, [data-theme="dark"] .cv-bullets, [data-theme="dark"] .tl-bullets { color: #c4cbe0; }
+[data-theme="dark"] .cv-tl > li.current strong { color: #4fd1c0; }
+[data-theme="dark"] .cv-avail { background: rgba(34, 197, 94, 0.14); color: #7ee2a8; }
+[data-theme="dark"] .cv-dl dd { color: var(--muted); }
+
+/* ------------------------------------------------------------------ PDF und Druck bleiben hell */
+[data-theme="dark"] .pdf-mode,
+[data-theme="dark"] .pdf-host {
+    color-scheme: light;
+    --ink: #141b2d; --muted: #5f6880; --line: #e6e9f0; --paper: #ffffff; --soft: #f4f6fb; --soft-2: #eceff6; --navy-2: #2b3d63;
+    --accent-text: #c2410c; --ok-text: #15803d;
+    --shadow-sm: 0 1px 2px rgba(12, 20, 40, 0.06), 0 2px 8px rgba(12, 20, 40, 0.06);
+    --shadow: 0 12px 32px rgba(12, 20, 40, 0.16), 0 2px 6px rgba(12, 20, 40, 0.08);
+}
+[data-theme="dark"] .pdf-mode .chip, [data-theme="dark"] .pdf-mode .cert-list li { background: #fff; }
+[data-theme="dark"] .pdf-mode .cv-avail { background: #e3f9ee; color: #0f6b44; }
+[data-theme="dark"] .pdf-mode .cv-dl dd, [data-theme="dark"] .pdf-mode .cv-bullets { color: #4a5268; }
+[data-theme="dark"] .pdf-mode .cv-summary { color: #3d4560; }
+[data-theme="dark"] .pdf-mode .cv-tl > li.current strong { color: #0e8c7f; }
+[data-theme="dark"] .pdf-mode .cv-projects .cv-stage.build { background: #fff1d6; color: #a15c00; }
+[data-theme="dark"] .pdf-mode .cv-projects .cv-stage.base { background: #eceff6; color: #5f6880; }
+[data-theme="dark"] .pdf-mode .cv-projects .cv-stage.done { background: #d9f7e8; color: #0f6b44; }
+@media print {
+    :root[data-theme="dark"] {
+        color-scheme: light;
+        --ink: #141b2d; --muted: #5f6880; --line: #e6e9f0; --paper: #ffffff; --soft: #f4f6fb; --soft-2: #eceff6; --navy-2: #2b3d63;
+        --accent-text: #c2410c; --ok-text: #15803d;
+    }
+    [data-theme="dark"] .cv-page { background: #fff; }
+    [data-theme="dark"] .cv-avail { background: #e3f9ee; color: #0f6b44; }
+    [data-theme="dark"] .cv-dl dd, [data-theme="dark"] .cv-bullets { color: #4a5268; }
+    [data-theme="dark"] .cv-summary { color: #3d4560; }
+    [data-theme="dark"] .cv-tl > li.current strong { color: #0e8c7f; }
+    [data-theme="dark"] .cv-projects .cv-stage.build { background: #fff1d6; color: #a15c00; }
+    [data-theme="dark"] .cv-projects .cv-stage.base { background: #eceff6; color: #5f6880; }
+    [data-theme="dark"] .cv-projects .cv-stage.done { background: #d9f7e8; color: #0f6b44; }
+}

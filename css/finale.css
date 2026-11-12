@@ -18,7 +18,7 @@
 .cert-list li small { color: var(--muted); font-size: 0.75rem; }
 .cert-list li .st { color: #f59e0b; font-size: 0.75rem; letter-spacing: 1px; }
 .firm { display: grid; gap: 6px; max-width: 440px; margin: 0 auto 20px; text-align: left; }
-.firm > span { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c1); }
+.firm > span { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--c1) 62%, #000); }
 .firm input { font: inherit; font-family: var(--display); font-size: 1.3rem; padding: 12px 16px; border-radius: 16px; border: 2px solid var(--line); font-weight: 800; color: var(--ink); width: 100%; }
 .firm input:focus { outline: none; border-color: var(--c1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c1) 18%, transparent); }
 .firm small { color: var(--muted); font-size: 0.82rem; }
