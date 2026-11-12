@@ -7,7 +7,7 @@ import { audio } from '../core/audio.js';
 import { emit } from '../core/events.js';
 import { FINALE } from '../config/layout.js';
 import { TIMING } from '../config/timing.js';
-import { stationColors } from '../config/theme.js';
+import { stationColors, BADGE_ICONS } from '../config/theme.js';
 import { World } from '../world/world.js';
 import { GAMES, mountGame } from '../games/index.js';
 import { progress, MAX_STARS_PER_GAME } from '../app/progress.js';
@@ -137,7 +137,7 @@ function renderInfo(id, result) {
     const stars = result ? result.stars : 0;
     const badge = (firstTime || result) ? `
         <div class="achv ${firstTime ? 'new' : ''}">
-            <span class="b-icon">${esc(st.badgeIcon || '⭐')}</span>
+            <span class="b-icon">${icon(BADGE_ICONS[id])}</span>
             <div>
                 <small>${esc(firstTime ? t('station.unlocked') : t('station.result'))}${result ? `<span class="a-stars">${starRow(stars)}</span>` : ''}</small>
                 <strong>${esc(st.badge || '')}</strong>

@@ -4,7 +4,7 @@
 // eintragen, dann steht die E-Mail-Adresse gar nicht mehr im Quelltext.
 import { $, esc } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { t } from '../core/i18n.js';
+import { t, lang } from '../core/i18n.js';
 import { audio } from '../core/audio.js';
 import { progress } from '../app/progress.js';
 import { data } from '../app/content.js';
@@ -33,7 +33,7 @@ function formHtml(firm) {
             </div>
             <label class="cf-f"><span>${esc(t('contact.message'))} *</span><textarea name="message" rows="5" required maxlength="${LIMITS.message}">${esc(t('contact.messageStart'))}</textarea></label>
             <label class="cf-hp" aria-hidden="true">${esc(t('contact.honeypot'))} <input name="_honey" type="text" tabindex="-1" autocomplete="off"></label>
-            <label class="cf-ok"><input name="consent" type="checkbox" required><span>${esc(t('contact.consent', { name: data().name }))} *</span></label>
+            <label class="cf-ok"><input name="consent" type="checkbox" required><span>${esc(t('contact.consent', { name: data().name }))} * <a href="datenschutz.html?lang=${lang()}" target="_blank" rel="noopener">${esc(t('contact.privacy'))}</a></span></label>
             <p class="cf-err" role="alert" hidden></p>
             <div class="cf-foot">
                 <span class="muted small">${esc(t('contact.required'))}</span>

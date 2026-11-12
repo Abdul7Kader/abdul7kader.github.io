@@ -33,6 +33,7 @@
 [data-theme="dark"] .panel.narrow .close { color: var(--muted); }
 [data-theme="dark"] .palette { background: var(--paper); }
 [data-theme="dark"] .pal-item.sel { background: #252d55; }
+[data-theme="dark"] .je { background: var(--soft-2); }
 [data-theme="dark"] .pal-item.sel .pi-ic { background: var(--soft-2); }
 [data-theme="dark"] .pal-item mark { background: rgba(255, 138, 61, 0.3); }
 [data-theme="dark"] #journey-list li.is-next button { background: rgba(255, 122, 61, 0.12); box-shadow: inset 0 0 0 1.5px rgba(255, 150, 90, 0.5); }

@@ -38,3 +38,4 @@
     .cf-grid { grid-template-columns: 1fr; }
     .cf-foot { flex-direction: column-reverse; align-items: stretch; }
 }
+.cf-ok a { color: var(--accent-text); font-weight: 700; }

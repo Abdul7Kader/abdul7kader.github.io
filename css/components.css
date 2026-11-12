@@ -55,3 +55,15 @@
 .h-note { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: none; letter-spacing: 0; margin-left: 6px; }
 .flag-img { display: inline-block; width: 20px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.12); vertical-align: -2px; object-fit: cover; }
 .pi-ic .flag-img { width: 22px; height: 15px; }
+
+/* Abzeichen als Linien-Icons (Farbe je Station über --bc) */
+.hb .ico { width: 18px; height: 18px; }
+.hb.got { color: var(--bc, var(--accent)); }
+.pc-chapters span .ico { width: 18px; height: 18px; }
+.pc-chapters span.got { color: #6ee7b7; }
+.achv .b-icon { color: var(--c1); }
+.achv .b-icon .ico { width: 32px; height: 32px; }
+.cert-list li b { display: grid; place-items: center; color: var(--bc, var(--accent)); }
+.cert-list li b .ico { width: 24px; height: 24px; }
+.je { color: var(--bc, var(--accent)); }
+.je .ico { width: 22px; height: 22px; }

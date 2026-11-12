@@ -14,6 +14,9 @@ export const STATION_COLORS = {
 };
 export const stationColors = (id) => STATION_COLORS[id] || STATION_COLORS.finale;
 
+/** Abzeichen je Station als Linien-Icon (HUD, Startkarte, Dialog, Urkunde, Kapitelübersicht) – siehe core/icons.js */
+export const BADGE_ICONS = { arrival: 'globe', school: 'school', career: 'users', lab: 'cpu', projects: 'rocket', lake: 'heart', finale: 'trophy' };
+
 /** Bewohner der Welt (Haut, Haare, Kleidung) */
 export const NPC_LOOKS = [
     { skin: '#f1c27d', hair: '#e2b04a', jacket: '#e76f51', pants: '#3d405b', shirt: '#fff' },

@@ -69,42 +69,36 @@ window.RESUME.de = {
             "title": "Ankunft & Reisen",
             "era": "seit 10.2014",
             "badge": "Weltoffen",
-            "badgeIcon": "🌍",
             "story": "Mein Neuanfang in Deutschland war die größte Reise meines Lebens. Seitdem entdecke ich gern neue Länder – andere Kulturen machen mich offen, neugierig und anpassungsfähig."
         },
         "school": {
             "title": "Bildungsweg",
             "era": "2015 – heute",
             "badge": "Wissensdurst",
-            "badgeIcon": "🎓",
             "story": "Sprache war mein erster Schlüssel – danach kam Schritt für Schritt alles andere, bis zum Informatikstudium."
         },
         "career": {
             "title": "Business-Viertel",
             "era": "2017 – heute",
             "badge": "Kundenfokus",
-            "badgeIcon": "🤝",
             "story": "Ich übersetze Kundenwünsche in Lösungen: Im Kundenservice habe ich gelernt, genau hinzuhören – heute stimme ich Anforderungen direkt mit Kunden ab."
         },
         "lab": {
             "title": "Tech-Lab",
             "era": "seit 11.2023",
             "badge": "Problemlöser",
-            "badgeIcon": "🧠",
             "story": "Hier entsteht Code – im Team bei PSI ganz klassisch, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt."
         },
         "projects": {
             "title": "Projekt-Baustelle",
             "era": "eigene Projekte",
             "badge": "Macher",
-            "badgeIcon": "🚀",
             "story": "Was ich anfange, baue ich fertig. In meinem Projekt-Viertel sehen Sie, was schon steht und was gerade wächst."
         },
         "lake": {
             "title": "Freizeit & Ehrenamt",
             "era": "Freizeit",
             "badge": "Engagement",
-            "badgeIcon": "💛",
             "story": "Abschalten kann ich am besten im Wasser und im Fitnessstudio. Und ich gebe gern etwas zurück – an die Stadt, die mich so gut aufgenommen hat."
         },
         "finale": {

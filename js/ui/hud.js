@@ -6,7 +6,7 @@ import { icon } from '../core/icons.js';
 import { t, lang } from '../core/i18n.js';
 import { themePref } from '../core/theme.js';
 import { audio } from '../core/audio.js';
-import { stationColors } from '../config/theme.js';
+import { stationColors, BADGE_ICONS } from '../config/theme.js';
 import { World } from '../world/world.js';
 import { progress } from '../app/progress.js';
 import { station } from '../app/content.js';
@@ -20,7 +20,7 @@ export function updateHud() {
     $('#hud-ring').style.setProperty('--p', Math.round(done / n * 100));
     $('#hud-badges').innerHTML = progress.chapters.map(id => {
         const s = station(id), got = progress.visited.has(id), fresh = got && lastBadges && !lastBadges.includes(id);
-        return `<span class="hb ${got ? 'got' : ''} ${fresh ? 'fresh' : ''}" title="${esc(s.badge || '')}${got ? '' : ' ' + esc(t('hud.badgeOpen'))}">${esc(s.badgeIcon || '⭐')}</span>`;
+        return `<span class="hb ${got ? 'got' : ''} ${fresh ? 'fresh' : ''}" title="${esc(s.badge || '')}${got ? '' : ' ' + esc(t('hud.badgeOpen'))}" style="--bc:${stationColors(id)[0]}">${icon(BADGE_ICONS[id])}</span>`;
     }).join('');
     lastBadges = progress.chapters.filter(id => progress.visited.has(id));
     const next = progress.nextId(), obj = $('#objective');

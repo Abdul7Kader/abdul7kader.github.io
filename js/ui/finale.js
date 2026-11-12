@@ -7,6 +7,7 @@ import { t } from '../core/i18n.js';
 import { audio } from '../core/audio.js';
 import { emit } from '../core/events.js';
 import { FINALE } from '../config/layout.js';
+import { BADGE_ICONS, stationColors } from '../config/theme.js';
 import { World } from '../world/world.js';
 import { progress, MAX_STARS_PER_GAME } from '../app/progress.js';
 import { data, derived, station } from '../app/content.js';
@@ -119,7 +120,7 @@ export function renderFinale(body) {
                 <ul class="cert-list">
                     ${progress.chapters.map(id => {
                         const s = station(id), sN = progress.stars(id);
-                        return `<li class="got"><b>${esc(s.badgeIcon || '⭐')}</b><span><strong>${esc(s.badge || '')}</strong><small>${esc(s.title || '')}</small>${sN ? `<span class="st">${'★'.repeat(sN)}</span>` : ''}</span></li>`;
+                        return `<li class="got"><b style="--bc:${stationColors(id)[0]}">${icon(BADGE_ICONS[id])}</b><span><strong>${esc(s.badge || '')}</strong><small>${esc(s.title || '')}</small>${sN ? `<span class="st">${'★'.repeat(sN)}</span>` : ''}</span></li>`;
                     }).join('')}
                 </ul>
             </div>

@@ -2,6 +2,8 @@
 import { $, esc } from '../core/dom.js';
 import { clamp } from '../core/math.js';
 import { t } from '../core/i18n.js';
+import { icon } from '../core/icons.js';
+import { BADGE_ICONS } from '../config/theme.js';
 import { isTouch, reducedMotion, param } from '../core/env.js';
 import { progress } from '../app/progress.js';
 import { data, derived, station } from '../app/content.js';
@@ -37,7 +39,7 @@ export function renderStart() {
     if (x.countries.length) stats.push([String(x.countries.length), t('start.countries')]);
     $('#start-stats').innerHTML = stats.slice(0, MAX_STATS).map(([v, l]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join('');
     const seen = progress.doneCount;
-    $('#start-chapters').innerHTML = progress.chapters.map(id => `<span class="${progress.visited.has(id) ? 'got' : ''}" title="${esc(station(id).badge || '')}">${esc(station(id).badgeIcon || '⭐')}</span>`).join('');
+    $('#start-chapters').innerHTML = progress.chapters.map(id => `<span class="${progress.visited.has(id) ? 'got' : ''}" title="${esc(station(id).badge || '')}">${icon(BADGE_ICONS[id])}</span>`).join('');
     $('#start-foot').textContent = seen ? t('start.footBack', { done: seen, total: progress.chapters.length }) : t('start.foot');
     $('#start-play .cta-txt b').textContent = seen ? t('start.continue') : t('start.play');
 }
