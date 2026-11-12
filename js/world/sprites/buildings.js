@@ -323,5 +323,42 @@ const finale = {
     animBox: (s) => { const { yR } = top(s); return [s.x + 6, yR - 46, s.x + s.w + 24, yR - 18]; }
 };
 
-export const BUILDINGS = { airport, school, career, lab, construction, boathouse, finale };
+// ------------------------------------------------------------------ GitHub-Werkstatt (kein Kapitel)
+// Auf dem Dach steht eine Leuchtwand mit den Beitrags-Kacheln der letzten Wochen (info.activity, Stufen 0–4).
+// Die Kacheln werden nach der Nacht-Abdunklung gemalt (glow) – nachts leuchten sie.
+const SHOP = { wall: ['#f4f1ea', '#e2dccf'], roof: ['#3b3f46', '#2b2f35'], door: '#2da44e', window: '#9fd4f5', frame: '#24292f', panel: '#0d1117', sign: '#24292f', signText: '#ffffff' };
+const TILE_COLORS = ['#1f2933', '#0e4429', '#006d32', '#26a641', '#39d353'];
+const WALL = { weeks: 20, cell: 10, gap: 2, padX: 10, padTop: 20, padBottom: 8, lift: 16 };
+const wallBox = (s) => {
+    const w = WALL.weeks * WALL.cell + WALL.padX * 2, h = 7 * WALL.cell + WALL.padTop + WALL.padBottom;
+    const { yR } = top(s);
+    return { x: s.x + (s.w - w) / 2, y: yR - h + WALL.lift, w, h };
+};
+const workshop = {
+    pad: { left: 14, right: 26, top: 120, bottom: 18 },
+    paint(c, s, info) {
+        const P = SHOP, { yT } = box(c, s, P.wall, P.roof);
+        windows(c, s.x + 16, yT + 22, 84, 44, 2, 1, P.window);
+        windows(c, s.x + s.w - 100, yT + 22, 84, 44, 2, 1, P.window);
+        door(c, s.x + s.w / 2, s.base, P.door, 40, 48);
+        c.fillStyle = P.sign; rr(c, s.x + s.w / 2 - 54, yT + 4, 108, 24, 6); c.fill();
+        signText(c, info.t('world.signs.github'), s.x + s.w / 2, yT + 16.5, 12, P.signText, 800);
+        const b = wallBox(s);   // Leuchtwand: Gestell und dunkle Fläche
+        c.fillStyle = P.frame; c.fillRect(b.x + 18, b.y + b.h - 2, 6, WALL.lift + 4); c.fillRect(b.x + b.w - 24, b.y + b.h - 2, 6, WALL.lift + 4);
+        c.fillStyle = P.panel; rr(c, b.x, b.y, b.w, b.h, 8); c.fill();
+        c.strokeStyle = P.frame; c.lineWidth = 3; rr(c, b.x, b.y, b.w, b.h, 8); c.stroke();
+    },
+    glow(c, s, info) {
+        const b = wallBox(s), levels = info.activity;
+        signText(c, info.t('world.signs.githubWall'), b.x + b.w / 2, b.y + 10.5, 9, '#c9d1d9', 800);
+        for (let i = 0; i < WALL.weeks * 7; i++) {
+            const col = Math.floor(i / 7), row = i % 7;
+            const lv = levels ? (levels[i] || 0) : 0;
+            c.fillStyle = TILE_COLORS[lv];
+            rr(c, b.x + WALL.padX + col * WALL.cell, b.y + WALL.padTop + row * WALL.cell, WALL.cell - WALL.gap, WALL.cell - WALL.gap, 2); c.fill();
+        }
+    }
+};
+
+export const BUILDINGS = { airport, school, career, lab, construction, boathouse, finale, workshop };
 export const buildingTop = top;

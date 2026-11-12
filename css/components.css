@@ -67,3 +67,6 @@
 .cert-list li b .ico { width: 24px; height: 24px; }
 .je { color: var(--bc, var(--accent)); }
 .je .ico { width: 22px; height: 22px; }
+
+/* GitHub-Werkstatt */
+.workshop-intro { color: var(--muted); margin-bottom: 12px; line-height: 1.55; }

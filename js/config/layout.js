@@ -20,8 +20,16 @@ export const STATIONS = [
     { id: 'lab', emoji: '💻', style: 'lab', x: 1500, base: 620, w: 320, depth: 120, height: 116 },
     { id: 'projects', emoji: '🏗️', style: 'construction', x: 1500, base: 1400, w: 320, depth: 120, height: 86 },
     { id: 'lake', emoji: '🏄', style: 'boathouse', x: 1900, base: 1420, w: 240, depth: 90, height: 80 },
-    { id: 'finale', emoji: '🏆', style: 'finale', x: 2060, base: 470, w: 340, depth: 120, height: 146 }
+    { id: 'finale', emoji: '🏆', style: 'finale', x: 2060, base: 470, w: 340, depth: 120, height: 146 },
+    // Kein Kapitel: GitHub-Werkstatt am früheren Platz der Sprachschule (Leuchtwand mit Beitrags-Kacheln)
+    { id: 'github', emoji: '🛠️', style: 'workshop', x: 640, base: 1300, w: 260, depth: 100, height: 104, extra: true }
 ];
+/** Gebäude, das kein Kapitel ist */
+export const WORKSHOP = 'github';
+/** Kurze Zuwege zu Gebäuden ohne Kapitel (werden gezeichnet, zählen aber nicht für Sterne und Laternen) */
+export const SIDE_PATHS = [[[770, 1420], [770, 1336]]];
+/** Leuchtwand der Werkstatt: so viele Wochen Beitrags-Kacheln */
+export const WORKSHOP_WEEKS = 20;
 /** Die Tür liegt mittig unter dem Gebäude, so weit davor: */
 export const DOOR_OFFSET_Y = 30;
 /** So nah muss die Spielfigur an der Tür sein, um eintreten zu können */

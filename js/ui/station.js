@@ -5,7 +5,7 @@ import { t } from '../core/i18n.js';
 import { reducedMotion } from '../core/env.js';
 import { audio } from '../core/audio.js';
 import { emit } from '../core/events.js';
-import { FINALE } from '../config/layout.js';
+import { FINALE, WORKSHOP } from '../config/layout.js';
 import { TIMING } from '../config/timing.js';
 import { stationColors, BADGE_ICONS } from '../config/theme.js';
 import { World } from '../world/world.js';
@@ -13,7 +13,8 @@ import { GAMES, mountGame } from '../games/index.js';
 import { progress, MAX_STARS_PER_GAME } from '../app/progress.js';
 import { data, derived, station } from '../app/content.js';
 import { showOverlay, hideOverlay } from './overlays.js';
-import { CONTENT, mountExtras } from './station-content.js';
+import { CONTENT, mountExtras, githubCard } from './station-content.js';
+import { mountGitHub } from './github.js';
 import { renderFinale } from './finale.js';
 
 let cleanupGame = null;
@@ -24,6 +25,7 @@ const starRow = (n) => '★'.repeat(n) + '☆'.repeat(MAX_STARS_PER_GAME - n);  
 export const currentStation = () => current;
 
 export function openStation(id, opts = {}) {
+    if (id === WORKSHOP) { openWorkshop(); return; }
     if (progress.isLocked(id)) { emit('station:locked', id); return; }
     stopGame();
     current = id;
@@ -44,6 +46,32 @@ export function openStation(id, opts = {}) {
     if (id === FINALE) return renderFinale($('#station-body'));
     if (progress.visited.has(id) || opts.info) renderInfo(id, null);
     else renderStory(id);
+}
+
+/** GitHub-Werkstatt: kein Kapitel, zeigt die vollständige GitHub-Aktivität */
+function openWorkshop() {
+    stopGame();
+    current = WORKSHOP;
+    const def = World.stations.find(s => s.id === WORKSHOP), panel = $('#station .panel');
+    const [c1, c2] = stationColors(WORKSHOP);
+    panel.style.setProperty('--c1', c1); panel.style.setProperty('--c2', c2);
+    panel.classList.remove('playing');
+    $('#station-emoji').textContent = def.emoji;
+    $('#station-era').textContent = t('workshop.era');
+    $('#station-chapter').textContent = t('workshop.kicker');
+    $('#station-title').textContent = t('workshop.title');
+    $('#station-steps').innerHTML = '';
+    $('#station').dataset.station = WORKSHOP;
+    const body = $('#station-body');
+    body.innerHTML = `<div class="info"><p class="workshop-intro">${esc(t('workshop.intro'))}</p><div class="gh-root"></div>${githubCard()}</div>
+        <footer class="panel-foot"><span class="spacer"></span><button class="btn primary" data-act="next">${esc(t('station.backToWorld'))}</button></footer>`;
+    const gh = body.querySelector('.gh-root');
+    mountGitHub(gh, {});
+    const nb = body.querySelector('[data-act="next"]');
+    nb.onclick = () => { audio.play('click'); closeStation(); };
+    showOverlay('station');
+    audio.play('open');
+    focusLater(nb, 60);
 }
 
 export function closeStation() {

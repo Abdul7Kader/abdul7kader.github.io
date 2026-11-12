@@ -20,6 +20,7 @@ let hooks = {
 };
 
 let covered = false, frozen = false, last = 0, lastDraw = 0, wakeUntil = 0, camMoving = false, liveParticles = 0;
+let activityLevels = null;   // Beitrags-Kacheln für die Leuchtwand der Werkstatt (Stufen 0–4)
 let gapEma = 0, busyFrames = 0, prevTs = 0, frames = 0, lastCamMove = 0;
 
 const ROBOT_FOLLOW = { dx: 38, dy: 14, lerp: 3 };
@@ -260,7 +261,8 @@ function renderInfo() {
     return {
         t: hooks.t, lang: hooks.lang(), firm: hooks.firm(),
         nextStation: nextId ? state.stations.find(s => s.id === nextId) : null,
-        isVisited: hooks.isVisited, isLocked: hooks.isLocked
+        isVisited: hooks.isVisited, isLocked: hooks.isLocked,
+        activity: activityLevels, activityKey: activityLevels ? activityLevels.join('') : ''
     };
 }
 
@@ -299,6 +301,8 @@ export const World = {
         if (titles) state.stations.forEach(s => { s.title = titles[s.id] || s.title; });
         renderer.invalidate(); frozen = false;
     },
+    /** Beitrags-Kacheln für die Leuchtwand (Liste der Stufen 0–4, älteste zuerst) */
+    setActivity(levels) { activityLevels = levels; renderer.setInfo(renderInfo()); frozen = false; World.wake(); },
     setPalette(p) { const g = renderer.setPalette(p); frozen = false; return g; },
     groundCanvas: () => renderer.groundCanvas(),
     /** Ist die Welt von einem Dialog verdeckt? Dann wird nicht gezeichnet. */

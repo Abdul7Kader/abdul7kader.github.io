@@ -72,6 +72,17 @@ export function loadActivity() {
     return cache;
 }
 
+/** Stufen 0–4 der letzten weeks Wochen (älteste zuerst) – für die Leuchtwand in der Spielwelt */
+export async function activityLevels(weeks) {
+    const a = await loadActivity();
+    if (!a) return null;
+    const days = a.days.slice(-weeks * 7);
+    const active = days.map(d => d[1]).filter(Boolean).sort((x, y) => x - y);
+    const q = (p) => (active.length ? active[Math.min(active.length - 1, Math.floor(p * active.length))] : 1);
+    const limits = LEVEL_QUANTILES.map(q);
+    return days.map(d => (!d[1] ? 0 : 1 + limits.filter(l => d[1] > l).length));
+}
+
 /** Aktuelle Serie in Tagen (heute darf noch leer sein) */
 function streak(days) {
     let cur = 0;

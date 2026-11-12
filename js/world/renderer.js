@@ -163,7 +163,7 @@ function drawGround(c, x0, y0, x1, y1, ox, oy) {
 // ------------------------------------------------------------------ Gebäude-Sprites (statischer Teil)
 function buildingSprite(s) {
     const B = BUILDINGS[s.style], pad = B.pad;
-    const key = `${s.id}|${info.lang}|${s.style === 'finale' ? info.firm : ''}`;
+    const key = `${s.id}|${info.lang}|${s.style === 'finale' ? info.firm : ''}|${B.glow ? info.activityKey : ''}`;
     let e = buildingSprites.get(s.id);
     if (e && e.key === key) return e.sp;
     const { yR } = buildingTop(s);
@@ -174,6 +174,7 @@ function buildingSprite(s) {
     c.setTransform(RS, 0, 0, RS, -x0 * RS, -y0 * RS);
     B.paint(c, s, info);
     nightTint(c, cv);
+    if (B.glow) B.glow(c, s, info);   // Leuchtendes nach der Abdunklung
     e = { key, sp: { cv, x0, y0 } };
     buildingSprites.set(s.id, e);
     staticLayer.valid = false;
@@ -447,7 +448,7 @@ function drawOverlay(c, time, vb) {
     }
 }
 // Höhe der Beschriftung über dem Dach je Gebäudetyp
-const LABEL_LIFT = { career: 100, airport: 30, school: 136, construction: 60, default: 34 };
+const LABEL_LIFT = { career: 100, airport: 30, school: 136, construction: 60, workshop: 124, default: 34 };
 const EDGE_ARROW = { margin: 56, r: 24 };
 
 /** Letztes Bild einmal weichzeichnen (hinter Dialogen, statt einer ständig neu berechneten CSS-Unschärfe) */

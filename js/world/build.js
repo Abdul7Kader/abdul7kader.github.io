@@ -1,8 +1,8 @@
 // Aufbau der Welt: Stationen, Wald, Laternen, Bewohner, Enten, Wolken und Skill-Sterne.
 // Alles deterministisch (fester Zufalls-Startwert), damit die Welt bei jedem Besuch gleich aussieht.
-import { WORLD, STATIONS, DOOR_OFFSET_Y, ROADS, ROAD_WIDTH, PLAZA, FOUNTAIN, RUNWAY, SPAWN, NPC_HOMES, PROPS, FOREST, TOKENS } from '../config/layout.js';
+import { WORLD, STATIONS, SIDE_PATHS, DOOR_OFFSET_Y, ROADS, ROAD_WIDTH, PLAZA, FOUNTAIN, RUNWAY, SPAWN, NPC_HOMES, PROPS, FOREST, TOKENS } from '../config/layout.js';
 import { NPC_LOOKS } from '../config/theme.js';
-import { rng, dist } from '../core/math.js';
+import { rng, dist, distToSegment } from '../core/math.js';
 import { state, createPlayer, createRobot } from './state.js';
 import { blocked, inLake, distRoad } from './pathfinding.js';
 
@@ -18,6 +18,7 @@ function placeTrees(rnd) {
         if (inLake(x, y, pad + 26)) return false;
         if (x > RUNWAY.x - pad && x < RUNWAY.x + RUNWAY.w + pad && y > RUNWAY.y - pad && y < RUNWAY.y + RUNWAY.h + pad + 20) return false;
         for (const s of state.stations) {
+            if (s.extra) continue;   // spätere Gebäude: Bäume werden danach entfernt (der übrige Wald bleibt unverändert)
             const top = s.base - s.height - s.depth - 30;
             if (x > s.x - pad - 10 && x < s.x + s.w + pad + 10 && y > top && y < s.base + pad + 60) return false;
         }
@@ -86,6 +87,10 @@ export function buildWorld({ titles, skillTokens, collected }) {
     const rnd = rng(FOREST.seed);
     state.stations = STATIONS.map(d => ({ ...d, title: titles[d.id] || d.id, door: { x: d.x + d.w / 2, y: d.base + DOOR_OFFSET_Y }, fade: 0 }));
     placeTrees(rnd);
+    // Platz für Gebäude ohne Kapitel und ihre Zuwege freiräumen
+    const extras = state.stations.filter(s => s.extra);
+    state.trees = state.trees.filter(t => !extras.some(s => t.x > s.x - 40 && t.x < s.x + s.w + 40 && t.y > s.base - s.height - s.depth - 30 && t.y < s.base + 70)
+        && !SIDE_PATHS.some(p => p.some((a, i) => i > 0 && distToSegment(t.x, t.y, p[i - 1][0], p[i - 1][1], a[0], a[1]) < ROAD_WIDTH / 2 + 24)));
     placeLamps();
     state.props.push({ type: 'sign', x: PROPS.signpost.x, y: PROPS.signpost.y, solid: SIGN_SOLID });
     PROPS.benches.forEach(b => state.props.push({ type: 'bench', x: b.x, y: b.y }));

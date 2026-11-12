@@ -10,7 +10,8 @@ export const STATION_COLORS = {
     lab: ['#16a34a', '#0ea5a4'],
     projects: ['#f59e0b', '#f0532f'],
     lake: ['#0891b2', '#3a86ff'],
-    finale: ['#f59e0b', '#ef4462']
+    finale: ['#f59e0b', '#ef4462'],
+    github: ['#24292f', '#2da44e']
 };
 export const stationColors = (id) => STATION_COLORS[id] || STATION_COLORS.finale;
 

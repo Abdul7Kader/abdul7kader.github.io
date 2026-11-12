@@ -8,7 +8,7 @@ import { audio } from './core/audio.js';
 import { store } from './core/store.js';
 import { theme, setThemePref, cycleTheme } from './core/theme.js';
 import { WORLD_DAY, WORLD_NIGHT } from './config/theme.js';
-import { FINALE } from './config/layout.js';
+import { FINALE, WORKSHOP, WORKSHOP_WEEKS } from './config/layout.js';
 import { TIMING } from './config/timing.js';
 import { WORLD_PERF } from './config/performance.js';
 import { World } from './world/world.js';
@@ -24,13 +24,14 @@ import { openPalette, setupPalette } from './ui/palette.js';
 import { openCv, closeCv, renderCv, savePdfFromCv, setupPrint } from './ui/cv.js';
 import { openContact, closeContact } from './ui/contact.js';
 import { renderStart, setupStartCard } from './ui/start.js';
+import { activityLevels } from './ui/github.js';
 
 const ACTION_POLL_MS = 150;
 const DELAY = { allDoneToast: 400, collectorToast: 300, startFocus: 300 };
 const COLLECTOR_CONFETTI = 120;
 const CLICK_OUTSIDE_CLOSES = ['station', 'journey', 'palette', 'contact'];
 
-const titles = () => Object.fromEntries(progress.order.map(id => [id, station(id).title]));
+const titles = () => ({ ...Object.fromEntries(progress.order.map(id => [id, station(id).title])), [WORKSHOP]: t('workshop.title') });
 let pendingAllDone = false;
 
 // ------------------------------------------------------------------ Spielablauf
@@ -89,7 +90,7 @@ function setupWorld() {
             isLocked: (id) => progress.isLocked(id),
             allVisited: () => progress.allVisited(),
             // Erster Besuch: automatisch hinein. Danach nur noch per „Betreten“ (Knopf, E/Enter oder Klick aufs Gebäude).
-            canAutoEnter: (id) => !progress.visited.has(id) && !progress.isLocked(id),
+            canAutoEnter: (id) => id !== WORKSHOP && !progress.visited.has(id) && !progress.isLocked(id),
             onEnterStation: (id) => openStation(id),
             onLocked: () => {
                 if (performance.now() - lockSaid < TIMING.LOCK_MESSAGE_GAP_MS) return;
@@ -121,6 +122,7 @@ function setupWorld() {
         }
     });
     if (theme() === 'dark') applyWorldTheme();
+    activityLevels(WORKSHOP_WEEKS).then(levels => { if (levels) World.setActivity(levels); });
     $('#tokens-max').textContent = World.tokenCount();
     $('#tokens-val').textContent = World.tokensGot().length;
     $('#minimap').addEventListener('click', minimapClick);

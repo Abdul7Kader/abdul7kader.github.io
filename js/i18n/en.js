@@ -91,7 +91,9 @@ export default {
             projects: 'PROJECTS',
             yourCompany: 'Your company?',
             toStations: '→ Stations',
-            toStart: 'Start ←'
+            toStart: 'Start ←',
+            github: 'GITHUB',
+            githubWall: 'Contributions · 20 weeks'
         },
         locked: '🔒 Still locked',
         enterTouch: 'Tap “Enter”',
@@ -182,6 +184,13 @@ export default {
         more: 'more',
         latest: 'Latest commits',
         pushed: 'Pushed new commits'
+    },
+
+    workshop: {
+        title: 'GitHub Workshop',
+        kicker: 'Bonus · not a chapter',
+        era: 'live from GitHub',
+        intro: 'This is what I’m working on right now – updated daily from my GitHub profile.'
     },
 
     finale: {
