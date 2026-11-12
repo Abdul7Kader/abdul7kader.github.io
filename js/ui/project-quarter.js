@@ -1,6 +1,7 @@
 // Projekt-Viertel: eigene Projekte als kleine Stadt. Jedes Gebäude steht im Bauzustand,
 // der zum Fortschritt passt (projects[].progress), sodass Fertiges und Laufendes sofort unterscheidbar sind.
 import { TAU, clamp } from '../core/math.js';
+import { rr, ellipse as ell, FONT } from '../core/canvas.js';
 import { reducedMotion } from '../core/env.js';
 import { t as tr, lang } from '../core/i18n.js';
 import { projStage } from '../core/derive.js';
@@ -10,13 +11,10 @@ const VW = 960, VH = 350, GROUND = 236, PLOT = 150, X0 = 30;   // Szene in feste
 const MAX_PROJECTS = 6;
 const MIN_CSS_WIDTH = 720;                                       // schmaler wird horizontal gescrollt
 const MAX_DPR = 2;
-const FONT = 'Outfit, system-ui, sans-serif';
 const GHOST_ALPHA = 0.16;       // Deckkraft des „Bauplans“ (fertiges Gebäude in Grau)
 const GROW = { stagger: 0.25, duration: 1.6 };                   // Belohnung: Gebäude wachsen nacheinander
 const SCROLL_LEAD = 60;
 
-function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
-function ell(c, x, y, rx, ry) { c.beginPath(); c.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), 0, 0, TAU); }
 function text(c, s, x, y, size, col, weight = 800, align = 'center') {
     c.font = `${weight} ${size}px ${FONT}`; c.textAlign = align; c.textBaseline = 'middle'; c.fillStyle = col; c.fillText(s, x, y);
 }
@@ -264,7 +262,9 @@ export function mountQuarter(wrap, projects, opts = {}) {
         k = cnv.width / VW;
     };
     fit();
-    window.addEventListener('resize', fit);
+    let lastWidth = wrap.clientWidth;
+    const ro = new ResizeObserver(() => { if (wrap.clientWidth !== lastWidth) { lastWidth = wrap.clientWidth; fit(); } });
+    ro.observe(wrap);
     const target = list.map(p => clamp(+p.progress || 0, 0, 100));
     const animate = opts.animate && !reducedMotion;
     const t0 = performance.now();
@@ -281,7 +281,7 @@ export function mountQuarter(wrap, projects, opts = {}) {
     const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { visible = es[0].isIntersecting; }) : null;
     if (io) io.observe(cnv);
     (function frame(ts) {
-        if (!cnv.isConnected) { window.removeEventListener('resize', fit); if (io) io.disconnect(); return; }
+        if (!cnv.isConnected) { ro.disconnect(); if (io) io.disconnect(); return; }
         requestAnimationFrame(frame);
         if (!visible || ts - lastDraw < WIDGET_FRAME_MS) return;
         lastDraw = ts;

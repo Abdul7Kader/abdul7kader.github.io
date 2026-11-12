@@ -4,6 +4,8 @@ export const WORLD_PERF = {
     MAX_DPR: 1.5,             // höchste Pixeldichte der Welt (Retina rechnet sonst die vierfache Fläche)
     MIN_DPR: 1,               // so weit wird bei Überlast automatisch heruntergeregelt
     DPR_STEP: 0.25,
+    MOTION_DPR: 1,            // Pixeldichte, solange die Kamera fährt (im Stand wieder volle Schärfe)
+    MOTION_SETTLE_MS: 250,    // so lange nach dem Anhalten, bevor wieder scharf gezeichnet wird
     IDLE_FPS: 15,             // Bildrate, wenn nur Kleinigkeiten sich bewegen (Bewohner, Wasser, Wolken)
     ATTRACT_FPS: 24,          // Vorschau hinter dem Startbildschirm
     SLOW_GAP_MS: 26,          // gemessener Bildabstand, ab dem die Welt als überlastet gilt

@@ -1,6 +1,7 @@
 // Finale „Ihr Unternehmen“: Foto mit Namensaufkleber auf dem T-Shirt (jubelbild-nah.jpg, 838 × 944).
 // Der eingegebene Firmenname wird wie mit einem Marker auf den Aufkleber geschrieben; Falten und Licht des Shirts liegen darüber.
 import { esc } from '../core/dom.js';
+import { FONT } from '../core/canvas.js';
 import { icon } from '../core/icons.js';
 import { t } from '../core/i18n.js';
 import { audio } from '../core/audio.js';
@@ -66,7 +67,7 @@ export function shirtPrint(cnv, img, name) {
     s.save(); stickerShape(s, S); s.clip();
     s.fillStyle = P.band; s.fillRect(-S.w / 2, -S.h / 2, S.w, S.h * S.band);
     s.fillStyle = P.bandText; s.textAlign = 'center'; s.textBaseline = 'middle';
-    s.font = `800 ${Math.round(S.h * 0.11)}px Outfit, system-ui, sans-serif`;
+    s.font = `800 ${Math.round(S.h * 0.11)}px ${FONT}`;
     if (s.letterSpacing !== undefined) s.letterSpacing = '2px';
     s.fillText(t('finale.stickerBand'), 0, -S.h / 2 + S.h * S.band / 2 + 1);
     if (s.letterSpacing !== undefined) s.letterSpacing = '0px';

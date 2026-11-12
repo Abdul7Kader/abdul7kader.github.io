@@ -132,6 +132,11 @@ export async function mountWorldMap(root, visitedNames) {
         if (pinned === el && !tip.hidden) { tip.hidden = true; pinned = null; return; }
         pinned = el; el.classList.add('hl'); show(el, e.clientX, e.clientY);
     });
-    const onResize = () => { if (!root.isConnected) { window.removeEventListener('resize', onResize); return; } apply(); };
-    window.addEventListener('resize', onResize);
+    // Größe des Ausschnitts ändert sich (Fenster, Drehen des Handys) → neu einpassen; endet mit dem Dialog
+    let lastWidth = sc.clientWidth;
+    const ro = new ResizeObserver(() => {
+        if (!root.isConnected) { ro.disconnect(); return; }
+        if (sc.clientWidth !== lastWidth) { lastWidth = sc.clientWidth; apply(); }
+    });
+    ro.observe(sc);
 }

@@ -6,9 +6,9 @@ import { MINIMAP, stationColors } from '../config/theme.js';
 import { World } from '../world/world.js';
 import { progress } from '../app/progress.js';
 import { audio } from '../core/audio.js';
+import { EMOJI_FONT } from '../core/canvas.js';
 
 const MAX_DPR = 2, DOT_R = 9, PULSE_S = 1.2, PULSE_GROW = 10;
-const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 let base = null;   // Boden verkleinert, einmal je Größe/Farbmodus
 
 export const resetMinimap = () => { base = null; };

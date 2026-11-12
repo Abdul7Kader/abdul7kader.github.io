@@ -20,7 +20,7 @@ let hooks = {
 };
 
 let covered = false, frozen = false, last = 0, lastDraw = 0, wakeUntil = 0, camMoving = false, liveParticles = 0;
-let gapEma = 0, busyFrames = 0, prevTs = 0, frames = 0;
+let gapEma = 0, busyFrames = 0, prevTs = 0, frames = 0, lastCamMove = 0;
 
 const ROBOT_FOLLOW = { dx: 38, dy: 14, lerp: 3 };
 const FADE = { in: 0.12, out: 0.08, alpha: 0.62, roofReach: { career: 110, school: 140, default: 60 }, side: 24 };
@@ -240,8 +240,11 @@ function frame(ts) {
 function draw(ts, dt) {
     lastDraw = ts; frames++;
     update(dt);
+    // Fahrende Kamera: geringere Pixeldichte; kurz nach dem Anhalten wieder scharf (siehe renderer.setMotion)
+    if (camMoving) lastCamMove = ts;
+    if (renderer.setMotion(camMoving || ts - lastCamMove < PERF.MOTION_SETTLE_MS)) frozen = false;
     renderer.setInfo(renderInfo());
-    renderer.render(!camMoving && !state.attract);
+    renderer.render(true);
     hooks.onFrame(ts);
 }
 // Läuft die Welt trotz Bewegung dauerhaft unter ~38 Bildern/s, wird die Auflösung schrittweise gesenkt.

@@ -23,7 +23,7 @@ import { drawPerson, drawRobot, PERSON_BOX, ROBOT_BOX } from './sprites/people.j
 import { drawParticles } from './particles.js';
 
 let canvas = null, ctx = null;
-let dpr = 1, vw = 0, vh = 0, zoom = 1, RS = 1, dprCap = PERF.MAX_DPR;
+let dpr = 1, vw = 0, vh = 0, zoom = 1, RS = 1, dprCap = PERF.MAX_DPR, motion = false;
 let ground = null, groundRes = 1;
 let palette = WORLD_DAY;
 let info = null;          // Angaben von außen: Sprache, Fortschritt, Firmenname … (siehe setInfo)
@@ -43,13 +43,27 @@ export function initRenderer(cnv) {
     return ground;
 }
 export function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+    const full = Math.min(window.devicePixelRatio || 1, dprCap);
+    dpr = motion ? Math.min(full, PERF.MOTION_DPR) : full;
     vw = window.innerWidth; vh = window.innerHeight;
     canvas.width = Math.round(vw * dpr); canvas.height = Math.round(vh * dpr);
     canvas.style.width = vw + 'px'; canvas.style.height = vh + 'px';
     zoom = clamp(Math.sqrt(vw * vh) / CAMERA.zoomDivisor, CAMERA.minZoom, CAMERA.maxZoom);
     RS = dpr * zoom;
-    invalidate();
+    useCaches();
+    staticLayer.valid = false;
+}
+/**
+ * Während die Kamera fährt, mit geringerer Pixeldichte zeichnen (die Rasterung kostet bei 60 Bildern/s am meisten),
+ * im Stand wieder voll scharf. Die Sprites beider Auflösungen bleiben erhalten – der Wechsel kostet daher fast nichts.
+ * Gibt zurück, ob sich etwas geändert hat.
+ */
+export function setMotion(on) {
+    if (on === motion) return false;
+    const before = dpr;
+    motion = on;
+    resize();
+    return dpr !== before;
 }
 /** Bei Überlast die Auflösung schrittweise senken; true, wenn noch Luft war */
 export function lowerResolution() {
@@ -63,16 +77,21 @@ export function setPalette(p) { palette = p; ground = buildGround(groundRes, p);
 export const groundCanvas = () => ground;
 
 // ------------------------------------------------------------------ Sprite-Cache
-const sprites = new Map();
-let spriteRS = 0;
-function checkScale() {
-    if (spriteRS === RS) return;
-    sprites.clear(); groundTiles.clear(); buildingSprites.clear();
-    spriteRS = RS; staticLayer.valid = false;
+// Je Auflösung (RS) ein eigener Satz Caches; höchstens zwei Sätze (scharf und beim Fahren).
+const MAX_CACHE_SETS = 2;
+const cacheSets = new Map();
+let sprites = new Map(), groundTiles = new Map(), buildingSprites = new Map();
+function useCaches() {
+    let set = cacheSets.get(RS);
+    if (!set) {
+        set = { sprites: new Map(), groundTiles: new Map(), buildingSprites: new Map() };
+        cacheSets.set(RS, set);
+        if (cacheSets.size > MAX_CACHE_SETS) cacheSets.delete(cacheSets.keys().next().value);
+    }
+    ({ sprites, groundTiles, buildingSprites } = set);
 }
 /** Sprite holen oder einmal zeichnen. Box in Welteinheiten relativ zum Bezugspunkt. */
 function sprite(key, x0, y0, x1, y1, paint) {
-    checkScale();
     let sp = sprites.get(key);
     if (!sp) {
         sp = { cv: document.createElement('canvas'), x0, y0 };
@@ -89,10 +108,9 @@ function blit(c, sp, x, y) {
     c.drawImage(sp.cv, Math.round((x + sp.x0) * RS) / RS, Math.round((y + sp.y0) * RS) / RS, sp.cv.width / RS, sp.cv.height / RS);
 }
 /** Alles neu zeichnen lassen (Auflösung, Sprache, Farbmodus, Firmenname …) */
-export function invalidate() { sprites.clear(); groundTiles.clear(); buildingSprites.clear(); staticLayer.valid = false; spriteRS = 0; }
+export function invalidate() { cacheSets.clear(); useCaches(); staticLayer.valid = false; }
 
 // ------------------------------------------------------------------ Bodenkacheln
-const groundTiles = new Map();
 function groundTile(tx, ty) {
     const key = tx + ',' + ty;
     let t = groundTiles.get(key);
@@ -121,9 +139,7 @@ function drawGround(c, x0, y0, x1, y1, ox, oy) {
 }
 
 // ------------------------------------------------------------------ Gebäude-Sprites (statischer Teil)
-const buildingSprites = new Map();
 function buildingSprite(s) {
-    checkScale();
     const B = BUILDINGS[s.style], pad = B.pad;
     const key = `${s.id}|${info.lang}|${s.style === 'finale' ? info.firm : ''}`;
     let e = buildingSprites.get(s.id);
@@ -169,7 +185,7 @@ const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b
 const inView = (box, v) => overlaps(box, v);
 
 // Statische Ebene als Offscreen-Bild (nur bei stehender Kamera)
-const STATIC_MARGIN = 64;
+const STATIC_MARGIN = PERF.STATIC_MARGIN;
 const staticLayer = { cv: null, valid: false, x0: 0, y0: 0, x1: 0, y1: 0, px0: 0, py0: 0, fadeKey: '' };
 function buildStaticLayer(camX, camY) {
     const x0 = camX - STATIC_MARGIN, y0 = camY - STATIC_MARGIN, x1 = camX + view.w + STATIC_MARGIN, y1 = camY + view.h + STATIC_MARGIN;
@@ -325,7 +341,6 @@ function occluders(dyn, ground, viewBox) {
  * Gibt zurück, ob die statische Ebene benutzt wurde.
  */
 export function render(useStatic) {
-    checkScale();
     const c = ctx, { cam } = state, time = state.time, P = palette;
     const camPx = Math.round(cam.x * RS), camPy = Math.round(cam.y * RS);
     const vb = [cam.x - 80, cam.y - 80, cam.x + view.w + 80, cam.y + view.h + 260];
