@@ -14,16 +14,18 @@ const TYPES = {
     '.svg': 'image/svg+xml', '.md': 'text/markdown; charset=utf-8', '.ico': 'image/x-icon'
 };
 
-export function startServer(root = ROOT) {
+export function startServer(root = ROOT, port = 0) {
     const server = http.createServer((req, res) => {
         let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
         if (p.endsWith('/')) p += 'index.html';
         const file = path.join(root, p);
+        // Ordner ohne Schrägstrich (z. B. /links) wie bei GitHub Pages weiterleiten
+        if (file.startsWith(root) && fs.existsSync(file) && fs.statSync(file).isDirectory()) { res.writeHead(301, { Location: p + '/' }); res.end(); return; }
         if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); res.end('not found'); return; }
         res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
         fs.createReadStream(file).pipe(res);
     });
-    return new Promise(resolve => server.listen(0, '127.0.0.1', () => {
+    return new Promise(resolve => server.listen(port, '127.0.0.1', () => {
         const { port } = server.address();
         resolve({ url: `http://127.0.0.1:${port}`, close: () => new Promise(r => server.close(r)) });
     }));

@@ -1,0 +1,53 @@
+# Prüft jede Änderung: Linter, Smoke-Test in drei Browsern (Chromium, Firefox, WebKit/Safari),
+# Sprachen (DE/EN), Farbmodi (Hell/Dunkel), Kontrast (WCAG AA) und die Textliste docs/texte.md.
+name: CI
+
+on:
+  push:
+    branches: [main, 'abdul7kader/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx eslint .
+      - name: Textliste aktuell (docs/texte.md)
+        run: node tools/texte.mjs && git diff --exit-code docs/texte.md
+
+  browser:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Playwright nur hier installieren (nicht in package.json – die Seite selbst braucht nichts davon)
+      - run: npm install --no-save playwright@1.63.0 && npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Smoke-Test Deutsch hell (inkl. PDF-Download)
+        run: node tests/smoke.mjs --browser=${{ matrix.browser }}
+      - name: Smoke-Test Englisch dunkel
+        run: node tests/smoke.mjs --browser=${{ matrix.browser }} --lang=en --theme=dark
+      - name: Sprachen und Kontrast
+        if: matrix.browser == 'chromium'
+        run: node tests/i18n.mjs && node tests/contrast.mjs

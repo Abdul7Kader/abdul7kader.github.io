@@ -6,11 +6,14 @@
   "scripts": {
     "serve": "node tools/serve.mjs",
     "lint": "eslint .",
-    "test": "node tests/smoke.mjs && node tests/i18n.mjs",
+    "test": "node tests/smoke.mjs && node tests/smoke.mjs --lang=en --theme=dark && node tests/i18n.mjs && node tests/contrast.mjs",
     "test:smoke": "node tests/smoke.mjs",
     "test:i18n": "node tests/i18n.mjs",
+    "test:contrast": "node tests/contrast.mjs",
     "test:visual": "node tests/visual.mjs shots",
-    "perf": "node tests/perf.mjs"
+    "perf": "node tests/perf.mjs",
+    "texte": "node tools/texte.mjs",
+    "css:unused": "node tools/css-unused.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
