@@ -94,7 +94,7 @@ export default {
             else if (robo.think > 0) [-18, 0, 18].forEach((dx, i) => { ell(c, rx + dx, ry - 11 + Math.sin(g.now * 14 + i) * 3, 4, 4); c.fill(); });
             else { const lid = Math.sin(g.now * 1.7) > 0.96 ? 1.5 : 7; [-16, 16].forEach(dx => { ell(c, rx + dx, ry - 11, 6, lid); c.fill(); }); }
             c.fillStyle = '#7b5cff'; rr(c, rx - 30, ry + 22, 60, 10, 5); c.fill();
-            txt(c, t('games.career.agent'), rx, ry + 58, 11, '#5b5f80');
+            txt(c, t('games.career.agent'), rx, ry + 58, 11, g.ink('#5b5f80'));
             for (const o of outputs) {   // Ergebnisse, die der Roboter „ausspuckt“
                 const k = easeOut(o.t);
                 c.save(); c.globalAlpha = 1 - Math.max(0, o.t - 0.8) / 0.4;
@@ -160,7 +160,7 @@ export default {
                     const k = easeOut(f.t);
                     card(c, f.kind, lerp(f.x, f.tx, k), lerp(f.y, f.ty, k) - Math.sin(k * Math.PI) * 60, 1 - k * 0.2, 1 - k * 0.6);
                 }
-                if (g.state === 'play' && g.t < 2.6) { c.globalAlpha = 1 - g.t / 2.6; txt(c, t('games.career.hint'), W / 2, 392, 16, '#4b3fb0', 'center', 800); c.globalAlpha = 1; }
+                if (g.state === 'play' && g.t < 2.6) { c.globalAlpha = 1 - g.t / 2.6; txt(c, t('games.career.hint'), W / 2, 392, 16, g.ink('#4b3fb0'), 'center', 800); c.globalAlpha = 1; }
             },
             down(p) {
                 for (let i = items.length - 1; i >= 0; i--) {

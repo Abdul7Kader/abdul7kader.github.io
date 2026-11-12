@@ -128,6 +128,7 @@ export default {
                 for (let i = 0; i < 12; i++) { const bh = 40 + ((i * 37) % 70); c.fillRect(i * 54, H - 40 - bh + cam * 0.35, 46, bh + 40); }
                 c.fillStyle = '#6b7280'; c.fillRect(0, H - 40 + cam, W, 60);
                 c.fillStyle = '#facc15'; for (let x = 0; x < W; x += 60) c.fillRect(x, H - 34 + cam, 30, 5);
+                g.nightShade(c);
                 stack.forEach((b, i) => {
                     const y = yOf(i) + cam + (b.land ? -Math.sin(b.land * Math.PI) * 4 : 0);
                     if (y >= -BH * 2 && y <= H + 20) block(c, b, y);

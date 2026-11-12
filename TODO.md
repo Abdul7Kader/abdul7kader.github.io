@@ -56,22 +56,25 @@ Legende: ✅ umgesetzt · ⏳ wartet auf Abdul · ☐ offen
   - Optional: Den Alias, den FormSubmit danach anzeigt, im Admin unter „Kontaktformular“ eintragen. Dann steht die Adresse gar nicht mehr im Code.
 - ✅ **#15 Farbiges PDF.** „Als PDF speichern“ erzeugt die Datei selbst, farbig und im A4-Format. Die Umbrüche liegen zwischen den Einträgen, der Text ist auswählbar und die Links sind klickbar. Die Bibliotheken liegen lokal in `vendor/`.
 
-## Runde 3 (Nacht 1: 11.11.2026 · Nacht 2: 12.11.2026, 02:00 Uhr · Plan: `docs/REFACTORING-PLAN.md`, Abschnitt 6)
+## Runde 3 (Nacht 1: 11.11.2026 · Nacht 2: 12.11.2026 · Plan: `docs/REFACTORING-PLAN.md` · Bericht: `docs/REFACTORING-BERICHT.md`)
 
 Branch `abdul7kader/refactoring`. Kein Merge auf `main` ohne Freigabe.
 
-- ✅ **Neustrukturierung:** ES-Module in klaren Ordnern (`config/`, `core/`, `world/`, `games/`, `ui/`, `app/`, `i18n/`), benannte Konstanten statt Zahlen, eine Aufgabe pro Datei.
-- ◐ **Code-Review:** ESLint eingerichtet und sauber, Fokus bleibt in Dialogen. Offen (Nacht 2): restliche Durchsicht, doppelte Zeichenhilfen zusammenführen, Aufräumen von Listenern. Das CSS wird nach Bereichen aufgeteilt (`css/`).
-- ◐ **Performance:** Hauptthread vorher → jetzt: Welt steht 100 → 13 % ✓, Dialog 53 → 1 % ✓, Minispiel 63 → 27 % ✓. Offen (Nacht 2): Welt beim Laufen 44–50 %, Ziel ≤ 35 %.
-- ✅ **Englisch überall:** Oberfläche, Minispiele, Welt-Schilder, Lebenslauf, PDF, Formular, Weltkarte und Admin. Umschalter DE/EN auf der Startseite und im HUD, `?lang=en`, die Wahl wird gemerkt. ⏳ Abdul prüft die Übersetzung in `data/resume.en.js`.
-- ☐ **Dark Mode überall:** Umschalter System/Hell/Dunkel ohne Aufblitzen beim Laden. Oberfläche, Spielwelt bei Nacht, Minispiele, Projekt-Viertel, Weltkarte, GitHub-Kacheln, Admin und Unterseiten bekommen dunkle Farben. PDF und Druck bleiben hell. Die Kontraste prüfe ich in beiden Modi (WCAG AA).
-- ☐ **Lücken aus Runde 2:** GitHub-Werkstatt mit Leuchtwand in der Spielwelt, Projekt-Viertel begehbar und zoombar, Weltkarte mit Weltansicht, Datenschutz-Seite, Linkseite `/links/`, letzte Emoji-Reste, vollständige Prüfung auf Doppelungen, PDF-Test in Firefox und Safari.
-- ☐ **Qualität:** Linter, automatische Tests (Chromium/Firefox/WebKit, DE/EN, Hell/Dunkel), CI-Workflow, README.
+- ✅ **Neustrukturierung:** ES-Module in klaren Ordnern (`config/`, `core/`, `world/`, `games/`, `ui/`, `app/`, `i18n/`), benannte Konstanten statt Zahlen, eine Aufgabe pro Datei. CSS nach Bereichen in `css/`.
+- ✅ **Code-Review:** ESLint sauber, gemeinsame Zeichenhilfen, aufgeräumte Listener, Fokus bleibt in Dialogen, sichtbare Fokusrahmen, `!important` nur noch, wo nötig.
+- ✅ **Performance:** Hauptthread vorher → jetzt: Welt steht 100 → 13–15 %, Welt läuft 100 → 29–35 %, Dialog 53 → 1 %, Minispiel 63 → 27–30 %. Alle Zielwerte erreicht (Messung ohne Grafikkarte, siehe Bericht).
+- ✅ **Englisch überall:** Oberfläche, Minispiele, Welt-Schilder, Lebenslauf, PDF, Formular, Weltkarte, Admin, Unterseiten. Umschalter DE/EN, `?lang=en`. ⏳ Abdul prüft die Übersetzung in `data/resume.en.js`.
+- ✅ **Dark Mode:** System/Hell/Dunkel ohne Aufblitzen. Oberfläche, Spielwelt bei Nacht (leuchtende Laternen), Projekt-Viertel mit Sternenhimmel, Weltkarte, GitHub, Admin, Unterseiten. PDF und Druck bleiben hell. Kontrast in beiden Modi nach WCAG AA geprüft.
+- ✅ **Lücken aus Runde 2:** GitHub-Werkstatt mit Leuchtwand (#3, #16), Weltkarte mit Weltansicht und Pinch-/Strg-Zoom (#7), Projekt-Viertel zoom- und verschiebbar (#11), Datenschutz-Seite (#14), Linkseite `/links/` mit Admin (#18), Abzeichen als Icons (#17), Textliste ohne Doppelungen (#10).
+- ✅ **Qualität:** Tests für Smoke (DE/EN, Hell/Dunkel), Sprachen, Kontrast, Screenshots, Leistung; CI auf GitHub mit Chromium, Firefox und WebKit; README.
+- ☐ **Noch offen:** Das Projekt-Viertel ist zoombar, aber keine eigene begehbare Mini-Welt. Die Minispiele sind nachts abgedunkelt, haben aber keine eigenen Nacht-Grafiken.
 
 ## Wartet auf Abdul
 
-- ⏳ **#18 Linksammlung.** Dafür brauche ich die Social-Media-Kanäle der KI-Videos (Plattform + URL) und später die Projekt-Links. Die Projekt-Kacheln zeigen bis dahin „Link folgt“. Sobald ein `link` in `data.js` steht, erscheint dort „Ansehen ↗“.
+- ⏳ **#18 Linksammlung.** Dafür brauche ich die Social-Media-Kanäle der KI-Videos (Plattform + URL) und später die Projekt-Links. Die Projekt-Kacheln zeigen bis dahin „Link folgt“. Die Linkseite `/links/` steht schon; leere Links zeigen „folgt“. Sobald ein `link` in `data/resume.de.js` steht, erscheint dort „Ansehen ↗“.
 - ⏳ Endgültiger Name des Handyspiels (bisher „Rustfall (Arbeitstitel)“)
 - ⏳ Ehrenamt-Texte bestätigen oder korrigieren (siehe #13)
 - ⏳ FormSubmit-Aktivierung bestätigen (siehe #14)
+- ⏳ Englische Texte in `data/resume.en.js` gegenlesen
+- ⏳ Datenschutz-Seite prüfen (ggf. Impressum ergänzen, falls rechtlich nötig)
 - ⏳ Vorschau prüfen und freigeben, danach Merge auf `main` und die Issues schließen

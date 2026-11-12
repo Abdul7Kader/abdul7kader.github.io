@@ -87,7 +87,7 @@ export default {
                     }
                 }
                 drawBasket(c);
-                if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, t('games.lab.hint'), W / 2, 90, 17, '#1b2a4a', 'center', 800); c.globalAlpha = 1; }
+                if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, t('games.lab.hint'), W / 2, 90, 17, g.ink('#1b2a4a'), 'center', 800); c.globalAlpha = 1; }
             },
             down(p) { bk.tx = p.x; },
             move(p) { bk.tx = p.x; },

@@ -10,6 +10,7 @@
 import { esc } from '../core/dom.js';
 import { store } from '../core/store.js';
 import { reducedMotion } from '../core/env.js';
+import { theme } from '../core/theme.js';
 import { TAU, easeOut, rand, pick } from '../core/math.js';
 import { t } from '../core/i18n.js';
 import { GAME_PERF } from '../config/performance.js';
@@ -20,6 +21,13 @@ const COMBO_STEP = 5, MAX_MULT = 3;             // alle 5 Treffer steigt der Mul
 const COUNTDOWN_STEP_S = 0.5, GO_S = 0.7;
 const RESULT_DELAY_MS = 750, SCORE_COUNT_MS = 900;
 const LAST_SECONDS = 3;
+// Dunkelmodus: Hintergründe der Spiele werden einmal abgedunkelt (multiplizieren), Spielobjekte und Texte bleiben hell
+const NIGHT_SHADE = 'rgb(118,132,190)';
+/** Nacht: Fläche abdunkeln (ohne Wirkung im hellen Modus) */
+function nightShade(c, h = H) {
+    if (theme() !== 'dark') return;
+    c.save(); c.globalCompositeOperation = 'multiply'; c.fillStyle = NIGHT_SHADE; c.fillRect(0, 0, W, h); c.restore();
+}
 const HUD_BG = 'rgba(10,18,36,0.55)';
 const CONFETTI = ['#ffd166', '#ff8a3d', '#2ec4b6', '#fff', '#ff5f6d'];
 
@@ -59,7 +67,7 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
         bg = null;
         if (spec.bg) {
             bg = document.createElement('canvas'); bg.width = cnv.width; bg.height = cnv.height;
-            const b = bg.getContext('2d'); b.setTransform(k, 0, 0, k, 0, 0); spec.bg(b);
+            const b = bg.getContext('2d'); b.setTransform(k, 0, 0, k, 0, 0); spec.bg(b); nightShade(b);
         }
     }
     fit();
@@ -74,6 +82,9 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
     let scoreBump = 0, comboBump = 0, alive = true, last = performance.now(), raf = 0, resultTimer = null;
 
     // ----------------------------------------------------- Werkzeuge für die Spiele
+    g.nightShade = nightShade;
+    /** Schriftfarbe direkt auf dem Hintergrund: nachts hell statt dunkel */
+    g.ink = (dayColor) => (theme() === 'dark' ? '#e7ebf7' : dayColor);
     g.mult = () => Math.min(MAX_MULT, 1 + Math.floor(g.combo / COMBO_STEP));
     g.pop = (x, y, s, col = '#fff', size = 22) => texts.push({ x, y, s, col, size, t: 0 });
     g.add = (pts, x, y, label, col = '#ffe08a') => { g.score += pts; scoreBump = 1; if (x != null) g.pop(x, y, (label ? label + '  ' : '') + '+' + pts, col); };

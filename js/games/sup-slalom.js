@@ -135,6 +135,7 @@ export default {
                     if (b.kind === 'tree') { c.fillStyle = 'rgba(0,0,0,0.12)'; ell(c, x + 6, b.y + 8, 22 * b.s, 20 * b.s); c.fill(); c.fillStyle = '#3f9d4a'; ell(c, x, b.y, 22 * b.s, 22 * b.s); c.fill(); c.fillStyle = '#58b964'; ell(c, x - 5, b.y - 5, 12 * b.s, 12 * b.s); c.fill(); }
                     else { c.fillStyle = '#9aa5b1'; ell(c, x, b.y, 14 * b.s, 10 * b.s); c.fill(); }
                 }
+                g.nightShade(c);
                 for (const o of objs) drawObject(c, o);
                 drawBoard(c);
                 if (g.state === 'play' && g.t < 2.4) { c.globalAlpha = 1 - g.t / 2.4; txt(c, isTouch ? t('games.lake.hintTouch') : t('games.lake.hintMouse'), W / 2, 90, 17, '#fff', 'center', 800, 5); c.globalAlpha = 1; }
