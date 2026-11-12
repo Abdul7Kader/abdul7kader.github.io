@@ -373,6 +373,38 @@ window.RESUME.de = {
             "link": ""
         }
     ],
+    "links": [
+        {
+            "title": "Interaktiver Lebenslauf",
+            "note": "Mein Weg als begehbare Spielwelt",
+            "url": "../",
+            "icon": "globe"
+        },
+        {
+            "title": "GitHub",
+            "note": "Code und tägliche Aktivität",
+            "url": "https://github.com/Abdul7Kader",
+            "icon": "github"
+        },
+        {
+            "title": "KI-Videos",
+            "note": "Eigene Kanäle mit KI-generierten Videos",
+            "url": "",
+            "icon": "play"
+        },
+        {
+            "title": "LinkedIn",
+            "note": "Beruflicher Werdegang",
+            "url": "",
+            "icon": "linkedin"
+        },
+        {
+            "title": "Kontakt",
+            "note": "Schreiben Sie mir über das Formular",
+            "url": "../#kontakt",
+            "icon": "send"
+        }
+    ],
     "traits": [
         "Teamgeist",
         "Zuverlässigkeit",

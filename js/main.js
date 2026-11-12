@@ -253,6 +253,7 @@ function boot() {
     exposeTestApi();
     // Direktlinks: ?cv=1 oder #lebenslauf / #cv öffnet direkt die Kompaktansicht
     if (param('cv') || /lebenslauf|cv/i.test(location.hash)) cvNow();
+    else if (/kontakt|contact/i.test(location.hash)) { $('#start').classList.add('hidden'); openContact(); }
     else setTimeout(() => $('#start-play').focus({ preventScroll: true }), DELAY.startFocus);
 }
 

@@ -92,6 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
         addSectionTitle('KI-Kompetenzen (Tech-Lab & Lebenslauf)');
         createJSONField('aiSkills', 'KI-Kompetenzen (JSON: name, text)');
 
+        addSectionTitle('Linkseite /links/');
+        if (!Array.isArray(currentData.links)) currentData.links = [];
+        createJSONField('links', 'Links (JSON: title, note, url, icon: globe, github, play, linkedin, send, mail …). Leere url = „folgt“.');
+
         addSectionTitle('Eigenschaften (Blöcke im Projekt-Stapler)');
         createJSONField('traits', 'Eigenschaften (JSON-Liste)');
 

@@ -124,6 +124,17 @@ for (const [label, opts] of VIEWPORTS) {
     check(errors.length === 0, 'Admin: keine Fehler' + (errors.length ? ': ' + errors.join(' | ') : ''));
 }
 
+// Unterseiten: Linkseite und Datenschutz laden ohne Fehler, in beiden Sprachen
+for (const [path, sel, min] of [['/links/?lang=de', '.link', 3], ['/links/?lang=en', '.link', 3], ['/datenschutz.html?lang=de', 'article[lang=de] h2', 5], ['/datenschutz.html?lang=en', 'article[lang=en] h2', 5]]) {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.goto(server.url + path, { waitUntil: 'networkidle' });
+    const n = await page.locator(sel).count();
+    check(n >= min && !errors.length, `Unterseite ${path}: ${n} Einträge${errors.length ? ' · ' + errors.join(' | ') : ''}`);
+    await page.close();
+}
+
 await browser.close();
 await server.close();
 console.log(failures.length ? `\n${failures.length} Fehler` : '\nAlles in Ordnung');

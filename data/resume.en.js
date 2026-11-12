@@ -187,6 +187,38 @@ window.RESUME.en = {
         { "title": "Rest-IQ", "tag": "Platform", "tech": "", "detail": "Platform that lets restaurants build their own websites for free.", "progress": 20, "building": "restaurant", "link": "" },
         { "title": "Drive Pluz", "tag": "Software", "tech": "", "detail": "Driving school management including a learner driver app.", "progress": 5, "stage": "Foundation", "building": "foundation", "link": "" }
     ],
+    "links": [
+        {
+            "title": "Interactive CV",
+            "note": "My journey as a walkable game world",
+            "url": "../",
+            "icon": "globe"
+        },
+        {
+            "title": "GitHub",
+            "note": "Code and daily activity",
+            "url": "https://github.com/Abdul7Kader",
+            "icon": "github"
+        },
+        {
+            "title": "AI videos",
+            "note": "Own channels with AI-generated videos",
+            "url": "",
+            "icon": "play"
+        },
+        {
+            "title": "LinkedIn",
+            "note": "Professional background",
+            "url": "",
+            "icon": "linkedin"
+        },
+        {
+            "title": "Contact",
+            "note": "Write to me via the form",
+            "url": "../#kontakt",
+            "icon": "send"
+        }
+    ],
     "traits": [
         "Team spirit",
         "Reliability",
