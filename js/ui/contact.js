@@ -9,6 +9,7 @@ import { audio } from '../core/audio.js';
 import { progress } from '../app/progress.js';
 import { data } from '../app/content.js';
 import { showOverlay, hideOverlay } from './overlays.js';
+import { achieve } from './toasts.js';
 
 const ENDPOINT = 'https://formsubmit.co/ajax/';
 // Ziel-Adresse nur verschleiert (gegen einfache Spam-Bots), wird erst beim Senden zusammengesetzt.
@@ -17,6 +18,7 @@ const decode = () => { try { return atob(FALLBACK.split('').reverse().join(''));
 const LIMITS = { name: 80, email: 120, company: 80, phone: 40, message: 3000 };
 const FOCUS_DELAY_MS = 80;
 const EMPTY = '–';
+const TOAST_MS = 5200;   // Bestätigung nach dem Senden etwas länger zeigen
 
 const contactData = () => data().contact || {};
 const target = () => (contactData().form ? contactData().form.trim() : decode());
@@ -69,11 +71,15 @@ function render(prefill = {}) {
             const res = await fetch(ENDPOINT + encodeURIComponent(target()), {
                 method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload)
             });
+            // FormSubmit antwortet mit JSON { success: "true" | "false", message }. Manche Antworten sind kein JSON –
+            // dann zählt der HTTP-Status. Ein Fehler wird nur gemeldet, wenn der Dienst ihn ausdrücklich zurückgibt.
             const j = await res.json().catch(() => ({}));
-            if (!res.ok || String(j.success) !== 'true') throw new Error(j.message || 'send failed');
+            if (!res.ok || String(j.success) === 'false') throw new Error(j.message || 'send failed');
             if (company && !progress.firm) progress.setFirm(company);
-            box.innerHTML = `<div class="cf-done"><span class="cf-check">${icon('check')}</span><h3>${esc(t('contact.thanks'))}</h3><p class="muted">${esc(t('contact.thanksText'))}</p><button class="btn ghost" data-act="close">${esc(t('contact.close'))}</button></div>`;
-            box.querySelector('[data-act=close]').onclick = closeContact;
+            // Erfolg: Formular schließt sich, eine kurze Bestätigung erscheint
+            closeContact();
+            box.innerHTML = '';
+            achieve(icon('check'), t('contact.sent'), t('contact.thanks'), TOAST_MS);
             audio.play('fanfare');
         } catch (ex) {
             const mail = mailAddr();

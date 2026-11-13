@@ -309,9 +309,8 @@ export default {
         errSend: 'Die Nachricht konnte gerade nicht gesendet werden. Bitte versuchen Sie es gleich noch einmal',
         orWrite: '– oder schreiben Sie mir direkt:',
         openMail: 'E-Mail öffnen',
-        thanks: 'Danke! Ich melde mich bald.',
-        thanksText: 'Ihre Nachricht ist bei mir angekommen. Ich antworte in der Regel innerhalb von zwei Werktagen.',
-        close: 'Schließen'
+        sent: 'Nachricht gesendet',
+        thanks: 'Danke! Ich antworte in der Regel innerhalb von zwei Werktagen.'
     },
 
     games: {

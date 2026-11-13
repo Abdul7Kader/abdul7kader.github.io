@@ -74,10 +74,13 @@ for (const [label, opts] of VIEWPORTS) {
     await page.check('#contact-form [name=consent]');
     await page.evaluate(() => document.querySelector('#contact-form [type=submit]').click());
     await page.waitForTimeout(400);
-    check(await page.locator('.cf-done').count() === 1, 'Kontaktformular gesendet (simuliert)');
+    check(await page.evaluate(() => document.querySelector('#contact').classList.contains('hidden')) && await page.locator('#toasts .toast').count() >= 1,
+        'Kontaktformular gesendet (simuliert): Formular geschlossen, Bestätigung sichtbar');
+    await page.evaluate(() => document.querySelector('.firm-next [data-act=contact]').click());
+    await page.waitForTimeout(250);
     await page.keyboard.press('Escape');
     await page.waitForTimeout(150);
-    check(await page.evaluate(() => !document.querySelector('#station').classList.contains('hidden')), 'Esc schließt nur den Kontakt-Dialog');
+    check(await page.evaluate(() => document.querySelector('#contact').classList.contains('hidden') && !document.querySelector('#station').classList.contains('hidden')), 'Esc schließt nur den Kontakt-Dialog');
     await app(A => A.closeStation());
 
     await app(A => A.openPalette());

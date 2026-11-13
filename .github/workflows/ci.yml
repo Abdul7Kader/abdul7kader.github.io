@@ -50,4 +50,4 @@ jobs:
         run: node tests/smoke.mjs --browser=${{ matrix.browser }} --lang=en --theme=dark
       - name: Sprachen und Kontrast
         if: matrix.browser == 'chromium'
-        run: node tests/i18n.mjs && node tests/contrast.mjs
+        run: node tests/i18n.mjs && node tests/contrast.mjs && node tests/contact.mjs

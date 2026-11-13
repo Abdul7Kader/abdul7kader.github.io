@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (547 Texte)
+## Deutsch (546 Texte)
 
 ### Doppelungen
 
@@ -311,9 +311,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.contact.errSend` | Die Nachricht konnte gerade nicht gesendet werden. Bitte versuchen Sie es gleich noch einmal |
 | `ui.contact.orWrite` | – oder schreiben Sie mir direkt: |
 | `ui.contact.openMail` | E-Mail öffnen |
-| `ui.contact.thanks` | Danke! Ich melde mich bald. |
-| `ui.contact.thanksText` | Ihre Nachricht ist bei mir angekommen. Ich antworte in der Regel innerhalb von zwei Werktagen. |
-| `ui.contact.close` | Schließen |
+| `ui.contact.sent` | Nachricht gesendet |
+| `ui.contact.thanks` | Danke! Ich antworte in der Regel innerhalb von zwei Werktagen. |
 | `ui.games.play` | Spielen |
 | `ui.games.seconds` | {n} Sekunden |
 | `ui.games.secondsShort` | {n}s |
@@ -576,7 +575,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (547 Texte)
+## Englisch (546 Texte)
 
 ### Doppelungen
 
@@ -881,9 +880,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.contact.errSend` | The message could not be sent just now. Please try again in a moment |
 | `ui.contact.orWrite` | – or write to me directly: |
 | `ui.contact.openMail` | Open email |
-| `ui.contact.thanks` | Thank you! I’ll be in touch soon. |
-| `ui.contact.thanksText` | Your message has reached me. I usually reply within two working days. |
-| `ui.contact.close` | Close |
+| `ui.contact.sent` | Message sent |
+| `ui.contact.thanks` | Thank you! I usually reply within two working days. |
 | `ui.games.play` | Play |
 | `ui.games.seconds` | {n} seconds |
 | `ui.games.secondsShort` | {n}s |

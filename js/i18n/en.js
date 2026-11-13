@@ -308,9 +308,8 @@ export default {
         errSend: 'The message could not be sent just now. Please try again in a moment',
         orWrite: '– or write to me directly:',
         openMail: 'Open email',
-        thanks: 'Thank you! I’ll be in touch soon.',
-        thanksText: 'Your message has reached me. I usually reply within two working days.',
-        close: 'Close'
+        sent: 'Message sent',
+        thanks: 'Thank you! I usually reply within two working days.'
     },
 
     games: {

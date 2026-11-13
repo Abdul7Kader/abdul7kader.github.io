@@ -13,10 +13,10 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 ## Reihenfolge (zuerst Fehler, dann Inhalte, dann Neues)
 
 ### A – Fehler und Bedienung
-- [ ] **A1 Kontaktformular:** Nach dem Senden erschien „konnte nicht gesendet werden“, obwohl die Mail ankam.
+- [x] **A1 Kontaktformular:** Nach dem Senden erschien „konnte nicht gesendet werden“, obwohl die Mail ankam.
   Erfolgsprüfung robuster machen (Antwort von FormSubmit auswerten: `res.ok` + `success`, Text- statt JSON-Antwort
   abfangen), Fehler nur bei echtem Fehlschlag. Nach erfolgreichem Senden schließt sich das Formular und ein Toast
-  „Danke, Nachricht gesendet“ erscheint. Test mit simulierter FormSubmit-Antwort (Erfolg, Fehler, Nicht-JSON).
+  „Danke, Nachricht gesendet“ erscheint. Test mit simulierter FormSubmit-Antwort (Erfolg, Fehler, Nicht-JSON). ✓ *(Commit „Runde 4 A1: Kontaktformular schließt nach dem Senden“)*
 - [ ] **A2 Farbmodus nur Hell/Dunkel:** „Wie das System“ entfällt. Ein Knopf wechselt Hell ↔ Dunkel; beim allerersten
   Besuch gilt die Systemeinstellung als Startwert. Startseite: zwei Knöpfe (Sonne, Mond).
 - [ ] **A3 Kontrast aller Knöpfe:** „Weiter zu den Fakten“ in den Minispielen ist im Dunkelmodus weiß auf weiß.
