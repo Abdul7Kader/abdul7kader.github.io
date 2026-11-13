@@ -357,7 +357,7 @@ export default {
             name: 'Prompt-Fabrik',
             goal: 'Führen Sie den KI-Agenten sicher zur Auslieferung: Tippen Sie auf dem Fließband den Schritt an, dessen Platz gerade leuchtet. Ungeprüftes meiden!',
             result: { zero: 'Plan, Review, Tests – erst dann wird ausgeliefert.', other: '{n}× sicher ausgeliefert – mit Plan, Review und Tests.' },
-            steps: { requirement: 'Anforderung', plan: 'Plan prüfen', code: 'KI-Code', review: 'Human in the Loop', tests: 'Tests & QS' },
+            steps: { requirement: 'Anforderung', plan: 'Plan prüfen', code: 'Entwicklung', review: 'Human in the Loop', tests: 'Tests & QS' },
             traps: { unchecked: 'Ungeprüft übernehmen', unclear: 'Unklare Anforderung' },
             trapMsg: { unchecked: 'Nie ungeprüft!', unclear: 'Zu unklar!' },
             firstNeed: 'Erst {step}!',

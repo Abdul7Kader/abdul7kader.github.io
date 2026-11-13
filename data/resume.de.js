@@ -11,7 +11,7 @@ window.RESUME.de = {
     "location": "Dortmund",
     "tagline": "Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen Projekten – erleben Sie meinen Weg als kleine, begehbare Welt.",
     "availability": "Offen für neue Herausforderungen",
-    "summary": "Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen entsteht Software mit KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein.",
+    "summary": "Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen Entwicklung von Software, unterstützt von KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein.",
     "contact": {
         "email": "",
         "phone": "",
@@ -24,7 +24,7 @@ window.RESUME.de = {
         {
             "icon": "cpu",
             "title": "Softwareentwicklung mit KI",
-            "text": "Eigene Software mit KI-Agenten – mit Plan, menschlichem Review und Tests."
+            "text": "Eigene Produkte von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests."
         },
         {
             "icon": "code",
@@ -263,9 +263,9 @@ window.RESUME.de = {
             "role": "Mitgründer eines eigenen Unternehmens – Softwareentwicklung",
             "company": "Eigenes Unternehmen, Dortmund (nebenberuflich)",
             "bullets": [
-                "Konzeption und Entwicklung eigener Softwarelösungen mit KI-Agenten (Claude Code, OpenAI Codex) – von der Anforderung über Prompt-Design und Code-Generierung bis zu Test, Deployment und Support.",
-                "Entwicklung und schrittweise Optimierung von Prompts und Projektanweisungen, damit die KI-Agenten verlässliche und nachvollziehbare Ergebnisse liefern.",
-                "Kritische Prüfung KI-generierten Codes auf Korrektheit, Wartbarkeit und Sicherheit vor der Auslieferung.",
+                "Konzeption und Entwicklung eigener Softwarelösungen – von der Anforderung über Prompt Engineering, UI/UX-Design und Programmentwicklung bis zu Qualitätssicherung, Deployment und Support; KI-Agenten (Claude Code, OpenAI Codex) unterstützen dabei.",
+                "Schrittweise Optimierung von Prompts und Projektanweisungen, damit die KI-Agenten verlässlich und nachvollziehbar unterstützen.",
+                "Qualitätssicherung vor jeder Auslieferung: Code-Reviews und Tests auf Korrektheit, Wartbarkeit und Sicherheit.",
                 "Kundenprojekt Werkzeugverleih-Software: React, Node.js, Express.js, SQLite; inklusive Kundenabstimmung, Aufwandsschätzung und Angebot."
             ]
         },

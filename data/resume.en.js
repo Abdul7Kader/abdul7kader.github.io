@@ -8,10 +8,10 @@ window.RESUME.en = {
     "cardStatus": "open to new challenges",
     "tagline": "From a fresh start in 2014 to software developer at PSI and my own projects – experience my journey as a small, walkable world.",
     "availability": "Open to new challenges",
-    "summary": "Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I build software with AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away.",
+    "summary": "Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I develop software, supported by AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away.",
     "intro": "Welcome to my world! Walk with WASD/arrow keys or by clicking. Every building is a station of my CV.",
     "strengths": [
-        { "icon": "cpu", "title": "Software development with AI", "text": "My own software built with AI agents, backed by a plan, human review and tests." },
+        { "icon": "cpu", "title": "Software development with AI", "text": "Own products from idea to operation – AI agents as tools, quality through review and tests." },
         { "icon": "code", "title": "Hands-on since 2023", "text": "Working student at PSI: Java, SQL and a warehouse management system for logistics customers." },
         { "icon": "users", "title": "Communication & customer focus", "text": "Customer service and sales for Telekom and Samsung, customer meetings at PSI." },
         { "icon": "trending", "title": "Steep learning curve", "text": "Fresh start in 2014 – today German at C2 level, university entrance qualification and a computer science degree." }
@@ -131,9 +131,9 @@ window.RESUME.en = {
             "company": "Own company, Dortmund (part-time)",
             "founder": true,
             "bullets": [
-                "Design and development of own software solutions with AI agents (Claude Code, OpenAI Codex) – from requirements via prompt design and code generation to testing, deployment and support.",
-                "Development and step-by-step optimisation of prompts and project instructions so that the AI agents deliver reliable and traceable results.",
-                "Critical review of AI-generated code for correctness, maintainability and security before delivery.",
+                "Design and development of own software solutions – from requirements via prompt engineering, UI/UX design and software development to quality assurance, deployment and support, supported by AI agents (Claude Code, OpenAI Codex).",
+                "Step-by-step optimisation of prompts and project instructions so that the AI agents provide reliable and traceable support.",
+                "Quality assurance before every delivery: code reviews and tests for correctness, maintainability and security.",
                 "Customer project tool rental software: React, Node.js, Express.js, SQLite; including customer coordination, effort estimation and quotation."
             ]
         },

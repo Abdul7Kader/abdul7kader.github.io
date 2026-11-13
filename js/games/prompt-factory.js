@@ -1,6 +1,6 @@
 // Business-Viertel: „Prompt-Fabrik“ – ein sicherer KI-Workflow in fünf Schritten.
-// Ein KI-Agent liefert nur dann sicher aus, wenn der Mensch den Ablauf steuert: Anforderung klären, Plan prüfen,
-// Code generieren lassen, selbst reviewen (Human in the Loop), testen. Die Schritte fahren übers Fließband –
+// Sicher ausgeliefert wird nur, wenn der Mensch den Ablauf steuert: Anforderung klären, Plan prüfen,
+// entwickeln (mit Unterstützung des KI-Agenten), selbst reviewen (Human in the Loop), testen. Die Schritte fahren übers Fließband –
 // den Schritt antippen, dessen Platz gerade leuchtet. Störkarten („Ungeprüft übernehmen“) kosten die Combo.
 import { TAU, lerp, easeOut, pick } from '../core/math.js';
 import { t } from '../core/i18n.js';

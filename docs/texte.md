@@ -359,7 +359,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.games.career.result.other` | {n}× sicher ausgeliefert – mit Plan, Review und Tests. |
 | `ui.games.career.steps.requirement` | Anforderung |
 | `ui.games.career.steps.plan` | Plan prüfen |
-| `ui.games.career.steps.code` | KI-Code |
+| `ui.games.career.steps.code` | Entwicklung |
 | `ui.games.career.steps.review` | Human in the Loop |
 | `ui.games.career.steps.tests` | Tests & QS |
 | `ui.games.career.traps.unchecked` | Ungeprüft übernehmen |
@@ -405,10 +405,10 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.location` | Dortmund |
 | `cv.tagline` | Vom Neuanfang 2014 zum Softwareentwickler bei PSI und eigenen Projekten – erleben Sie meinen Weg als kleine, begehbare Welt. |
 | `cv.availability` | Offen für neue Herausforderungen |
-| `cv.summary` | Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen entsteht Software mit KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein. |
+| `cv.summary` | Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen Entwicklung von Software, unterstützt von KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein. |
 | `cv.intro` | Willkommen in meiner Welt! Laufen Sie mit WASD/Pfeiltasten oder per Klick. Jedes Gebäude ist eine Station meines Lebenslaufs. |
 | `cv.strengths[0].title` | Softwareentwicklung mit KI |
-| `cv.strengths[0].text` | Eigene Software mit KI-Agenten – mit Plan, menschlichem Review und Tests. |
+| `cv.strengths[0].text` | Eigene Produkte von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests. |
 | `cv.strengths[1].title` | Praxis seit 2023 |
 | `cv.strengths[1].text` | Werkstudent bei PSI: Java, SQL und ein Lagerverwaltungssystem für Logistik-Kunden. |
 | `cv.strengths[2].title` | Kommunikation & Kundenfokus |
@@ -510,9 +510,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.languages[3].name` | Französisch |
 | `cv.experience[0].role` | Mitgründer eines eigenen Unternehmens – Softwareentwicklung |
 | `cv.experience[0].company` | Eigenes Unternehmen, Dortmund (nebenberuflich) |
-| `cv.experience[0].bullets[0]` | Konzeption und Entwicklung eigener Softwarelösungen mit KI-Agenten (Claude Code, OpenAI Codex) – von der Anforderung über Prompt-Design und Code-Generierung bis zu Test, Deployment und Support. |
-| `cv.experience[0].bullets[1]` | Entwicklung und schrittweise Optimierung von Prompts und Projektanweisungen, damit die KI-Agenten verlässliche und nachvollziehbare Ergebnisse liefern. |
-| `cv.experience[0].bullets[2]` | Kritische Prüfung KI-generierten Codes auf Korrektheit, Wartbarkeit und Sicherheit vor der Auslieferung. |
+| `cv.experience[0].bullets[0]` | Konzeption und Entwicklung eigener Softwarelösungen – von der Anforderung über Prompt Engineering, UI/UX-Design und Programmentwicklung bis zu Qualitätssicherung, Deployment und Support; KI-Agenten (Claude Code, OpenAI Codex) unterstützen dabei. |
+| `cv.experience[0].bullets[1]` | Schrittweise Optimierung von Prompts und Projektanweisungen, damit die KI-Agenten verlässlich und nachvollziehbar unterstützen. |
+| `cv.experience[0].bullets[2]` | Qualitätssicherung vor jeder Auslieferung: Code-Reviews und Tests auf Korrektheit, Wartbarkeit und Sicherheit. |
 | `cv.experience[0].bullets[3]` | Kundenprojekt Werkzeugverleih-Software: React, Node.js, Express.js, SQLite; inklusive Kundenabstimmung, Aufwandsschätzung und Angebot. |
 | `cv.experience[1].role` | Werkstudent Softwareentwicklung |
 | `cv.experience[1].company` | PSI SE, Dortmund |
@@ -925,7 +925,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.games.career.result.other` | Shipped safely {n}× – with plan, review and tests. |
 | `ui.games.career.steps.requirement` | Requirement |
 | `ui.games.career.steps.plan` | Review plan |
-| `ui.games.career.steps.code` | AI code |
+| `ui.games.career.steps.code` | Development |
 | `ui.games.career.steps.review` | Human in the Loop |
 | `ui.games.career.steps.tests` | Tests & QA |
 | `ui.games.career.traps.unchecked` | Accept unchecked |
@@ -971,10 +971,10 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.location` | Dortmund |
 | `cv.tagline` | From a fresh start in 2014 to software developer at PSI and my own projects – experience my journey as a small, walkable world. |
 | `cv.availability` | Open to new challenges |
-| `cv.summary` | Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I build software with AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away. |
+| `cv.summary` | Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I develop software, supported by AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away. |
 | `cv.intro` | Welcome to my world! Walk with WASD/arrow keys or by clicking. Every building is a station of my CV. |
 | `cv.strengths[0].title` | Software development with AI |
-| `cv.strengths[0].text` | My own software built with AI agents, backed by a plan, human review and tests. |
+| `cv.strengths[0].text` | Own products from idea to operation – AI agents as tools, quality through review and tests. |
 | `cv.strengths[1].title` | Hands-on since 2023 |
 | `cv.strengths[1].text` | Working student at PSI: Java, SQL and a warehouse management system for logistics customers. |
 | `cv.strengths[2].title` | Communication & customer focus |
@@ -1076,9 +1076,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.languages[3].name` | French |
 | `cv.experience[0].role` | Co-founder of my own company – software development |
 | `cv.experience[0].company` | Own company, Dortmund (part-time) |
-| `cv.experience[0].bullets[0]` | Design and development of own software solutions with AI agents (Claude Code, OpenAI Codex) – from requirements via prompt design and code generation to testing, deployment and support. |
-| `cv.experience[0].bullets[1]` | Development and step-by-step optimisation of prompts and project instructions so that the AI agents deliver reliable and traceable results. |
-| `cv.experience[0].bullets[2]` | Critical review of AI-generated code for correctness, maintainability and security before delivery. |
+| `cv.experience[0].bullets[0]` | Design and development of own software solutions – from requirements via prompt engineering, UI/UX design and software development to quality assurance, deployment and support, supported by AI agents (Claude Code, OpenAI Codex). |
+| `cv.experience[0].bullets[1]` | Step-by-step optimisation of prompts and project instructions so that the AI agents provide reliable and traceable support. |
+| `cv.experience[0].bullets[2]` | Quality assurance before every delivery: code reviews and tests for correctness, maintainability and security. |
 | `cv.experience[0].bullets[3]` | Customer project tool rental software: React, Node.js, Express.js, SQLite; including customer coordination, effort estimation and quotation. |
 | `cv.experience[1].role` | Working student software development |
 | `cv.experience[1].company` | PSI SE, Dortmund |

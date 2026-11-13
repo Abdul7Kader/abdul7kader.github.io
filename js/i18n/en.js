@@ -356,7 +356,7 @@ export default {
             name: 'Prompt Factory',
             goal: 'Guide the AI agent safely to delivery: on the conveyor belt, tap the step whose slot is lit. Avoid anything unchecked!',
             result: { zero: 'Plan, review, tests – only then is it shipped.', other: 'Shipped safely {n}× – with plan, review and tests.' },
-            steps: { requirement: 'Requirement', plan: 'Review plan', code: 'AI code', review: 'Human in the Loop', tests: 'Tests & QA' },
+            steps: { requirement: 'Requirement', plan: 'Review plan', code: 'Development', review: 'Human in the Loop', tests: 'Tests & QA' },
             traps: { unchecked: 'Accept unchecked', unclear: 'Unclear requirement' },
             trapMsg: { unchecked: 'Never unchecked!', unclear: 'Too vague!' },
             firstNeed: '{step} first!',

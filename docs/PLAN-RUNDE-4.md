@@ -36,10 +36,10 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   „C2 – höchste Stufe des GER (kompetente Sprachverwendung)“, EN „C2 – Mastery, highest CEFR level“.
   (Der Europarat betont, dass C2 nicht „muttersprachlich“ bedeutet; „verhandlungssicher“ ist eine Lebenslauf-Floskel,
   meist C1–C2.) ✓ *(Commit „Runde 4 B3: Deutsch C2 mit GER-Bezeichnung“)*
-- [ ] **B4 Business-Viertel (eigenes Unternehmen):** „Prompt-Design und Code-Generierung“ → „Prompt Engineering,
+- [x] **B4 Business-Viertel (eigenes Unternehmen):** „Prompt-Design und Code-Generierung“ → „Prompt Engineering,
   UI/UX-Design, Programmentwicklung, Qualitätssicherung, Deployment und Support“. Nirgends „KI-generierter Code“:
   Formulierungen so, dass Abdul entwickelt und KI-Agenten unterstützen (auch Minispiel „Prompt-Fabrik“: Schritt
-  „KI-Code“ → „Entwicklung“, KI-Kompetenzen, Kurzprofil, Stärken – Deutsch und Englisch).
+  „KI-Code“ → „Entwicklung“, KI-Kompetenzen, Kurzprofil, Stärken – Deutsch und Englisch). ✓ *(Commit „Runde 4 B4: Business-Viertel: Abdul entwickelt, KI unterstützt“)*
 - [ ] **B5 Telekom:** Punkt „Bedarfsorientierter Verkauf … (Up- und Cross-Selling)“ löschen.
 - [ ] **B6 PSI nur einmal:** Werkstudent PSI steht nur im Business-Viertel – dort einmal „100 % ohne KI-Werkzeuge“
   (der doppelte Satz „Code-Reviews ohne KI-Unterstützung“ entfällt).
