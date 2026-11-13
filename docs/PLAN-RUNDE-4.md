@@ -28,7 +28,7 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   das Spielfeld skaliert auf die größtmögliche Fläche – Handy hoch/quer und Rechner. ✓ *(Commit „Runde 4 A5: Spielfenster nutzt den ganzen Bildschirm“)*
 
 ### B – Inhalte (keine Doppelungen)
-- [ ] **B1 Flaggen entfernen:** Syrien-Flagge raus, überall nur Ländernamen (Länderliste, Weltkarten-Tooltip, Suche).
+- [x] **B1 Flaggen entfernen:** Syrien-Flagge raus, überall nur Ländernamen (Länderliste, Weltkarten-Tooltip, Suche). ✓ *(Commit „Runde 4 B1: Flaggen entfernt, nur Ländernamen“)*
 - [ ] **B2 Sprachkurse zusammenlegen:** Integrationskurs VHS und Sprachkurs B1 → ein Eintrag „Integrations- und
   Sprachkurse bis B1“, Zeitraum **03.2015 – 04.2016** (Abdul schrieb „3.2025 bis 4.2026“ – ich gehe von 2015/2016 aus,
   weil die Kurse vor dem Abitur lagen; bitte bestätigen).

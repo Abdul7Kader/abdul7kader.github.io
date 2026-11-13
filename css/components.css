@@ -53,8 +53,6 @@
 .pv-link { align-self: flex-start; display: inline-flex; gap: 5px; align-items: center; margin-top: 4px; font-weight: 700; font-size: 0.86rem; color: var(--c1); text-decoration: none; }
 .pv-soon { align-self: flex-start; margin-top: 4px; font-size: 0.78rem; font-weight: 700; color: #9aa1ad; }
 .h-note { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: none; letter-spacing: 0; margin-left: 6px; }
-.flag-img { display: inline-block; width: 20px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.12); vertical-align: -2px; object-fit: cover; }
-.pi-ic .flag-img { width: 22px; height: 15px; }
 
 /* Abzeichen als Linien-Icons (Farbe je Station über --bc) */
 .hb .ico { width: 18px; height: 18px; }

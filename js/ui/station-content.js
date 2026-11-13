@@ -3,7 +3,6 @@
 import { esc, $$ } from '../core/dom.js';
 import { icon } from '../core/icons.js';
 import { t } from '../core/i18n.js';
-import { flagHtml } from '../core/flags.js';
 import { levelPct, noEmoji, hobbyIcon, projStage, displayDate } from '../core/derive.js';
 import { reducedMotion } from '../core/env.js';
 import { audio } from '../core/audio.js';
@@ -48,7 +47,7 @@ export const CONTENT = {
             <h3>${esc(t('facts.myMap'))}</h3>
             <div class="wm-root"></div>
             <h3>${esc(t('facts.countries'))}</h3>
-            <div class="flags">${countries.map(c => `<span class="flagchip">${flagHtml(c)} ${esc(c)}</span>`).join('')}</div>`;
+            <div class="flags">${countries.map(c => `<span class="flagchip">${esc(c)}</span>`).join('')}</div>`;
     },
     school() {
         return `<h3>${esc(t('facts.educationPath'))}</h3>${timeline(derived().educationDesc, e => ({ date: e.date, title: e.title, sub: e.detail, current: e.range.current, bullets: e.bullets }))}

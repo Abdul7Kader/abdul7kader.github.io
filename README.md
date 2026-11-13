@@ -31,7 +31,7 @@ data/                 Lebenslauf-Inhalte (Deutsch/Englisch)
 assets/img/           Fotos
 assets/data/          Kartendaten (Europa, Welt) – werden erst beim Öffnen geladen
 js/main.js            Einstieg: verbindet Welt, Spielstand und Oberfläche
-js/core/              Hilfen: DOM, Mathe, Speicher, Ereignisse, i18n, Farbmodus, Audio, Icons, Flaggen
+js/core/              Hilfen: DOM, Mathe, Speicher, Ereignisse, i18n, Farbmodus, Audio, Icons
 js/config/            Stellschrauben: Weltaufbau, Zeiten, Leistung, Farben (Tag/Nacht)
 js/world/             Spielwelt: Aufbau, Wegfindung, Eingabe, Renderer, Sprites (Gebäude, Menschen, Natur)
 js/games/             Minispiel-Engine und die sechs Spiele

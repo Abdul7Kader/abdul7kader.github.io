@@ -1,8 +1,7 @@
 // Ankunft & Reisen: „Stempel-Jet“ – Flugzeug steuern, Länder-Stempel einsammeln, Gewittern ausweichen.
 import { TAU, clamp, rand, shuffle } from '../core/math.js';
 import { t } from '../core/i18n.js';
-import { flagEmoji, flagImage } from '../core/flags.js';
-import { W, H, rr, ell, txt, emo } from './draw.js';
+import { W, H, rr, ell, txt } from './draw.js';
 
 const PHYS = { startSpeed: 230, speedGain: 7, lift: -1150, gravity: 680, minVy: -330, maxVy: 370, top: 50, bottomGap: 74, bounce: 0.3, idleSpeed: 80 };
 const SPAWN = { first: 0.9, min: 0.62, max: 0.95, stormChance: 0.24, stormAfter: 1.5, passChance: 0.31, trioChance: 0.45, trioGap: 64 };
@@ -37,7 +36,7 @@ export default {
                 const n = Math.random() < SPAWN.trioChance ? 3 : 1, y0 = rand(80, H - 120), dy = rand(-45, 45);
                 for (let i = 0; i < n; i++) {
                     const name = countries.length ? countries[ci++ % countries.length] : t('games.arrival.world');
-                    items.push({ kind: 'stamp', x: W + 40 + i * SPAWN.trioGap, y: clamp(y0 + dy * i, 70, H - 100), r: 26, name, flag: flagEmoji(name), img: flagImage(name), h: hue(name), rot: rand(-0.3, 0.3) });
+                    items.push({ kind: 'stamp', x: W + 40 + i * SPAWN.trioGap, y: clamp(y0 + dy * i, 70, H - 100), r: 26, name, h: hue(name), rot: rand(-0.3, 0.3) });
                 }
             }
         }
@@ -111,9 +110,7 @@ export default {
                         c.save(); c.translate(it.x, it.y + Math.sin(g.now * 3 + it.x * 0.02) * 3); c.rotate(it.rot);
                         c.fillStyle = '#fff'; ell(c, 0, 0, it.r, it.r); c.fill();
                         c.strokeStyle = `hsl(${it.h},70%,45%)`; c.lineWidth = 3; c.setLineDash([5, 4]); ell(c, 0, 0, it.r - 4, it.r - 4); c.stroke(); c.setLineDash([]);
-                        if (it.img && it.img.complete && it.img.naturalWidth) c.drawImage(it.img, -12, -11, 24, 16);
-                        else if (it.flag) emo(c, it.flag, 0, -3, 22);
-                        else txt(c, it.name.slice(0, 2).toUpperCase(), 0, -3, 16, `hsl(${it.h},70%,40%)`);
+                        txt(c, it.name.slice(0, 2).toUpperCase(), 0, -3, 16, `hsl(${it.h},70%,40%)`);   // Stempel: Anfangsbuchstaben statt Flagge
                         txt(c, it.name.length > 10 ? it.name.slice(0, 9) + '.' : it.name, 0, 14, 8.5, `hsl(${it.h},70%,35%)`);
                         c.restore();
                     } else if (it.kind === 'pass') {

@@ -6,7 +6,6 @@ import { esc } from '../core/dom.js';
 import { clamp } from '../core/math.js';
 import { isTouch } from '../core/env.js';
 import { t, lang } from '../core/i18n.js';
-import { flagHtml } from '../core/flags.js';
 
 const VIEWS = {
     europe: { url: 'assets/data/worldmap.json', minAreaUnvisited: 200000, microState: 6000, fontDivisor: 52, tag: true },
@@ -160,7 +159,7 @@ function draw(root, M, view, visitedNames, switchView) {
     const show = (el, x, y) => {
         const en = el.dataset.n, c = lookup.get(en.toLowerCase()), v = visited.has(en);
         const status = c === home ? t('worldmap.homeSince') : c === origin ? t('worldmap.origin') : v ? t('worldmap.visited') : t('worldmap.notVisited');
-        tip.innerHTML = `${v ? flagHtml(visited.get(en)) + ' ' : ''}<strong>${esc(label(c))}</strong><small>${esc(status)}</small>`;
+        tip.innerHTML = `<strong>${esc(label(c))}</strong><small>${esc(status)}</small>`;
         tip.className = 'wm-tip' + (v ? ' v' : '');
         tip.hidden = false;
         const r = wrap.getBoundingClientRect();

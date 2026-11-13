@@ -49,7 +49,7 @@ Was die Last gesenkt hat:
 
 ```
 js/main.js         Einstieg; verbindet Module über Ereignisse (core/events.js)
-js/core/           DOM, Mathe, Canvas-Grundformen, Speicher, Ereignisse, i18n, Farbmodus, Audio, Icons, Flaggen, Ableitungen
+js/core/           DOM, Mathe, Canvas-Grundformen, Speicher, Ereignisse, i18n, Farbmodus, Audio, Icons, Ableitungen
 js/config/         Weltaufbau (layout), Zeiten (timing), Leistung (performance), Farben Tag/Nacht (theme)
 js/world/          Aufbau, Wegfindung, Eingabe, Partikel, Renderer, Sprites (Gebäude, Menschen, Requisiten, Natur)
 js/games/          Engine + sechs Spiele, je eine Datei

@@ -4,7 +4,6 @@ import { t } from '../core/i18n.js';
 import { audio } from '../core/audio.js';
 import { emit } from '../core/events.js';
 import { skillIcon, noEmoji } from '../core/derive.js';
-import { flagEmoji, flagSvgUrl, flagHtml } from '../core/flags.js';
 import { World } from '../world/world.js';
 import { progress } from '../app/progress.js';
 import { data, derived, station } from '../app/content.js';
@@ -53,7 +52,7 @@ function buildIndex() {
     (d.aiSkills || []).forEach(a => add(C, '🤖', a.name, t('palette.aiSkill'), `${a.name} ${a.text} ki ai prompt`, info('lab')));
     (d.volunteer || []).forEach(v => add(C, '💛', v.title, t('palette.volunteer', { date: v.date }), `${v.title} ${v.detail || ''} ${t('palette.volunteerQ')}`, info('lake')));
     (d.hobbies || []).forEach(h => add(C, '🏄', noEmoji(h), t('palette.hobby'), `${h} ${t('palette.hobbyQ')}`, info('lake')));
-    x.countries.forEach(cn => add(C, flagEmoji(cn) || '🌍', cn, t('palette.country'), `${cn} ${t('palette.countryQ')}`, info('arrival'), { icHtml: flagSvgUrl(cn) ? flagHtml(cn) : '' }));
+    x.countries.forEach(cn => add(C, '🌍', cn, t('palette.country'), `${cn} ${t('palette.countryQ')}`, info('arrival')));
     return list;
 }
 
