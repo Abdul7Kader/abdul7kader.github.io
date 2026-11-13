@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (542 Texte)
+## Deutsch (541 Texte)
 
 ### Doppelungen
 
@@ -521,7 +521,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.experience[1].bullets[2]` | Konfiguration und serverseitige Anbindung von Schnittstellen; automatisierte und manuelle Tests; Versionsverwaltung mit GitLab. |
 | `cv.experience[1].bullets[3]` | Teilnahme an Kundenterminen zur Aufnahme und Abstimmung fachlicher Anforderungen. |
 | `cv.experience[1].badge` | 100 % ohne KI-Werkzeuge |
-| `cv.experience[1].note` | Bei PSI entwickle ich klassisch im Team – Java, SQL und Code-Reviews ohne KI-Unterstützung. |
 | `cv.experience[2].role` | Kundenservice und Vertrieb – Telekom-Auftrag (Vollzeit) |
 | `cv.experience[2].company` | Amevida, Dortmund |
 | `cv.experience[2].bullets[0]` | Beratung von Telekom-Kunden zu Tarifen, Verträgen und Produkten. |
@@ -571,7 +570,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (542 Texte)
+## Englisch (541 Texte)
 
 ### Doppelungen
 
@@ -1086,7 +1085,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.experience[1].bullets[2]` | Configuration and server-side integration of interfaces; automated and manual tests; version control with GitLab. |
 | `cv.experience[1].bullets[3]` | Participation in customer meetings to gather and align functional requirements. |
 | `cv.experience[1].badge` | 100 % without AI tools |
-| `cv.experience[1].note` | At PSI I develop the classic way in the team – Java, SQL and code reviews without AI support. |
 | `cv.experience[2].role` | Customer service and sales – Telekom account (full-time) |
 | `cv.experience[2].company` | Amevida, Dortmund |
 | `cv.experience[2].bullets[0]` | Advising Telekom customers on tariffs, contracts and products. |

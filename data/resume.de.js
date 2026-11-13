@@ -280,8 +280,7 @@ window.RESUME.de = {
                 "Konfiguration und serverseitige Anbindung von Schnittstellen; automatisierte und manuelle Tests; Versionsverwaltung mit GitLab.",
                 "Teilnahme an Kundenterminen zur Aufnahme und Abstimmung fachlicher Anforderungen."
             ],
-            "badge": "100 % ohne KI-Werkzeuge",
-            "note": "Bei PSI entwickle ich klassisch im Team – Java, SQL und Code-Reviews ohne KI-Unterstützung."
+            "badge": "100 % ohne KI-Werkzeuge"
         },
         {
             "date": "01.2021 - 12.2021",

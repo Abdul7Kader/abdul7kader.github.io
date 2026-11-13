@@ -148,8 +148,7 @@ window.RESUME.en = {
                 "Configuration and server-side integration of interfaces; automated and manual tests; version control with GitLab.",
                 "Participation in customer meetings to gather and align functional requirements."
             ],
-            "badge": "100 % without AI tools",
-            "note": "At PSI I develop the classic way in the team – Java, SQL and code reviews without AI support."
+            "badge": "100 % without AI tools"
         },
         {
             "date": "01.2021 - 12.2021",

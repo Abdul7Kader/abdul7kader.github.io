@@ -41,8 +41,8 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Formulierungen so, dass Abdul entwickelt und KI-Agenten unterstützen (auch Minispiel „Prompt-Fabrik“: Schritt
   „KI-Code“ → „Entwicklung“, KI-Kompetenzen, Kurzprofil, Stärken – Deutsch und Englisch). ✓ *(Commit „Runde 4 B4: Business-Viertel: Abdul entwickelt, KI unterstützt“)*
 - [x] **B5 Telekom:** Punkt „Bedarfsorientierter Verkauf … (Up- und Cross-Selling)“ löschen. ✓ *(Commit „Runde 4 B5: Telekom ohne Up-/Cross-Selling-Punkt“)*
-- [ ] **B6 PSI nur einmal:** Werkstudent PSI steht nur im Business-Viertel – dort einmal „100 % ohne KI-Werkzeuge“
-  (der doppelte Satz „Code-Reviews ohne KI-Unterstützung“ entfällt).
+- [x] **B6 PSI nur einmal:** Werkstudent PSI steht nur im Business-Viertel – dort einmal „100 % ohne KI-Werkzeuge“
+  (der doppelte Satz „Code-Reviews ohne KI-Unterstützung“ entfällt). ✓ *(Commit „Runde 4 B6: PSI-Hinweis nur einmal“)*
 - [ ] **B7 Tech-Lab = Werkzeuge + GitHub:** Im Tech-Lab nur noch Technologien und Werkzeuge (Sprachen, Datenbanken,
   Web, Tools, Betriebssysteme, ITSM, KI-Werkzeuge) und die GitHub-Ansicht – keine Rollenkarte, keine Aufgaben.
   Die GitHub-Werkstatt wird mit dem Tech-Lab zusammengelegt: Die Leuchtwand zieht aufs Tech-Lab-Dach, das separate
