@@ -101,7 +101,6 @@ export function derive(data) {
         if (a.range.current !== b.range.current) return a.range.current ? -1 : 1;
         return (b.range.start || 0) - (a.range.start || 0);
     });
-    d.currentRole = d.experienceDesc.find(e => e.primary) || d.experienceDesc.find(e => e.range.current) || d.experienceDesc[0] || null;
     d.founderRole = d.experienceDesc.find(e => e.founder || /gründer|founder/i.test(e.role)) || null;
 
     const edu = (data.education || []).map(e => ({ ...e, range: parseRange(e.date) }));

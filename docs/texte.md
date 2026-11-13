@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (541 Texte)
+## Deutsch (535 Texte)
 
 ### Doppelungen
 
@@ -104,7 +104,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.world.signs.yourCompany` | Ihr Unternehmen? |
 | `ui.world.signs.toStations` | → Stationen |
 | `ui.world.signs.toStart` | Start ← |
-| `ui.world.signs.githubWall` | Beiträge · 20 Wochen |
+| `ui.world.signs.githubWall` | GitHub · {n} Wochen |
 | `ui.world.locked` | 🔒 Noch gesperrt |
 | `ui.world.enterTouch` | „Betreten“ antippen |
 | `ui.world.enterKeys` | E / Enter · Betreten |
@@ -131,8 +131,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.facts.educationPath` | Vom Integrationskurs zum Studium |
 | `ui.facts.languagesToday` | Meine Sprachen heute |
 | `ui.facts.experience` | Berufserfahrung |
-| `ui.facts.currentPosition` | Aktuelle Position |
-| `ui.facts.since` | seit {since} |
 | `ui.facts.aiSkills` | KI-Kompetenzen |
 | `ui.facts.workingOn` | Woran ich gerade arbeite |
 | `ui.facts.myGithub` | Mein GitHub |
@@ -191,10 +189,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.more` | mehr |
 | `ui.github.latest` | Letzte Commits |
 | `ui.github.pushed` | Neue Commits gepusht |
-| `ui.workshop.title` | GitHub-Werkstatt |
-| `ui.workshop.kicker` | Extra · kein Kapitel |
-| `ui.workshop.era` | live aus GitHub |
-| `ui.workshop.intro` | Hier sehen Sie, woran ich gerade arbeite – täglich aktualisiert aus meinem GitHub-Profil. |
 | `ui.finale.photoLabel` | Foto von {name} mit dem Firmennamen auf dem T-Shirt |
 | `ui.finale.stickerBand` | MEIN NÄCHSTES KAPITEL |
 | `ui.finale.firmLabel` | Ihr Unternehmen |
@@ -440,9 +434,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.stations.career.badge` | Kundenfokus |
 | `cv.stations.career.story` | Ich übersetze Kundenwünsche in Lösungen: Im Kundenservice habe ich gelernt, genau hinzuhören – heute stimme ich Anforderungen direkt mit Kunden ab. |
 | `cv.stations.lab.title` | Tech-Lab |
-| `cv.stations.lab.era` | seit 11.2023 |
+| `cv.stations.lab.era` | Werkzeuge & GitHub |
 | `cv.stations.lab.badge` | Problemlöser |
-| `cv.stations.lab.story` | Hier entsteht Code – bei PSI im Team mit Java und SQL, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt. |
+| `cv.stations.lab.story` | Mein Werkzeugkasten: Sprachen, Datenbanken, Tools und KI-Agenten – für jedes Problem das passende Werkzeug. Auf dem Dach leuchtet live, woran ich gerade auf GitHub arbeite. |
 | `cv.stations.projects.title` | Projekt-Baustelle |
 | `cv.stations.projects.era` | eigene Projekte |
 | `cv.stations.projects.badge` | Macher |
@@ -570,7 +564,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (541 Texte)
+## Englisch (535 Texte)
 
 ### Doppelungen
 
@@ -668,7 +662,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.world.signs.yourCompany` | Your company? |
 | `ui.world.signs.toStations` | → Stations |
 | `ui.world.signs.toStart` | Start ← |
-| `ui.world.signs.githubWall` | Contributions · 20 weeks |
+| `ui.world.signs.githubWall` | GitHub · {n} weeks |
 | `ui.world.locked` | 🔒 Still locked |
 | `ui.world.enterTouch` | Tap “Enter” |
 | `ui.world.enterKeys` | E / Enter · Enter |
@@ -695,8 +689,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.facts.educationPath` | From integration course to university |
 | `ui.facts.languagesToday` | My languages today |
 | `ui.facts.experience` | Work experience |
-| `ui.facts.currentPosition` | Current position |
-| `ui.facts.since` | since {since} |
 | `ui.facts.aiSkills` | AI skills |
 | `ui.facts.workingOn` | What I’m working on |
 | `ui.facts.myGithub` | My GitHub |
@@ -755,10 +747,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.more` | more |
 | `ui.github.latest` | Latest commits |
 | `ui.github.pushed` | Pushed new commits |
-| `ui.workshop.title` | GitHub Workshop |
-| `ui.workshop.kicker` | Bonus · not a chapter |
-| `ui.workshop.era` | live from GitHub |
-| `ui.workshop.intro` | This is what I’m working on right now – updated daily from my GitHub profile. |
 | `ui.finale.photoLabel` | Photo of {name} with the company name on the T-shirt |
 | `ui.finale.stickerBand` | MY NEXT CHAPTER |
 | `ui.finale.firmLabel` | Your company |
@@ -1004,9 +992,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.stations.career.badge` | Customer focus |
 | `cv.stations.career.story` | I translate customer wishes into solutions: in customer service I learned to listen carefully – today I align requirements directly with customers. |
 | `cv.stations.lab.title` | Tech Lab |
-| `cv.stations.lab.era` | since 11.2023 |
+| `cv.stations.lab.era` | Tools & GitHub |
 | `cv.stations.lab.badge` | Problem solver |
-| `cv.stations.lab.story` | This is where code gets written – with my team at PSI in Java and SQL, and together with AI agents in my own company. Both have their place, and I know when to use which. |
+| `cv.stations.lab.story` | My toolbox: languages, databases, tools and AI agents – the right tool for every problem. The wall on the roof shows live what I am working on at GitHub. |
 | `cv.stations.projects.title` | Project Site |
 | `cv.stations.projects.era` | own projects |
 | `cv.stations.projects.badge` | Doer |

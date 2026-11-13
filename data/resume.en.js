@@ -50,9 +50,9 @@ window.RESUME.en = {
         },
         "lab": {
             "title": "Tech Lab",
-            "era": "since 11.2023",
+            "era": "Tools & GitHub",
             "badge": "Problem solver",
-            "story": "This is where code gets written – with my team at PSI in Java and SQL, and together with AI agents in my own company. Both have their place, and I know when to use which."
+            "story": "My toolbox: languages, databases, tools and AI agents – the right tool for every problem. The wall on the roof shows live what I am working on at GitHub."
         },
         "projects": {
             "title": "Project Site",

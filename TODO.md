@@ -65,7 +65,7 @@ Branch `abdul7kader/refactoring`. Kein Merge auf `main` ohne Freigabe.
 - ✅ **Performance:** Hauptthread vorher → jetzt: Welt steht 100 → 13–15 %, Welt läuft 100 → 29–35 %, Dialog 53 → 1 %, Minispiel 63 → 27–30 %. Alle Zielwerte erreicht (Messung ohne Grafikkarte, siehe Bericht).
 - ✅ **Englisch überall:** Oberfläche, Minispiele, Welt-Schilder, Lebenslauf, PDF, Formular, Weltkarte, Admin, Unterseiten. Umschalter DE/EN, `?lang=en`. ⏳ Abdul prüft die Übersetzung in `data/resume.en.js`.
 - ✅ **Dark Mode:** System/Hell/Dunkel ohne Aufblitzen. Oberfläche, Spielwelt bei Nacht (leuchtende Laternen), Projekt-Viertel mit Sternenhimmel, Weltkarte, GitHub, Admin, Unterseiten. PDF und Druck bleiben hell. Kontrast in beiden Modi nach WCAG AA geprüft.
-- ✅ **Lücken aus Runde 2:** GitHub-Werkstatt mit Leuchtwand (#3, #16), Weltkarte mit Weltansicht und Pinch-/Strg-Zoom (#7), Projekt-Viertel zoom- und verschiebbar (#11), Datenschutz-Seite (#14), Linkseite `/links/` mit Admin (#18), Abzeichen als Icons (#17), Textliste ohne Doppelungen (#10).
+- ✅ **Lücken aus Runde 2:** GitHub-Leuchtwand (#3, #16; seit Runde 4 auf dem Tech-Lab-Dach), Weltkarte mit Weltansicht und Pinch-/Strg-Zoom (#7), Projekt-Viertel zoom- und verschiebbar (#11), Datenschutz-Seite (#14), Linkseite `/links/` mit Admin (#18), Abzeichen als Icons (#17), Textliste ohne Doppelungen (#10).
 - ✅ **Qualität:** Tests für Smoke (DE/EN, Hell/Dunkel), Sprachen, Kontrast, Screenshots, Leistung; CI auf GitHub mit Chromium, Firefox und WebKit; README.
 - ✅ **Nachtrag 12.11. morgens:** Projekt-Viertel begehbar – Abdul läuft zum angetippten Gebäude und zeigt das Projekt, Pfeiltasten und Enter gehen auch (#11). Minispiele nachts mit Sternen, Mond und dunklerer Landschaft.
 

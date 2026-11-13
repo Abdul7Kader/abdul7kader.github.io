@@ -1,7 +1,7 @@
 // Natur: Bäume und die einmal vorgerenderte Bodenebene (Gras, Hügel, Wege, Platz, See, Landebahn).
 import { rng } from '../../core/math.js';
 import { rr, ellipse } from '../draw.js';
-import { WORLD, ROADS, SIDE_PATHS, ROAD_WIDTH, PLAZA, LAKE, HILL, RUNWAY } from '../../config/layout.js';
+import { WORLD, ROADS, ROAD_WIDTH, PLAZA, LAKE, HILL, RUNWAY } from '../../config/layout.js';
 
 // ------------------------------------------------------------------ Bäume
 const TRUNK = '#7a5235';
@@ -45,7 +45,7 @@ const PLAZA_RING_STEP = 26;
 function strokeRoads(c, color, width, dash) {
     c.strokeStyle = color; c.lineWidth = width;
     if (dash) c.setLineDash(dash);
-    ROADS.concat(SIDE_PATHS).forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
+    ROADS.forEach(r => { c.beginPath(); c.moveTo(r[0][0], r[0][1]); r.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); });
     c.setLineDash([]);
 }
 

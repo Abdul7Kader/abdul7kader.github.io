@@ -93,8 +93,7 @@ export default {
             yourCompany: 'Ihr Unternehmen?',
             toStations: '→ Stationen',
             toStart: 'Start ←',
-            github: 'GITHUB',
-            githubWall: 'Beiträge · 20 Wochen'
+            githubWall: 'GitHub · {n} Wochen'
         },
         locked: '🔒 Noch gesperrt',
         enterTouch: '„Betreten“ antippen',
@@ -128,8 +127,6 @@ export default {
         educationPath: 'Vom Integrationskurs zum Studium',
         languagesToday: 'Meine Sprachen heute',
         experience: 'Berufserfahrung',
-        currentPosition: 'Aktuelle Position',
-        since: 'seit {since}',
         aiSkills: 'KI-Kompetenzen',
         workingOn: 'Woran ich gerade arbeite',
         myGithub: 'Mein GitHub',
@@ -190,13 +187,6 @@ export default {
         more: 'mehr',
         latest: 'Letzte Commits',
         pushed: 'Neue Commits gepusht'
-    },
-
-    workshop: {
-        title: 'GitHub-Werkstatt',
-        kicker: 'Extra · kein Kapitel',
-        era: 'live aus GitHub',
-        intro: 'Hier sehen Sie, woran ich gerade arbeite – täglich aktualisiert aus meinem GitHub-Profil.'
     },
 
     finale: {

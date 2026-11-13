@@ -5,9 +5,6 @@
 .ico { width: 1.1em; height: 1.1em; flex: none; vertical-align: -0.18em; }
 .noai { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 2px; padding: 3px 10px; border-radius: 999px; background: #e7f0ff; color: #1d4ed8; font-size: 0.74rem; font-weight: 800; }
 .noai::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.rc-noai { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); }
-.rc-noai b { background: #ffd166; color: #16213f; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
-.rc-noai span { font-size: 0.9rem; opacity: 0.92; }
 .role-card .rc-sub { opacity: 0.8; }
 .hobby b { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto; border-radius: 16px; background: #fff; color: var(--c1); box-shadow: var(--shadow-sm); font-size: 1.6rem; }
 .hobby b .ico { width: 26px; height: 26px; }
@@ -67,7 +64,6 @@
 .je .ico { width: 22px; height: 22px; }
 
 /* GitHub-Werkstatt */
-.workshop-intro { color: var(--muted); margin-bottom: 12px; line-height: 1.55; }
 
 /* Projekt-Viertel: Zoom-Knöpfe */
 .pv-tools { display: flex; justify-content: flex-end; gap: 4px; margin: -4px 0 6px; }

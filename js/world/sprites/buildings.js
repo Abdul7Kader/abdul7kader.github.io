@@ -5,6 +5,7 @@
 // s = Station aus config/layout.js; yT = Oberkante der Fassade, yR = hintere Dachkante.
 import { TAU } from '../../core/math.js';
 import { rr, ellipse, signText, FONT } from '../draw.js';
+import { ACTIVITY_WEEKS } from '../../config/layout.js';
 
 const SHADOW = 'rgba(25,50,20,0.22)';
 const top = (s) => { const yT = s.base - s.height; return { yT, yR: yT - s.depth }; };
@@ -157,8 +158,16 @@ const career = {
 };
 
 // ------------------------------------------------------------------ Tech-Lab
-const LAB = { wall: ['#fbfdff', '#e4ecf3'], roof: ['#2c3e50', '#1d2b38'], stripe: '#2ec4b6', screen: '#1b2a3a', ledA: '#4cf0a0', ledB: '#4cd0ff', ledOff: '#2d4357', screenGlow: 'rgba(76,240,255,0.25)', door: '#2ec4b6', signBg: '#132232', neon: '#2ef0e0', neonText: 'rgba(90,255,235,0.95)', dishPole: '#8796a8', dish: '#e6edf5', vent: '#56687c', ventSlat: '#9fb2c6' };
+const LAB = { wall: ['#fbfdff', '#e4ecf3'], roof: ['#2c3e50', '#1d2b38'], stripe: '#2ec4b6', screen: '#1b2a3a', ledA: '#4cf0a0', ledB: '#4cd0ff', ledOff: '#2d4357', screenGlow: 'rgba(76,240,255,0.25)', door: '#2ec4b6', signBg: '#132232', neon: '#2ef0e0', neonText: 'rgba(90,255,235,0.95)', dishPole: '#8796a8', dish: '#e6edf5' };
 const LAB_SCREENS = 6, LAB_LEDS = 4;
+// Leuchtwand auf dem Dach: GitHub-Beitrags-Kacheln der letzten Wochen (info.activity, Stufen 0–4).
+// Die Kacheln werden nach der Nacht-Abdunklung gemalt (glow) – nachts leuchten sie.
+const WALL_COLORS = { frame: '#24292f', panel: '#0d1117', text: '#c9d1d9', tiles: ['#1f2933', '#0e4429', '#006d32', '#26a641', '#39d353'] };
+const WALL = { weeks: ACTIVITY_WEEKS, cell: 9, gap: 2, padX: 10, padTop: 18, padBottom: 4, right: 18, top: 4 };
+const wallBox = (s) => {
+    const w = WALL.weeks * WALL.cell + WALL.padX * 2, h = 7 * WALL.cell + WALL.padTop + WALL.padBottom;
+    return { x: s.x + s.w - WALL.right - w, y: top(s).yR + WALL.top, w, h };
+};
 const labScreenX = (s, i) => s.x + 16 + i * 50;
 const labSkipsScreen = (s, i) => Math.abs(labScreenX(s, i) + 20 - (s.x + s.w / 2)) < 30;   // Platz für die Tür
 const lab = {
@@ -179,8 +188,18 @@ const lab = {
         c.restore();
         signText(c, info.t('world.signs.lab'), s.x + s.w / 2, yT - 11, 15, P.neonText, 800);
         c.fillStyle = P.dishPole; c.fillRect(s.x + 57, yR + 20, 6, 18);
-        c.fillStyle = P.vent; c.fillRect(s.x + s.w - 90, yR + 26, 50, 30);
-        c.fillStyle = P.ventSlat; for (let i = 0; i < 4; i++) c.fillRect(s.x + s.w - 86 + i * 12, yR + 30, 8, 22);
+        const b = wallBox(s);   // Leuchtwand: Gestell und dunkle Fläche
+        c.fillStyle = WALL_COLORS.panel; rr(c, b.x, b.y, b.w, b.h, 8); c.fill();
+        c.strokeStyle = WALL_COLORS.frame; c.lineWidth = 3; rr(c, b.x, b.y, b.w, b.h, 8); c.stroke();
+    },
+    glow(c, s, info) {
+        const b = wallBox(s), levels = info.activity;
+        signText(c, info.t('world.signs.githubWall', { n: WALL.weeks }), b.x + b.w / 2, b.y + 9.5, 9, WALL_COLORS.text, 800);
+        for (let i = 0; i < WALL.weeks * 7; i++) {
+            const col = Math.floor(i / 7), row = i % 7;
+            c.fillStyle = WALL_COLORS.tiles[levels ? (levels[i] || 0) : 0];
+            rr(c, b.x + WALL.padX + col * WALL.cell, b.y + WALL.padTop + row * WALL.cell, WALL.cell - WALL.gap, WALL.cell - WALL.gap, 2); c.fill();
+        }
     },
     anim(c, s, time) {
         const P = LAB, { yT, yR } = top(s);
@@ -323,42 +342,5 @@ const finale = {
     animBox: (s) => { const { yR } = top(s); return [s.x + 6, yR - 46, s.x + s.w + 24, yR - 18]; }
 };
 
-// ------------------------------------------------------------------ GitHub-Werkstatt (kein Kapitel)
-// Auf dem Dach steht eine Leuchtwand mit den Beitrags-Kacheln der letzten Wochen (info.activity, Stufen 0–4).
-// Die Kacheln werden nach der Nacht-Abdunklung gemalt (glow) – nachts leuchten sie.
-const SHOP = { wall: ['#f4f1ea', '#e2dccf'], roof: ['#3b3f46', '#2b2f35'], door: '#2da44e', window: '#9fd4f5', frame: '#24292f', panel: '#0d1117', sign: '#24292f', signText: '#ffffff' };
-const TILE_COLORS = ['#1f2933', '#0e4429', '#006d32', '#26a641', '#39d353'];
-const WALL = { weeks: 20, cell: 10, gap: 2, padX: 10, padTop: 20, padBottom: 8, lift: 16 };
-const wallBox = (s) => {
-    const w = WALL.weeks * WALL.cell + WALL.padX * 2, h = 7 * WALL.cell + WALL.padTop + WALL.padBottom;
-    const { yR } = top(s);
-    return { x: s.x + (s.w - w) / 2, y: yR - h + WALL.lift, w, h };
-};
-const workshop = {
-    pad: { left: 14, right: 26, top: 120, bottom: 18 },
-    paint(c, s, info) {
-        const P = SHOP, { yT } = box(c, s, P.wall, P.roof);
-        windows(c, s.x + 16, yT + 22, 84, 44, 2, 1, P.window);
-        windows(c, s.x + s.w - 100, yT + 22, 84, 44, 2, 1, P.window);
-        door(c, s.x + s.w / 2, s.base, P.door, 40, 48);
-        c.fillStyle = P.sign; rr(c, s.x + s.w / 2 - 54, yT + 4, 108, 24, 6); c.fill();
-        signText(c, info.t('world.signs.github'), s.x + s.w / 2, yT + 16.5, 12, P.signText, 800);
-        const b = wallBox(s);   // Leuchtwand: Gestell und dunkle Fläche
-        c.fillStyle = P.frame; c.fillRect(b.x + 18, b.y + b.h - 2, 6, WALL.lift + 4); c.fillRect(b.x + b.w - 24, b.y + b.h - 2, 6, WALL.lift + 4);
-        c.fillStyle = P.panel; rr(c, b.x, b.y, b.w, b.h, 8); c.fill();
-        c.strokeStyle = P.frame; c.lineWidth = 3; rr(c, b.x, b.y, b.w, b.h, 8); c.stroke();
-    },
-    glow(c, s, info) {
-        const b = wallBox(s), levels = info.activity;
-        signText(c, info.t('world.signs.githubWall'), b.x + b.w / 2, b.y + 10.5, 9, '#c9d1d9', 800);
-        for (let i = 0; i < WALL.weeks * 7; i++) {
-            const col = Math.floor(i / 7), row = i % 7;
-            const lv = levels ? (levels[i] || 0) : 0;
-            c.fillStyle = TILE_COLORS[lv];
-            rr(c, b.x + WALL.padX + col * WALL.cell, b.y + WALL.padTop + row * WALL.cell, WALL.cell - WALL.gap, WALL.cell - WALL.gap, 2); c.fill();
-        }
-    }
-};
-
-export const BUILDINGS = { airport, school, career, lab, construction, boathouse, finale, workshop };
+export const BUILDINGS = { airport, school, career, lab, construction, boathouse, finale };
 export const buildingTop = top;

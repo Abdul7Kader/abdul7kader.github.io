@@ -43,10 +43,10 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 - [x] **B5 Telekom:** Punkt „Bedarfsorientierter Verkauf … (Up- und Cross-Selling)“ löschen. ✓ *(Commit „Runde 4 B5: Telekom ohne Up-/Cross-Selling-Punkt“)*
 - [x] **B6 PSI nur einmal:** Werkstudent PSI steht nur im Business-Viertel – dort einmal „100 % ohne KI-Werkzeuge“
   (der doppelte Satz „Code-Reviews ohne KI-Unterstützung“ entfällt). ✓ *(Commit „Runde 4 B6: PSI-Hinweis nur einmal“)*
-- [ ] **B7 Tech-Lab = Werkzeuge + GitHub:** Im Tech-Lab nur noch Technologien und Werkzeuge (Sprachen, Datenbanken,
+- [x] **B7 Tech-Lab = Werkzeuge + GitHub:** Im Tech-Lab nur noch Technologien und Werkzeuge (Sprachen, Datenbanken,
   Web, Tools, Betriebssysteme, ITSM, KI-Werkzeuge) und die GitHub-Ansicht – keine Rollenkarte, keine Aufgaben.
   Die GitHub-Werkstatt wird mit dem Tech-Lab zusammengelegt: Die Leuchtwand zieht aufs Tech-Lab-Dach, das separate
-  Werkstatt-Gebäude entfällt (an seinem Platz wächst wieder Wald). Neuer Erzähltext ohne PSI-Wiederholung.
+  Werkstatt-Gebäude entfällt (an seinem Platz wächst wieder Wald). Neuer Erzähltext ohne PSI-Wiederholung. ✓ *(Commit „Runde 4 B7: Tech-Lab mit GitHub zusammengelegt“)*
 - [ ] **B8 Projekt-Baustelle ohne GitHub-Karte** (steht jetzt nur noch im Tech-Lab).
 - [ ] **B9 Rustfall:** „im Stil von Mad Max“ → „postapokalyptisches Handyspiel“ (ohne Filmbezug).
 - [ ] **B10 Finale:** Knopf „Abdul Kader kontaktieren“ (Feld `contactName`), der doppelte Knopf „Kontakt aufnehmen“ entfällt.

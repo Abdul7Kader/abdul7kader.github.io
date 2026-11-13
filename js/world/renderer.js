@@ -448,7 +448,7 @@ function drawOverlay(c, time, vb) {
     }
 }
 // Höhe der Beschriftung über dem Dach je Gebäudetyp
-const LABEL_LIFT = { career: 100, airport: 30, school: 136, construction: 60, workshop: 124, default: 34 };
+const LABEL_LIFT = { career: 100, airport: 30, school: 136, construction: 60, default: 34 };
 const EDGE_ARROW = { margin: 56, r: 24 };
 
 /** Letztes Bild einmal weichzeichnen (hinter Dialogen, statt einer ständig neu berechneten CSS-Unschärfe) */

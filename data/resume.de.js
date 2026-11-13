@@ -85,9 +85,9 @@ window.RESUME.de = {
         },
         "lab": {
             "title": "Tech-Lab",
-            "era": "seit 11.2023",
+            "era": "Werkzeuge & GitHub",
             "badge": "Problemlöser",
-            "story": "Hier entsteht Code – bei PSI im Team mit Java und SQL, im eigenen Unternehmen gemeinsam mit KI-Agenten. Beides hat seinen Platz, und ich weiß, wann was passt."
+            "story": "Mein Werkzeugkasten: Sprachen, Datenbanken, Tools und KI-Agenten – für jedes Problem das passende Werkzeug. Auf dem Dach leuchtet live, woran ich gerade auf GitHub arbeite."
         },
         "projects": {
             "title": "Projekt-Baustelle",

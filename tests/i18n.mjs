@@ -109,7 +109,7 @@ await page.waitForTimeout(200);
 await app(A => A.setLang('de'));
 await page.waitForTimeout(400);
 const deTitle = await page.textContent('#station-title');
-check(deTitle === 'Tech-Lab' && /Aktuelle Position/.test(await page.textContent('#station-body')), `Umschalten auf Deutsch baut den offenen Dialog neu auf (${deTitle})`);
+check(deTitle === 'Tech-Lab' && /KI-Kompetenzen/.test(await page.textContent('#station-body')), `Umschalten auf Deutsch baut den offenen Dialog neu auf (${deTitle})`);
 check(await page.evaluate(() => document.documentElement.lang) === 'de', '<html lang="de"> nach dem Umschalten');
 const visited = await app(A => A.state());
 check(visited.visited >= 7, 'Spielstand bleibt beim Umschalten erhalten');

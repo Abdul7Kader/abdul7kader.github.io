@@ -57,11 +57,8 @@ export const CONTENT = {
         return `<h3>${esc(t('facts.experience'))}</h3>${timeline(derived().experienceDesc, e => ({ date: e.date, title: e.role, sub: e.company, current: e.range.current, bullets: e.bullets, badge: e.badge }))}`;
     },
     lab() {
-        const r = derived().currentRole, d = data();
+        const d = data();
         return `
-            ${r ? `<div class="role-card"><span class="kicker">${esc(t('facts.currentPosition'))}</span><strong>${esc(r.role)}</strong><span class="rc-sub">${esc(r.company)} · ${esc(t('facts.since', { since: sinceDate(r.date) }))}</span>
-                ${r.badge || r.note ? `<p class="rc-noai">${r.badge ? `<b>${esc(r.badge)}</b>` : ''}${r.note ? `<span>${esc(r.note)}</span>` : ''}</p>` : ''}
-                ${(r.bullets || []).length ? `<ul>${r.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div>` : ''}
             ${(d.aiSkills || []).length ? `<h3>${esc(t('facts.aiSkills'))}</h3><div class="ai-grid">${d.aiSkills.map(a => `<div class="ai-item"><strong>${esc(a.name)}</strong><span>${esc(a.text)}</span></div>`).join('')}</div>` : ''}
             ${derived().skills.map(s => `<h3>${esc(s.name)}${s.note ? ` <small class="h-note">${esc(s.note)}</small>` : ''}</h3>${chips(String(s.level).split(',').map(x => x.trim()).filter(Boolean))}`).join('')}
             <h3>${esc(t('facts.workingOn'))}</h3>
