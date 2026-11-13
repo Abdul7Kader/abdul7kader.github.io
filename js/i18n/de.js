@@ -186,7 +186,15 @@ export default {
         less: 'weniger',
         more: 'mehr',
         latest: 'Letzte Commits',
-        pushed: 'Neue Commits gepusht'
+        pushed: 'Neue Commits gepusht',
+        overview: 'Commits im Überblick',
+        commitsTotal: 'Commits gesamt seit {year}',
+        commitsMonths: 'in den letzten {n} Monaten',
+        commitsPrivate: 'davon in privaten Projekten',
+        projectsSplit: 'Projekte ({pub} öffentlich, {priv} privat)',
+        projectsPublic: 'öffentliche Projekte',
+        scopePublic: 'Öffentliche Projekte',
+        scopeAll: 'Öffentliche und private Projekte'
     },
 
     finale: {

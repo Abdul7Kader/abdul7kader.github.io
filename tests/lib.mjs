@@ -55,6 +55,8 @@ export function sampleActivity() {
     return {
         login: 'Abdul7Kader', generated: new Date(Date.now() - 5 * 3600e3).toISOString(),
         total: days.reduce((a, d) => a + d[1], 0), currentStreak: 4, longestStreak: 12, best: { date: days[200][0], count: 23 }, days,
+        summary: { since: '2023-02-01', includesPrivate: true, commits: { total: 1874, months3: 212, months6: 455, months12: 903 },
+            privateCommits: { total: 1210, months3: 150, months6: 301, months12: 640 }, repos: { public: 6, private: 9 } },
         commits: [{ repo: 'Abdul7Kader/abdul7kader.github.io', message: 'Beispiel-Commit', date: new Date(Date.now() - 2 * 3600e3).toISOString(), url: 'https://github.com/Abdul7Kader' }]
     };
 }

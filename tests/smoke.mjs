@@ -56,7 +56,10 @@ for (const [label, opts] of VIEWPORTS) {
         check(facts > 50, `Station ${id}: Spiel + Fakten`);
         if (id === 'arrival') check(await page.locator('#station .wm-svg').count() === 1, 'Weltkarte vorhanden');
         if (id === 'projects') check(await page.locator('#station .pv-cnv, #station .pq-root canvas').count() >= 1, 'Projekt-Viertel vorhanden');
-        if (id === 'lab') check(await page.locator('#station .gh-grid').count() === 1, 'GitHub-Kacheln vorhanden');
+        if (id === 'lab') {
+            check(await page.locator('#station .gh-grid').count() === 1, 'GitHub-Kacheln vorhanden');
+            check(await page.locator('#station .gh-overview > div').count() === 4 && await page.locator('#station .gh-scope').count() === 1, 'GitHub-Übersicht (Commits gesamt, Monate, privat, Projekte) und Bereichs-Überschrift');
+        }
         await app(A => A.closeStation());
     }
     const st = await app(A => A.state());

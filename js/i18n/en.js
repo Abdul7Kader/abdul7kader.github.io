@@ -185,7 +185,15 @@ export default {
         less: 'less',
         more: 'more',
         latest: 'Latest commits',
-        pushed: 'Pushed new commits'
+        pushed: 'Pushed new commits',
+        overview: 'Commits at a glance',
+        commitsTotal: 'commits in total since {year}',
+        commitsMonths: 'in the last {n} months',
+        commitsPrivate: 'of them in private projects',
+        projectsSplit: 'projects ({pub} public, {priv} private)',
+        projectsPublic: 'public projects',
+        scopePublic: 'Public projects',
+        scopeAll: 'Public and private projects'
     },
 
     finale: {

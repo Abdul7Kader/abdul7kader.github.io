@@ -40,7 +40,10 @@
 .gh-act.compact { --gh-c: 10px; padding: 12px 14px; }
 .gh-act.compact .gh-stats b { font-size: 1.1rem; }
 .pdf-mode .no-print { display: none; }
-@media (max-width: 640px) { .gh-stats { grid-template-columns: 1fr 1fr; } .gh-stats div:nth-child(3) { grid-column: 1 / -1; } }
+.gh-act h4 + .gh-stats { margin-top: 4px; }
+.gh-overview { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+.gh-overview b { color: #8ecbff; }
+@media (max-width: 640px) { .gh-stats { grid-template-columns: 1fr 1fr; } .gh-stats:not(.gh-overview) div:nth-child(3) { grid-column: 1 / -1; } }
 
 .gh-ic .ico { width: 24px; height: 24px; }
 .panel-foot .btn .ico { width: 15px; height: 15px; margin-right: 2px; }

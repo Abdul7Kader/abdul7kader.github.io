@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (535 Texte)
+## Deutsch (543 Texte)
 
 ### Doppelungen
 
@@ -19,6 +19,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 - „zurück zur welt“: `ui.station.backToWorld`, `ui.cv.backToWorld`
 - „ki kompetenzen“: `ui.facts.aiSkills`, `ui.cv.aiSkills`
 - „ehrenamtliches engagement“: `ui.facts.volunteering`, `ui.cv.volunteering`
+- „öffentliche projekte“: `ui.github.projectsPublic`, `ui.github.scopePublic`
 - „kapitelübersicht“: `ui.journey.title`, `ui.palette.journey`
 - „als pdf speichern“: `ui.palette.pdf`, `ui.cv.savePdf`
 - „offen für neue herausforderungen“: `cv.cardStatus`, `cv.availability`
@@ -188,6 +189,14 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.more` | mehr |
 | `ui.github.latest` | Letzte Commits |
 | `ui.github.pushed` | Neue Commits gepusht |
+| `ui.github.overview` | Commits im Überblick |
+| `ui.github.commitsTotal` | Commits gesamt seit {year} |
+| `ui.github.commitsMonths` | in den letzten {n} Monaten |
+| `ui.github.commitsPrivate` | davon in privaten Projekten |
+| `ui.github.projectsSplit` | Projekte ({pub} öffentlich, {priv} privat) |
+| `ui.github.projectsPublic` | öffentliche Projekte |
+| `ui.github.scopePublic` | Öffentliche Projekte |
+| `ui.github.scopeAll` | Öffentliche und private Projekte |
 | `ui.finale.photoLabel` | Foto von {name} mit dem Firmennamen auf dem T-Shirt |
 | `ui.finale.stickerBand` | MEIN NÄCHSTES KAPITEL |
 | `ui.finale.firmLabel` | Ihr Unternehmen |
@@ -563,7 +572,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (535 Texte)
+## Englisch (543 Texte)
 
 ### Doppelungen
 
@@ -578,6 +587,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 - „back to the world“: `ui.station.backToWorld`, `ui.cv.backToWorld`
 - „work experience“: `ui.facts.experience`, `ui.cv.experience`
 - „under construction“: `ui.projects.stage.build`, `ui.projects.legend.build`
+- „public projects“: `ui.github.projectsPublic`, `ui.github.scopePublic`
 - „chapter overview“: `ui.journey.title`, `ui.palette.journey`
 - „open to new challenges“: `cv.cardStatus`, `cv.availability`
 
@@ -746,6 +756,14 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.more` | more |
 | `ui.github.latest` | Latest commits |
 | `ui.github.pushed` | Pushed new commits |
+| `ui.github.overview` | Commits at a glance |
+| `ui.github.commitsTotal` | commits in total since {year} |
+| `ui.github.commitsMonths` | in the last {n} months |
+| `ui.github.commitsPrivate` | of them in private projects |
+| `ui.github.projectsSplit` | projects ({pub} public, {priv} private) |
+| `ui.github.projectsPublic` | public projects |
+| `ui.github.scopePublic` | Public projects |
+| `ui.github.scopeAll` | Public and private projects |
 | `ui.finale.photoLabel` | Photo of {name} with the company name on the T-shirt |
 | `ui.finale.stickerBand` | MY NEXT CHAPTER |
 | `ui.finale.firmLabel` | Your company |

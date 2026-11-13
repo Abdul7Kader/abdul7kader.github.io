@@ -1,9 +1,10 @@
-// GitHub-Aktivität auf der Seite: Beitrags-Kacheln (wie im GitHub-Profil), Kennzahlen und letzte Commits.
+// GitHub-Aktivität auf der Seite: Übersichtszahlen (Commits inkl. privater, falls freigegeben), Beitrags-Kacheln
+// (wie im GitHub-Profil), Kennzahlen und letzte Commits.
 // Quelle 1: github-activity.json (täglich per GitHub Action erzeugt, keine API-Limits für Besucher).
 // Quelle 2 (Rückfall): öffentliche Events-API im Browser (letzte 90 Tage). Klappt beides nicht, bleibt nur der Link.
 import { esc } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { t, ago, shortDate, monthShort } from '../core/i18n.js';
+import { t, ago, shortDate, monthShort, locale } from '../core/i18n.js';
 import { data } from '../app/content.js';
 
 const DAY_MS = 86400e3;
@@ -14,6 +15,7 @@ const MAX_COMMITS = 5, MAX_EVENT_COMMITS = 6;
 const COMPACT_WEEKS = 26;
 const LEVEL_QUANTILES = [0.25, 0.5, 0.75];
 const DEFAULT_LOGIN = 'Abdul7Kader';
+const OVERVIEW_MONTHS = 6;        // Zeitraum der zweiten Übersichtszahl (die Kacheln zeigen schon das ganze Jahr)
 
 const login = () => (String((data().contact || {}).github || '').match(/github\.com\/([^/?#]+)/i) || [])[1] || DEFAULT_LOGIN;
 const noon = (iso) => new Date(iso + 'T12:00:00');
@@ -94,6 +96,26 @@ function streak(days) {
     return cur;
 }
 
+const nf = (n) => Number(n).toLocaleString(locale());
+
+/** Übersicht aus github-activity.json (summary): Commits gesamt, letzte Monate, davon privat, Projekte */
+function overview(a) {
+    const s = a.source === 'json' && a.summary;
+    if (!s || !s.commits) return '';
+    const recent = s.commits[`months${OVERVIEW_MONTHS}`];
+    const priv = s.includesPrivate && s.privateCommits ? s.privateCommits.total : 0;
+    const repos = s.repos || {};
+    const tiles = [
+        [nf(s.commits.total), t('github.commitsTotal', { year: String(s.since || '').slice(0, 4) })],
+        recent != null ? [nf(recent), t('github.commitsMonths', { n: OVERVIEW_MONTHS })] : null,
+        priv ? [nf(priv), t('github.commitsPrivate')] : null,
+        repos.public != null ? (repos.private != null
+            ? [nf(repos.public + repos.private), t('github.projectsSplit', { pub: repos.public, priv: repos.private })]
+            : [nf(repos.public), t('github.projectsPublic')]) : null
+    ].filter(Boolean);
+    return `<h4>${esc(t('github.overview'))}</h4><div class="gh-stats gh-overview">${tiles.map(([v, l]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join('')}</div>`;
+}
+
 function render(el, a, opts) {
     const days = a.days.slice(opts.compact ? -COMPACT_WEEKS * 7 : 0);
     // Wochen-Spalten (Sonntag oben, wie bei GitHub)
@@ -121,6 +143,8 @@ function render(el, a, opts) {
     const span = a.source === 'json' ? t(opts.compact ? 'github.span6m' : 'github.spanYear') : t('github.span90');
     const cur = a.currentStreak != null ? a.currentStreak : streak(a.days);
     const gh = (data().contact || {}).github;
+    // Die Kacheln zeigen private Beiträge nur, wenn sie über das persönliche Token mitgezählt wurden
+    const scope = t(a.source === 'json' && a.summary && a.summary.includesPrivate ? 'github.scopeAll' : 'github.scopePublic');
     el.innerHTML = `
         <div class="gh-act ${opts.compact ? 'compact' : ''}">
             <div class="gh-head">
@@ -128,8 +152,10 @@ function render(el, a, opts) {
                 <div><strong>${esc(t('github.title'))}</strong><small>${esc(login())} · ${esc(a.source === 'json' && a.generated ? t('github.updated', { ago: ago(a.generated) }) : t('github.public'))}</small></div>
                 ${gh ? `<a class="gh-out" href="${esc(gh)}" target="_blank" rel="noopener">${esc(t('github.profile'))} ${icon('external')}</a>` : ''}
             </div>
+            ${overview(a)}
+            <h4 class="gh-scope">${esc(scope)}</h4>
             <div class="gh-stats">
-                <div><b>${total}</b><span>${esc(t('github.contributions', { span }))}</span></div>
+                <div><b>${nf(total)}</b><span>${esc(t('github.contributions', { span }))}</span></div>
                 <div><b>${cur}</b><span>${esc(t('github.streak', { n: cur }))}</span></div>
                 ${a.best ? `<div><b>${a.best.count}</b><span>${esc(t('github.bestDay', { date: shortDate(a.best.date) }))}</span></div>` : ''}
             </div>
