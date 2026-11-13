@@ -75,7 +75,7 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 
 ### E – Abschluss
 - [x] **E1** Alle Tests, Leistungsmessung (darf nicht schlechter werden), Screenshot-Matrix DE/EN × Hell/Dunkel × Desktop/iPhone. ✓ *(Commit „Runde 4 E1: Abnahme: Tests, Leistung, Screenshot-Matrix“)*
-- [ ] **E2** `docs/REFACTORING-BERICHT.md` (Abschnitt Runde 4), `TODO.md`, README aktualisieren, pushen.
+- [x] **E2** `docs/REFACTORING-BERICHT.md` (Abschnitt Runde 4), `TODO.md`, README aktualisieren, pushen. ✓ *(Commit „Runde 4 E2: Bericht, TODO und README“)*
 - [ ] **E3** Merge auf `main`, CI und Pages-Build prüfen, kurze Zusammenfassung für Abdul.
 
 ## Braucht Abdul (nicht automatisierbar)

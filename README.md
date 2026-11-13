@@ -1,6 +1,7 @@
 # Interaktiver Lebenslauf – Abdul Kader Sabouni
 
-Ein Lebenslauf als kleine, begehbare Spielwelt mit sechs Minispielen, oder kompakt als eine Seite mit PDF-Export.
+Ein Lebenslauf als kleine, begehbare Spielwelt mit sechs Minispielen, einem begehbaren Projekt-Viertel von oben
+und einem Easter Egg für alle Skill-Sterne – oder kompakt als eine Seite mit PDF-Export.
 Statische Seite für GitHub Pages: kein Build-Schritt, keine Abhängigkeiten im Browser.
 Die Seite gibt es auf Deutsch und Englisch, hell und dunkel.
 

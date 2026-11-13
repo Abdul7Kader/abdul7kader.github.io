@@ -69,6 +69,16 @@ Branch `abdul7kader/refactoring`. Kein Merge auf `main` ohne Freigabe.
 - ✅ **Qualität:** Tests für Smoke (DE/EN, Hell/Dunkel), Sprachen, Kontrast, Screenshots, Leistung; CI auf GitHub mit Chromium, Firefox und WebKit; README.
 - ✅ **Nachtrag 12.11. morgens:** Projekt-Viertel begehbar – Abdul läuft zum angetippten Gebäude und zeigt das Projekt, Pfeiltasten und Enter gehen auch (#11). Minispiele nachts mit Sternen, Mond und dunklerer Landschaft.
 
+## Runde 4 (13.11.2026 · Plan: `docs/PLAN-RUNDE-4.md` · Bericht: oben in `docs/REFACTORING-BERICHT.md`)
+
+- ✅ **Fehler:** Kontaktformular schließt nach dem Senden (keine falsche Fehlermeldung mehr), Farbmodus nur Hell/Dunkel, Knöpfe und Firmenfeld in beiden Modi lesbar, Spielfenster nutzt den ganzen Bildschirm.
+- ✅ **Inhalte:** keine Flaggen, Sprachkurse zusammengelegt, Deutsch C2 (GER), Business-Viertel ohne „KI-generierter Code“, Telekom und PSI ohne Doppelungen, Tech-Lab nur Werkzeuge + GitHub (Leuchtwand auf dem Dach, Werkstatt entfällt), Projekt-Baustelle ohne GitHub, Rustfall ohne Filmbezug, Finale-Knopf „Abdul Kader kontaktieren“, Doppelungen bereinigt.
+- ✅ **GitHub-Zahlen:** Commits gesamt / letzte Monate / davon privat, Projekte öffentlich/privat; Panel „Öffentliche Projekte“.
+- ✅ **Neu:** Projekt-Baustelle als begehbare Mini-Stadt von oben; Easter Egg für alle Skill-Sterne (Feuerwerk, Bit tanzt, „Hinter den Kulissen“).
+- ⏳ Token `ACTIVITY_TOKEN` und Profil-Schalter für private Beiträge (Anleitung im README).
+- ⏳ Zeitraum der Sprachkurse bestätigen (03.2015 – 04.2016).
+- ⏳ 3D-Figur aus Blender (Codex-Prompt vom 12.11.) – danach baue ich die Sprites ein.
+
 ## Wartet auf Abdul
 
 - ⏳ **#18 Linksammlung.** Dafür brauche ich die Social-Media-Kanäle der KI-Videos (Plattform + URL) und später die Projekt-Links. Die Projekt-Kacheln zeigen bis dahin „Link folgt“. Die Linkseite `/links/` steht schon; leere Links zeigen „folgt“. Sobald ein `link` in `data/resume.de.js` steht, erscheint dort „Ansehen ↗“.

@@ -1,7 +1,79 @@
+# Runde 4: Rückmeldung vom 12.11.2026 (13.11.2026)
+
+Plan mit Fortschritt: `docs/PLAN-RUNDE-4.md`. Jeder Punkt ist ein eigener Commit „Runde 4 …“ mit Tests.
+
+## Was sich geändert hat
+
+**Fehler und Bedienung**
+- **Kontaktformular:** Die Antwort von FormSubmit wird jetzt richtig ausgewertet (Erfolg nur bei `success`,
+  Fehler nur bei echtem Fehlschlag, auch bei Text- statt JSON-Antwort). Nach dem Senden schließt sich das Formular
+  und ein Toast bestätigt. Neuer Test `tests/contact.mjs`. Die erste Mail ohne Nachricht war FormSubmits
+  Aktivierungsmail – das passiert nur einmal.
+- **Farbmodus:** nur noch Hell und Dunkel; beim ersten Besuch gilt die Systemeinstellung als Startwert.
+- **Knöpfe:** „Weiter zu den Fakten“ war im Dunkelmodus weiß auf weiß – behoben, Spielkarten sind jetzt im Kontrasttest.
+- **Firmenfeld im Finale:** folgte dem dunklen System-Design; Eingabefelder folgen jetzt dem Seitenmodus.
+- **Spielfenster:** nutzt beim Minispiel den ganzen Bildschirm (kleiner Rand), auf Handy hoch/quer und Rechner.
+
+**Inhalte (ohne Wiederholungen)**
+- Keine Flaggen mehr, nur Ländernamen. Sprachkurse in einem Eintrag (03.2015 – 04.2016, bitte bestätigen).
+- Deutsch: „C2 – höchste Stufe des GER“.
+- Business-Viertel: Prompt Engineering, UI/UX-Design, Programmentwicklung, Qualitätssicherung, Deployment und
+  Support; KI-Agenten unterstützen – nirgends mehr „KI-generierter Code“. Minispiel-Schritt heißt „Entwicklung“.
+- Telekom ohne Up-/Cross-Selling-Punkt; PSI „100 % ohne KI-Werkzeuge“ nur noch einmal.
+- **Tech-Lab = Werkzeuge + GitHub:** keine Rollenkarte, keine Aufgaben. Die Leuchtwand mit den GitHub-Kacheln steht
+  jetzt auf dem Tech-Lab-Dach; das Werkstatt-Gebäude ist weg, an seiner Stelle wächst wieder Wald.
+- Projekt-Baustelle ohne GitHub-Karte; Rustfall ohne Filmbezug („Postapokalyptisches Handyspiel“).
+- Finale: ein Knopf „Abdul Kader kontaktieren“ (Feld `contactName`, auch im Admin).
+- Doppelungen inhaltlich bereinigt (Stärken, Sprüche, KI-Kompetenzen, Tools, Weltkarte); `docs/texte.md` meldet keine.
+
+**GitHub-Zahlen**
+- Das Skript holt zusätzlich Commits gesamt seit Kontoerstellung, der letzten 3/6/12 Monate, davon privat, und die
+  Anzahl öffentlicher und privater Projekte – nur Zahlen, keine Namen privater Repositories.
+- Im Tech-Lab: „Commits im Überblick“ und darunter das Kachel-Panel „Öffentliche Projekte“ (bzw. „Öffentliche und
+  private Projekte“, sobald private Beiträge mitgezählt werden). Anleitung für das Token im README.
+
+**Neu**
+- **Projekt-Baustelle als Mini-Open-World:** kleine Stadt von oben mit Ringstraße und sechs Grundstücken. Abdul läuft
+  frei (Pfeiltasten/WASD, Ziehen, Tippen – der Weg führt über die Straßen). Erkennbare Gebäude im Bauzustand:
+  Werkzeugverleih (fertig, mit Kunden), Studio mit Bildschirm und Sendemast, Raffinerie in der Wüste, Stadion mit
+  Flutlicht, Restaurant mit Terrasse, Fahrschule mit Übungsplatz und Fahrschulauto (Baugrube mit Bagger).
+  Im Rohbau: Gerüst und drehender Kran. Vor einem Gebäude erscheint die Projektkarte. Hell/Dunkel mit Laternen.
+- **Easter Egg:** Sind alle Skill-Sterne gesammelt, gibt es Feuerwerk über Abdul, Bit tanzt, und danach die Karte
+  „Hinter den Kulissen“ (wie die Seite gebaut ist, mit Augenzwinkern). Danach auch über die Suche erreichbar.
+  Kein Meme: Rechte an Meme-Bildern sind meist ungeklärt, und Witz altert schnell – das Feuerwerk passt zur Welt.
+
+## Leistung (gleiche Umgebung, `main` vor Runde 4 → jetzt, Hauptthread)
+
+| Situation | vor Runde 4 | jetzt |
+|---|---|---|
+| Welt, Spieler steht | 15 % | 15 % |
+| Welt, Spieler läuft | 29 % | 29 % |
+| Dialog offen | 1 % | 1 % |
+| Projekt-Viertel offen | 20 % | **14 %** |
+| Minispiel läuft | 25 % | 26 % (größeres Spielfeld, Auflösung auf 1200 px begrenzt) |
+
+Dunkelmodus: praktisch gleich (Projekt-Viertel 16 %).
+
+## Tests
+
+ESLint, Smoke-Test (DE/EN × Hell/Dunkel), Sprachen, Kontrast, Kontaktformular, GitHub-Skript (neu, mit simulierter
+API) – alle grün. Der Kontrasttest prüft jetzt auch Karten mit Farbverlauf und hat dabei einen echten Fehler
+gefunden (aktueller Zeitleisten-Eintrag im Dunkelmodus hell mit blasser Schrift – behoben).
+Screenshot-Matrix DE/EN × Hell/Dunkel × Desktop/iPhone durchgesehen.
+
+## Was Abdul tun sollte
+
+1. **Private GitHub-Zahlen:** Profil-Schalter „Include private contributions“ einschalten und ein Token mit nur
+   Leserechten als Secret `ACTIVITY_TOKEN` speichern (README, Abschnitt „GitHub-Zahlen mit privaten Projekten“).
+2. **Sprachkurse:** Zeitraum 03.2015 – 04.2016 bestätigen (du hattest 2025/2026 geschrieben).
+3. **3D-Figur:** Fotos an Codex geben (Prompt vom 12.11.); die Sprites baue ich danach ein.
+
+---
+
 # Abschlussbericht Runde 3: Refactoring, Englisch, Dark Mode
 
 Branch: `abdul7kader/refactoring` · Plan: `docs/REFACTORING-PLAN.md` · Zeitraum: 10.–12.11.2026
-Nichts davon ist auf `main` gemergt; das entscheidet Abdul nach Durchsicht der Vorschau.
+Am 12.11.2026 auf Abduls Wunsch auf `main` gemergt.
 
 ## Kurzfassung
 
