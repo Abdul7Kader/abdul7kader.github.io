@@ -106,3 +106,25 @@
     .seg-btn { height: 30px; min-width: 40px; }
     .start-wrap { padding-top: calc(64px + var(--safe-t)); }
 }
+
+/* Niedrige Bildschirme (Handy quer): beim Spielen schmaler Kopf, kompakte Spielkarten – das Spielfeld bekommt die Höhe */
+@media (max-height: 520px) {
+    .station-panel.playing .sp-hero { padding: 6px 54px 6px 12px; }
+    .station-panel.playing .sp-emoji { width: 28px; height: 28px; font-size: 1rem; border-radius: 8px; }
+    .station-panel.playing .sp-title h2 { font-size: 1rem; }
+    .station-panel.playing .close { top: 5px; right: 8px; width: 30px; height: 30px; }
+    .station-panel.playing #station-body { padding: 6px 8px 0; }
+    .station-panel.playing .mg-foot { padding: 4px 0 6px; }
+    .arc-card h3 { font-size: 1.2rem; }
+    .arc-card p { font-size: 0.78rem; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .arc-icon { font-size: 1.8rem; margin-bottom: 0; }
+    .arc-keys { margin-bottom: 6px; }
+    .arc-key { font-size: 0.68rem; padding: 3px 8px; }
+    .arc-go { padding: 8px 20px; font-size: 0.95rem; }
+    .arc-meta { margin-top: 4px; }
+    .arc-stars i { font-size: 1.8rem; }
+    .arc-stars i:nth-child(2) { font-size: 2.1rem; }
+    .arc-score b { font-size: 1.8rem; }
+    .arc-card .arc-msg { display: none; }
+    .arc-btns button { padding: 8px 14px; font-size: 0.85rem; }
+}

@@ -53,11 +53,11 @@ const HUD_BG = 'rgba(10,18,36,0.55)';
 const CONFETTI = ['#ffd166', '#ff8a3d', '#2ec4b6', '#fff', '#ff5f6d'];
 
 /** Größe der Spielfläche: so breit wie möglich, aber ganz sichtbar */
+/** Größtes Spielfeld im Seitenverhältnis W : H, das in die Bühne passt (die Bühne füllt beim Spielen den Dialog) */
+const MIN_STAGE_H = 200;
 function fitSize(stage) {
-    const avail = stage.clientWidth || W;
-    const small = window.innerWidth < 700;
-    const maxH = Math.max(230, window.innerHeight - (small ? 170 : 290));
-    const cssW = Math.floor(Math.min(avail, maxH * W / H, 860));
+    const availW = stage.clientWidth || W, availH = Math.max(MIN_STAGE_H, stage.clientHeight || H);
+    const cssW = Math.floor(Math.min(availW, availH * W / H));
     return { cssW, cssH: Math.round(cssW * H / W) };
 }
 
@@ -80,7 +80,7 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
     let k = 1, bg = null;
     function fit() {
         const { cssW, cssH } = fitSize(stage);
-        const dpr = Math.min(GAME_PERF.MAX_DPR, window.devicePixelRatio || 1);
+        const dpr = Math.min(GAME_PERF.MAX_DPR, window.devicePixelRatio || 1, GAME_PERF.MAX_BACKING_PX / cssW);
         cnv.width = Math.round(cssW * dpr); cnv.height = Math.round(cssH * dpr);
         cnv.style.width = cssW + 'px'; cnv.style.height = cssH + 'px';
         wrap.style.width = cssW + 'px'; wrap.style.height = cssH + 'px';

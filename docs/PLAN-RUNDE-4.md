@@ -24,8 +24,8 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Kontrasttest um Spielkarten und Knöpfe erweitern. ✓ *(Commit „Runde 4 A3: Knöpfe in Hell und Dunkel lesbar“)*
 - [x] **A4 Firmenfeld im Finale (Hellmodus dunkel):** Ursache: Formularfelder folgen dem dunklen System-Design.
   `color-scheme: light` für den Hellmodus setzen, Feldfarben ausdrücklich über Tokens. ✓ *(Commit „Runde 4 A4: Eingabefelder folgen dem Seitenmodus“)*
-- [ ] **A5 Spielfenster responsiv:** Beim Minispiel nutzt der Dialog den ganzen Bildschirm (kleiner Rand),
-  das Spielfeld skaliert auf die größtmögliche Fläche – Handy hoch/quer und Rechner.
+- [x] **A5 Spielfenster responsiv:** Beim Minispiel nutzt der Dialog den ganzen Bildschirm (kleiner Rand),
+  das Spielfeld skaliert auf die größtmögliche Fläche – Handy hoch/quer und Rechner. ✓ *(Commit „Runde 4 A5: Spielfenster nutzt den ganzen Bildschirm“)*
 
 ### B – Inhalte (keine Doppelungen)
 - [ ] **B1 Flaggen entfernen:** Syrien-Flagge raus, überall nur Ländernamen (Länderliste, Weltkarten-Tooltip, Suche).
