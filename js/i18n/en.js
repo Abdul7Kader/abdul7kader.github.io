@@ -152,7 +152,7 @@ export default {
     },
 
     worldmap: {
-        stat: '{n} countries visited · starting point Germany',
+        stat: 'Starting point: Germany',
         zoomIn: 'Zoom in',
         zoomOut: 'Zoom out',
         zoomAll: 'All',

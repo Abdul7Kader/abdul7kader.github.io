@@ -86,7 +86,7 @@ function draw(root, M, view, visitedNames, switchView) {
     root.innerHTML = `
         <div class="wm wm-${view}">
             <div class="wm-bar">
-                <span class="wm-stat">${t('worldmap.stat', { n: `<b>${visitedNames.length}</b>` })}</span>
+                <span class="wm-stat">${esc(t('worldmap.stat'))}</span>
                 <span class="wm-views" role="group" aria-label="${esc(t('worldmap.views'))}">
                     <button type="button" data-view="europe" aria-pressed="${view === 'europe'}">${esc(t('worldmap.europe'))}</button>
                     <button type="button" data-view="world" aria-pressed="${view === 'world'}">${esc(t('worldmap.world'))}</button>

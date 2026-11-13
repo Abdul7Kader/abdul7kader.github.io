@@ -40,7 +40,7 @@
 .cv-tl .d { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
 .cv-tl strong { display: block; }
 .cv-tl span:not(.d) { color: var(--muted); font-size: 0.92rem; }
-.cv-tl > li.current strong { color: #0e8c7f; }
+.cv-tl > li.current strong { color: #0a7266; }
 .cv-projects { list-style: none; }
 .cv-projects li { padding: 8px 0; border-bottom: 1px solid var(--line); }
 .cv-projects li:last-child { border-bottom: 0; }

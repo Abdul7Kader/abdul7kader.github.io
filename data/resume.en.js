@@ -11,21 +11,21 @@ window.RESUME.en = {
     "summary": "Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I develop software, supported by AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away.",
     "intro": "Welcome to my world! Walk with WASD/arrow keys or by clicking. Every building is a station of my CV.",
     "strengths": [
-        { "icon": "cpu", "title": "Software development with AI", "text": "Own products from idea to operation – AI agents as tools, quality through review and tests." },
+        { "icon": "cpu", "title": "Own company", "text": "From idea to operation – AI agents as tools, quality through review and tests." },
         { "icon": "code", "title": "Hands-on since 2023", "text": "Working student at PSI: Java, SQL and a warehouse management system for logistics customers." },
         { "icon": "users", "title": "Communication & customer focus", "text": "Customer service and sales for Telekom and Samsung, customer meetings at PSI." },
         { "icon": "trending", "title": "Steep learning curve", "text": "Fresh start in 2014 – today German at C2 level, university entrance qualification and a computer science degree." }
     ],
     "aiSkills": [
         { "name": "Prompt engineering", "text": "Structured prompts (role, context, examples, output format), few-shot prompting, breaking down complex tasks, iterative optimisation" },
-        { "name": "Agentic coding", "text": "Claude Code, OpenAI Codex: planning, implementation, refactoring and debugging with AI agents – with a human in the loop: review the plan, review the code, test" },
+        { "name": "Agentic coding", "text": "Claude Code, OpenAI Codex: planning, implementation, refactoring and debugging – always with a human in the loop" },
         { "name": "AI models", "text": "Claude (Anthropic), GPT/ChatGPT (OpenAI)" }
     ],
     "facts": [
         "Did you know? Abdul earned his university entrance qualification at evening school – while working during the day.",
         "Abdul likes to try new AI models straight away – and checks critically what they can really do.",
         "Arabic, German, English, French – Abdul switches easily between four languages.",
-        "Customer service for Samsung and Telekom – that’s where you learn to stay friendly under pressure.",
+        "Many customer calls taught Abdul to stay friendly under pressure.",
         "Seen it yet? Abdul’s project quarter is growing behind the construction site.",
         "Abdul has already travelled to more than 20 countries."
     ],
@@ -114,7 +114,7 @@ window.RESUME.en = {
         { "name": "Programming", "level": "Java, C, C++, JavaScript, R", "note": "Java very good · C, C++, JavaScript good · R basic" },
         { "name": "Databases", "level": "SQL, Microsoft SQL Server, SQLite", "note": "SQL, Microsoft SQL Server very good · SQLite good" },
         { "name": "Web", "level": "HTML, CSS, React, Node.js, Express.js", "note": "good" },
-        { "name": "Tools", "level": "Git, GitLab, GitHub, Jira, Claude Code, OpenAI Codex", "note": "very good" },
+        { "name": "Tools", "level": "Git, GitLab, GitHub, Jira", "note": "very good" },
         { "name": "Operating systems", "level": "Windows, Linux", "note": "Windows very good · Linux good" },
         { "name": "ITSM", "level": "BMC Helix ITSM, ITIL", "note": "BMC Helix ITSM good · ITIL basic" }
     ],

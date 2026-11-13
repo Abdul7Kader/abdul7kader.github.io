@@ -154,7 +154,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.quarterAria` | Projekt-Viertel: {list} |
 | `ui.projects.walkHint` | Gebäude antippen – {name} läuft hin · Pfeiltasten laufen, Enter zeigt das Projekt |
 | `ui.projects.walkRole` | begehbares Projekt-Viertel |
-| `ui.worldmap.stat` | {n} Länder bereist · Ausgangspunkt Deutschland |
+| `ui.worldmap.stat` | Ausgangspunkt: Deutschland |
 | `ui.worldmap.zoomIn` | Hineinzoomen |
 | `ui.worldmap.zoomOut` | Herauszoomen |
 | `ui.worldmap.zoomAll` | Gesamt |
@@ -400,8 +400,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.availability` | Offen für neue Herausforderungen |
 | `cv.summary` | Informatikstudent (B.Sc. Praktische Informatik, FH Dortmund) mit Schwerpunkt Prompt Engineering und agentischer Softwareentwicklung: Im eigenen Unternehmen Entwicklung von Software, unterstützt von KI-Agenten wie Claude Code und OpenAI Codex – von der präzisen Aufgabenbeschreibung bis zur geprüften Auslieferung. Dazu drei Jahre Werkstudent in der Softwareentwicklung bei PSI (Java, SQL). Verfolgt neue KI-Modelle und -Tools laufend und setzt sie direkt in der Praxis ein. |
 | `cv.intro` | Willkommen in meiner Welt! Laufen Sie mit WASD/Pfeiltasten oder per Klick. Jedes Gebäude ist eine Station meines Lebenslaufs. |
-| `cv.strengths[0].title` | Softwareentwicklung mit KI |
-| `cv.strengths[0].text` | Eigene Produkte von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests. |
+| `cv.strengths[0].title` | Eigenes Unternehmen |
+| `cv.strengths[0].text` | Von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests. |
 | `cv.strengths[1].title` | Praxis seit 2023 |
 | `cv.strengths[1].text` | Werkstudent bei PSI: Java, SQL und ein Lagerverwaltungssystem für Logistik-Kunden. |
 | `cv.strengths[2].title` | Kommunikation & Kundenfokus |
@@ -411,13 +411,13 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.aiSkills[0].name` | Prompt Engineering |
 | `cv.aiSkills[0].text` | Strukturierte Prompts (Rolle, Kontext, Beispiele, Ausgabeformat), Few-Shot-Prompting, Zerlegung komplexer Aufgaben, iterative Optimierung |
 | `cv.aiSkills[1].name` | Agentic Coding |
-| `cv.aiSkills[1].text` | Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging mit KI-Agenten – mit Human in the Loop: Plan prüfen, Code reviewen, testen |
+| `cv.aiSkills[1].text` | Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging – immer mit Human in the Loop |
 | `cv.aiSkills[2].name` | KI-Modelle |
 | `cv.aiSkills[2].text` | Claude (Anthropic), GPT/ChatGPT (OpenAI) |
 | `cv.facts[0]` | Wussten Sie schon? Abdul hat sein Abitur abends gemacht – tagsüber hat er gearbeitet. |
 | `cv.facts[1]` | Neue KI-Modelle testet Abdul gern sofort – und prüft kritisch, was sie wirklich können. |
 | `cv.facts[2]` | Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen. |
-| `cv.facts[3]` | Kundenservice für Samsung und die Telekom – da lernt man, auch unter Druck freundlich zu bleiben. |
+| `cv.facts[3]` | Viele Kundengespräche am Telefon haben Abdul gelehrt, auch unter Druck freundlich zu bleiben. |
 | `cv.facts[4]` | Schon gesehen? Hinter der Baustelle wächst Abduls Projekt-Viertel. |
 | `cv.facts[5]` | Abdul hat schon über 20 Länder bereist. |
 | `cv.stations.arrival.title` | Ankunft & Reisen |
@@ -712,7 +712,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.quarterAria` | Project quarter: {list} |
 | `ui.projects.walkHint` | Tap a building – {name} walks there · arrow keys walk, Enter shows the project |
 | `ui.projects.walkRole` | walkable project quarter |
-| `ui.worldmap.stat` | {n} countries visited · starting point Germany |
+| `ui.worldmap.stat` | Starting point: Germany |
 | `ui.worldmap.zoomIn` | Zoom in |
 | `ui.worldmap.zoomOut` | Zoom out |
 | `ui.worldmap.zoomAll` | All |
@@ -958,8 +958,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.availability` | Open to new challenges |
 | `cv.summary` | Computer science student (B.Sc. Applied Computer Science, FH Dortmund) focusing on prompt engineering and agentic software development: in my own company I develop software, supported by AI agents such as Claude Code and OpenAI Codex – from a precise task description to a reviewed delivery. Plus three years as a working student in software development at PSI (Java, SQL). I keep up with new AI models and tools and put them into practice right away. |
 | `cv.intro` | Welcome to my world! Walk with WASD/arrow keys or by clicking. Every building is a station of my CV. |
-| `cv.strengths[0].title` | Software development with AI |
-| `cv.strengths[0].text` | Own products from idea to operation – AI agents as tools, quality through review and tests. |
+| `cv.strengths[0].title` | Own company |
+| `cv.strengths[0].text` | From idea to operation – AI agents as tools, quality through review and tests. |
 | `cv.strengths[1].title` | Hands-on since 2023 |
 | `cv.strengths[1].text` | Working student at PSI: Java, SQL and a warehouse management system for logistics customers. |
 | `cv.strengths[2].title` | Communication & customer focus |
@@ -969,13 +969,13 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.aiSkills[0].name` | Prompt engineering |
 | `cv.aiSkills[0].text` | Structured prompts (role, context, examples, output format), few-shot prompting, breaking down complex tasks, iterative optimisation |
 | `cv.aiSkills[1].name` | Agentic coding |
-| `cv.aiSkills[1].text` | Claude Code, OpenAI Codex: planning, implementation, refactoring and debugging with AI agents – with a human in the loop: review the plan, review the code, test |
+| `cv.aiSkills[1].text` | Claude Code, OpenAI Codex: planning, implementation, refactoring and debugging – always with a human in the loop |
 | `cv.aiSkills[2].name` | AI models |
 | `cv.aiSkills[2].text` | Claude (Anthropic), GPT/ChatGPT (OpenAI) |
 | `cv.facts[0]` | Did you know? Abdul earned his university entrance qualification at evening school – while working during the day. |
 | `cv.facts[1]` | Abdul likes to try new AI models straight away – and checks critically what they can really do. |
 | `cv.facts[2]` | Arabic, German, English, French – Abdul switches easily between four languages. |
-| `cv.facts[3]` | Customer service for Samsung and Telekom – that’s where you learn to stay friendly under pressure. |
+| `cv.facts[3]` | Many customer calls taught Abdul to stay friendly under pressure. |
 | `cv.facts[4]` | Seen it yet? Abdul’s project quarter is growing behind the construction site. |
 | `cv.facts[5]` | Abdul has already travelled to more than 20 countries. |
 | `cv.stations.arrival.title` | Arrival & Travel |

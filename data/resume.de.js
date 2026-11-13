@@ -24,8 +24,8 @@ window.RESUME.de = {
     "strengths": [
         {
             "icon": "cpu",
-            "title": "Softwareentwicklung mit KI",
-            "text": "Eigene Produkte von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests."
+            "title": "Eigenes Unternehmen",
+            "text": "Von der Idee bis zum Betrieb – KI-Agenten als Werkzeug, Qualität durch Review und Tests."
         },
         {
             "icon": "code",
@@ -50,7 +50,7 @@ window.RESUME.de = {
         },
         {
             "name": "Agentic Coding",
-            "text": "Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging mit KI-Agenten – mit Human in the Loop: Plan prüfen, Code reviewen, testen"
+            "text": "Claude Code, OpenAI Codex: Planung, Umsetzung, Refactoring und Debugging – immer mit Human in the Loop"
         },
         {
             "name": "KI-Modelle",
@@ -61,7 +61,7 @@ window.RESUME.de = {
         "Wussten Sie schon? Abdul hat sein Abitur abends gemacht – tagsüber hat er gearbeitet.",
         "Neue KI-Modelle testet Abdul gern sofort – und prüft kritisch, was sie wirklich können.",
         "Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen.",
-        "Kundenservice für Samsung und die Telekom – da lernt man, auch unter Druck freundlich zu bleiben.",
+        "Viele Kundengespräche am Telefon haben Abdul gelehrt, auch unter Druck freundlich zu bleiben.",
         "Schon gesehen? Hinter der Baustelle wächst Abduls Projekt-Viertel.",
         "Abdul hat schon über 20 Länder bereist."
     ],
@@ -226,7 +226,7 @@ window.RESUME.de = {
         },
         {
             "name": "Tools",
-            "level": "Git, GitLab, GitHub, Jira, Claude Code, OpenAI Codex",
+            "level": "Git, GitLab, GitHub, Jira",
             "note": "sehr gut"
         },
         {

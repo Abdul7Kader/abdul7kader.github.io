@@ -153,7 +153,7 @@ export default {
     },
 
     worldmap: {
-        stat: '{n} Länder bereist · Ausgangspunkt Deutschland',
+        stat: 'Ausgangspunkt: Deutschland',
         zoomIn: 'Hineinzoomen',
         zoomOut: 'Herauszoomen',
         zoomAll: 'Gesamt',
