@@ -88,3 +88,6 @@ tools/, tests/     Entwicklungswerkzeuge und Tests (siehe README)
 2. Datenschutz-Seite `datenschutz.html` – keine Rechtsberatung; ggf. Impressum ergänzen.
 3. Links für `/links/` (KI-Video-Kanäle, LinkedIn) im Admin eintragen.
 4. Vorschau ansehen (Hell/Dunkel, DE/EN, Handy), danach Merge auf `main`.
+5. Private GitHub-Zahlen (Runde 4): Profil-Schalter „Include private contributions“ einschalten und ein Token mit
+   nur Leserechten als Secret `ACTIVITY_TOKEN` speichern – Schritt für Schritt im README unter
+   „GitHub-Zahlen mit privaten Projekten“.

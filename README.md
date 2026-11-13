@@ -54,7 +54,7 @@ und `npx playwright install chromium`).
 npm install          # nur Entwicklungswerkzeuge (ESLint)
 npm run serve        # http://127.0.0.1:8080 (ES-Module brauchen einen Server, file:// geht nicht)
 npm run lint         # ESLint
-npm test             # Smoke-Test (DE hell, EN dunkel), Sprachen, Kontrast
+npm test             # Smoke-Test (DE hell, EN dunkel), Sprachen, Kontrast, Kontakt, GitHub-Skript
 npm run perf         # Rechenlast messen (Hauptthread, CPU)
 npm run texte        # docs/texte.md neu erzeugen und Doppelungen melden
 ```
@@ -62,8 +62,27 @@ npm run texte        # docs/texte.md neu erzeugen und Doppelungen melden
 Nützliche Adressen beim Testen: `?lang=en`, `?theme=dark`, `?firma=Musterfirma`, `#lebenslauf`, `#kontakt`.
 
 Die GitHub Action `ci.yml` prüft jede Änderung: Linter, Smoke-Test in Chromium, Firefox und WebKit, Sprachen,
-Kontrast und ob `docs/texte.md` aktuell ist. `github-activity.yml` aktualisiert täglich `github-activity.json`
-für die Beitrags-Kacheln.
+Kontrast, Kontaktformular, GitHub-Skript und ob `docs/texte.md` aktuell ist. `github-activity.yml` aktualisiert
+täglich `github-activity.json` für die Beitrags-Kacheln, die Leuchtwand auf dem Tech-Lab und „Commits im Überblick“.
+
+## GitHub-Zahlen mit privaten Projekten (einmalig einrichten)
+
+Ohne weitere Einstellung zeigt die Seite nur öffentliche Zahlen. Damit Commits aus privaten Repositories mitzählen:
+
+1. **Profil:** GitHub → Profilbild → *Settings* → *Public profile* → *Contributions & activity* →
+   „Include private contributions on my profile“ einschalten.
+2. **Token anlegen:** *Settings* → *Developer settings* → *Personal access tokens* → *Fine-grained tokens* →
+   *Generate new token*. Name z. B. `cv-activity`, Ablauf nach Wunsch (danach neu anlegen),
+   *Repository access:* „All repositories“, *Permissions → Repository permissions:* „Contents: Read-only“ und
+   „Metadata: Read-only“. Keine Schreibrechte.
+3. **Als Secret speichern:** in diesem Repository *Settings* → *Secrets and variables* → *Actions* →
+   *New repository secret*, Name `ACTIVITY_TOKEN`, Wert = das Token.
+4. **Testen:** *Actions* → „GitHub-Aktivität aktualisieren“ → *Run workflow*. Im Log steht danach
+   „Commits gesamt … (davon privat …)“.
+
+Gespeichert werden nur Zahlen (Commits gesamt, letzte 3/6/12 Monate, davon privat, Anzahl der Projekte) –
+keine Namen privater Repositories und keine Commit-Texte daraus. Die Liste „Letzte Commits“ zeigt weiterhin nur
+öffentliche Repositories.
 
 ## Leistung
 

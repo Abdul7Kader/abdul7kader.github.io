@@ -59,8 +59,8 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   öffentlicher und privater Repositories (nur Zahl, keine Namen). Ohne Token bleiben nur öffentliche Zahlen. ✓ *(Commit „Runde 4 C1: GitHub-Übersichtszahlen inklusive privater Commits“)*
 - [x] **C2 Anzeige im Tech-Lab:** Kacheln-Panel als „Öffentliche Projekte“ beschriften; darüber eine Übersicht
   „Commits gesamt · letzte 6 Monate · davon privat · Projekte (öffentlich/privat)“. Leuchtwand nutzt dieselben Daten. ✓ *(Commit „Runde 4 C2: GitHub-Übersicht im Tech-Lab“)*
-- [ ] **C3 Anleitung für Abdul** (README + Bericht): Token anlegen (fine-grained, nur Lesen), als Secret
-  `ACTIVITY_TOKEN` speichern, in GitHub „Private contributions“ im Profil einschalten.
+- [x] **C3 Anleitung für Abdul** (README + Bericht): Token anlegen (fine-grained, nur Lesen), als Secret
+  `ACTIVITY_TOKEN` speichern, in GitHub „Private contributions“ im Profil einschalten. ✓ *(Commit „Runde 4 C3: Anleitung für private GitHub-Zahlen“)*
 
 ### D – Neues
 - [ ] **D1 Projekt-Baustelle als Mini-Open-World (Draufsicht 2D):** eigene kleine Szene im Dialog:
