@@ -119,7 +119,7 @@ window.RESUME.en = {
         { "name": "ITSM", "level": "BMC Helix ITSM, ITIL", "note": "BMC Helix ITSM good · ITIL basic" }
     ],
     "languages": [
-        { "name": "German", "level": "business fluent (C2)" },
+        { "name": "German", "level": "C2 – Mastery, highest CEFR level" },
         { "name": "Arabic", "level": "native language" },
         { "name": "English", "level": "good command (B2)" },
         { "name": "French", "level": "basic knowledge (A2)" }

@@ -242,7 +242,7 @@ window.RESUME.de = {
     "languages": [
         {
             "name": "Deutsch",
-            "level": "verhandlungssicher (C2)"
+            "level": "C2 – höchste Stufe des GER"
         },
         {
             "name": "Arabisch",

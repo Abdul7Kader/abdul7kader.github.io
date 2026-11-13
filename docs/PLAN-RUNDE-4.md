@@ -32,10 +32,10 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 - [x] **B2 Sprachkurse zusammenlegen:** Integrationskurs VHS und Sprachkurs B1 → ein Eintrag „Integrations- und
   Sprachkurse bis B1“, Zeitraum **03.2015 – 04.2016** (Abdul schrieb „3.2025 bis 4.2026“ – ich gehe von 2015/2016 aus,
   weil die Kurse vor dem Abitur lagen; bitte bestätigen). ✓ *(Commit „Runde 4 B2: Sprachkurse in einem Eintrag“)*
-- [ ] **B3 Deutsch C2:** Statt „verhandlungssicher“ die Bezeichnung des Gemeinsamen europäischen Referenzrahmens:
+- [x] **B3 Deutsch C2:** Statt „verhandlungssicher“ die Bezeichnung des Gemeinsamen europäischen Referenzrahmens:
   „C2 – höchste Stufe des GER (kompetente Sprachverwendung)“, EN „C2 – Mastery, highest CEFR level“.
   (Der Europarat betont, dass C2 nicht „muttersprachlich“ bedeutet; „verhandlungssicher“ ist eine Lebenslauf-Floskel,
-  meist C1–C2.)
+  meist C1–C2.) ✓ *(Commit „Runde 4 B3: Deutsch C2 mit GER-Bezeichnung“)*
 - [ ] **B4 Business-Viertel (eigenes Unternehmen):** „Prompt-Design und Code-Generierung“ → „Prompt Engineering,
   UI/UX-Design, Programmentwicklung, Qualitätssicherung, Deployment und Support“. Nirgends „KI-generierter Code“:
   Formulierungen so, dass Abdul entwickelt und KI-Agenten unterstützen (auch Minispiel „Prompt-Fabrik“: Schritt
