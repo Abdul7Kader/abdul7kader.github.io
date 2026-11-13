@@ -332,7 +332,7 @@ window.RESUME.de = {
             "title": "Rustfall (Arbeitstitel)",
             "tag": "Handyspiel",
             "tech": "",
-            "detail": "Postapokalyptisches Handyspiel im Stil von „Mad Max“. Der endgültige Name folgt.",
+            "detail": "Postapokalyptisches Handyspiel. Der endgültige Name folgt.",
             "progress": 70,
             "building": "refinery",
             "link": ""

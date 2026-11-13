@@ -179,7 +179,7 @@ window.RESUME.en = {
     "projects": [
         { "title": "Tool rental software", "tag": "Customer project", "tech": "React, Node.js, Express.js, SQLite", "detail": "Software for a tool rental business – live and used by real customers. Continuously extended.", "progress": 100, "stage": "Finished · expandable", "building": "shop", "link": "" },
         { "title": "AI videos on social media", "tag": "Own channels", "tech": "AI video generation", "detail": "Own social media channels with AI-generated videos.", "progress": 95, "building": "studio", "link": "" },
-        { "title": "Rustfall (working title)", "tag": "Mobile game", "tech": "", "detail": "Post-apocalyptic mobile game in the style of “Mad Max”. The final name will follow.", "progress": 70, "building": "refinery", "link": "" },
+        { "title": "Rustfall (working title)", "tag": "Mobile game", "tech": "", "detail": "Post-apocalyptic mobile game. The final name will follow.", "progress": 70, "building": "refinery", "link": "" },
         { "title": "Ultranisator", "tag": "App", "tech": "", "detail": "App for football fans: planning and managing fan structures.", "progress": 50, "building": "stadium", "link": "" },
         { "title": "Rest-IQ", "tag": "Platform", "tech": "", "detail": "Platform that lets restaurants build their own websites for free.", "progress": 20, "building": "restaurant", "link": "" },
         { "title": "Drive Pluz", "tag": "Software", "tech": "", "detail": "Driving school management including a learner driver app.", "progress": 5, "stage": "Foundation", "building": "foundation", "link": "" }

@@ -534,7 +534,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.projects[1].detail` | Eigene Social-Media-Kanäle mit KI-generierten Videos. |
 | `cv.projects[2].title` | Rustfall (Arbeitstitel) |
 | `cv.projects[2].tag` | Handyspiel |
-| `cv.projects[2].detail` | Postapokalyptisches Handyspiel im Stil von „Mad Max“. Der endgültige Name folgt. |
+| `cv.projects[2].detail` | Postapokalyptisches Handyspiel. Der endgültige Name folgt. |
 | `cv.projects[3].title` | Ultranisator |
 | `cv.projects[3].tag` | App |
 | `cv.projects[3].detail` | App für Fußballfans: Planung und Verwaltung von Fan-Strukturen. |
@@ -1092,7 +1092,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.projects[1].detail` | Own social media channels with AI-generated videos. |
 | `cv.projects[2].title` | Rustfall (working title) |
 | `cv.projects[2].tag` | Mobile game |
-| `cv.projects[2].detail` | Post-apocalyptic mobile game in the style of “Mad Max”. The final name will follow. |
+| `cv.projects[2].detail` | Post-apocalyptic mobile game. The final name will follow. |
 | `cv.projects[3].title` | Ultranisator |
 | `cv.projects[3].tag` | App |
 | `cv.projects[3].detail` | App for football fans: planning and managing fan structures. |
