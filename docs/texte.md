@@ -14,7 +14,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 
 - „alle kapitel entdeckt“: `ui.hud.allDone`, `ui.toast.allDone`
 - „jetzt kontaktieren“: `ui.hud.contactNow`, `ui.palette.contact`
-- „kontakt aufnehmen“: `ui.hud.contactTitle`, `ui.finale.contact`
 - „switch to english“: `ui.hud.langSwitch`, `ui.palette.langSub`
 - „ihr unternehmen“: `ui.world.signs.yourCompany`, `ui.finale.firmLabel`, `ui.contact.companyPlaceholder`, `cv.stations.finale.title`
 - „zurück zur welt“: `ui.station.backToWorld`, `ui.cv.backToWorld`
@@ -199,7 +198,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.finale.explored` | {done} von {total} Kapiteln erkundet |
 | `ui.finale.insights` | Ihre Erkenntnisse über {name} |
 | `ui.finale.starsTotal` | {n} / {max} Sterne in Minispielen |
-| `ui.finale.contact` | Kontakt aufnehmen |
 | `ui.finale.cvAndPdf` | Lebenslauf kompakt & PDF |
 | `ui.journey.kicker` | Mein Weg in 7 Stationen |
 | `ui.journey.title` | Kapitelübersicht |
@@ -393,6 +391,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.games.lake.hintMouse` | Maus nach links oder rechts bewegen |
 | `cv.name` | Abdul Kader Sabouni |
 | `cv.firstName` | Abdul |
+| `cv.contactName` | Abdul Kader |
 | `cv.title` | Informatikstudent · Softwareentwicklung mit KI-Agenten |
 | `cv.cardRole` | Full-Stack-Entwickler · Informatikstudent |
 | `cv.cardStatus` | offen für neue Herausforderungen |
@@ -757,7 +756,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.finale.explored` | {done} of {total} chapters explored |
 | `ui.finale.insights` | What you learned about {name} |
 | `ui.finale.starsTotal` | {n} / {max} stars in mini-games |
-| `ui.finale.contact` | Get in touch |
 | `ui.finale.cvAndPdf` | Compact CV & PDF |
 | `ui.journey.kicker` | My journey in 7 stations |
 | `ui.journey.title` | Chapter overview |
@@ -951,6 +949,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.games.lake.hintMouse` | Move the mouse left or right |
 | `cv.name` | Abdul Kader Sabouni |
 | `cv.firstName` | Abdul |
+| `cv.contactName` | Abdul Kader |
 | `cv.title` | Computer science student · Software development with AI agents |
 | `cv.cardRole` | Full-stack developer · Computer science student |
 | `cv.cardStatus` | open to new challenges |

@@ -49,7 +49,7 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Werkstatt-Gebäude entfällt (an seinem Platz wächst wieder Wald). Neuer Erzähltext ohne PSI-Wiederholung. ✓ *(Commit „Runde 4 B7: Tech-Lab mit GitHub zusammengelegt“)*
 - [x] **B8 Projekt-Baustelle ohne GitHub-Karte** (steht jetzt nur noch im Tech-Lab). ✓ *(Commit „Runde 4 B8: Projekt-Baustelle ohne GitHub-Karte“)*
 - [x] **B9 Rustfall:** „im Stil von Mad Max“ → „postapokalyptisches Handyspiel“ (ohne Filmbezug). ✓ *(Commit „Runde 4 B9: Rustfall ohne Filmbezug“)*
-- [ ] **B10 Finale:** Knopf „Abdul Kader kontaktieren“ (Feld `contactName`), der doppelte Knopf „Kontakt aufnehmen“ entfällt.
+- [x] **B10 Finale:** Knopf „Abdul Kader kontaktieren“ (Feld `contactName`), der doppelte Knopf „Kontakt aufnehmen“ entfällt. ✓ *(Commit „Runde 4 B10: Finale mit einem Knopf „Abdul Kader kontaktieren““)*
 - [ ] **B11 Doppelungs-Prüfung** über die ganze Welt (Startseite, Stationen, Sprüche, Finale, Lebenslauf) –
   Werkzeug `tools/texte.mjs` plus inhaltliche Durchsicht; Ergebnis in `docs/texte.md`.
 

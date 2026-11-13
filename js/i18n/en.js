@@ -199,7 +199,6 @@ export default {
         explored: '{done} of {total} chapters explored',
         insights: 'What you learned about {name}',
         starsTotal: '{n} / {max} stars in mini-games',
-        contact: 'Get in touch',
         cvAndPdf: 'Compact CV & PDF'
     },
 

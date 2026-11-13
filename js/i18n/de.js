@@ -200,7 +200,6 @@ export default {
         explored: '{done} von {total} Kapiteln erkundet',
         insights: 'Ihre Erkenntnisse über {name}',
         starsTotal: '{n} / {max} Sterne in Minispielen',
-        contact: 'Kontakt aufnehmen',
         cvAndPdf: 'Lebenslauf kompakt & PDF'
     },
 

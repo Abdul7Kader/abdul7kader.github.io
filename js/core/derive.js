@@ -108,6 +108,7 @@ export function derive(data) {
     d.academic = d.educationDesc.filter(e => !LANGUAGE_COURSE.test(e.title + ' ' + e.detail));
 
     d.firstName = data.firstName || String(data.name || '').split(' ')[0];
+    d.contactName = data.contactName || d.firstName;   // Kontakt-Knopf im Finale
     d.devYears = devYears(data);
     return d;
 }

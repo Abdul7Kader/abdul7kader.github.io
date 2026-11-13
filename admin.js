@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addSectionTitle('Allgemein');
         createStringField('name', 'Vollständiger Name');
         createStringField('firstName', 'Vorname (wird in Texten genutzt)');
+        createStringField('contactName', 'Name auf dem Kontakt-Knopf im Finale (z. B. „Abdul Kader“)');
         createStringField('title', 'Berufsbezeichnung / Untertitel');
         if (currentData.cardRole == null) currentData.cardRole = '';
         createStringField('cardRole', 'Zeile unter dem Namen auf der Spielerkarte (ohne Firmennamen)');

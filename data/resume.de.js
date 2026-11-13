@@ -5,6 +5,7 @@ window.RESUME = window.RESUME || {};
 window.RESUME.de = {
     "name": "Abdul Kader Sabouni",
     "firstName": "Abdul",
+    "contactName": "Abdul Kader",
     "title": "Informatikstudent · Softwareentwicklung mit KI-Agenten",
     "cardRole": "Full-Stack-Entwickler · Informatikstudent",
     "cardStatus": "offen für neue Herausforderungen",

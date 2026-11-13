@@ -112,7 +112,7 @@ export function renderFinale(body) {
                 <input id="firm-input" type="text" maxlength="${FIRM_MAX_LENGTH}" autocomplete="organization" placeholder="${esc(t('finale.firmPlaceholder'))}" value="${esc(progress.firm)}">
                 <small>${esc(t('finale.firmHint'))}</small>
             </label>
-            <div class="firm-next ${progress.firm ? '' : 'hidden'}"><button class="btn primary big" data-act="contact">${icon('send')} <span>${esc(t('finale.contactName', { name: first }))}</span></button></div>
+            <div class="firm-next"><button class="btn primary big" data-act="contact">${icon('send')} <span>${esc(t('finale.contactName', { name: derived().contactName }))}</span></button></div>
             <h3 class="finale-title">${esc(done === n ? t('finale.allExplored') : t('finale.explored', { done, total: n }))}</h3>
             <p class="finale-text">${esc(station(FINALE).story || '')}</p>
             <div class="cert">
@@ -125,7 +125,6 @@ export function renderFinale(body) {
                 </ul>
             </div>
             <div class="cta">
-                <button class="btn ghost" data-act="contact">${icon('send')} ${esc(t('finale.contact'))}</button>
                 <button class="btn ghost" data-act="cv">${icon('file')} ${esc(t('finale.cvAndPdf'))}</button>
                 ${c.phone ? `<a class="btn ghost" href="tel:${esc(c.phone.replace(/\s/g, ''))}">${icon('phone')} ${esc(c.phone)}</a>` : ''}
                 ${c.linkedin ? `<a class="btn ghost" href="${esc(c.linkedin)}" target="_blank" rel="noopener">${icon('linkedin')} LinkedIn</a>` : ''}
@@ -150,10 +149,9 @@ export function renderFinale(body) {
     inp.addEventListener('input', () => {
         progress.setFirm(inp.value);
         cancelAnimationFrame(pending); pending = requestAnimationFrame(draw);
-        body.querySelector('.firm-next').classList.toggle('hidden', !progress.firm);
     });
     inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && progress.firm) { e.preventDefault(); contact(); } });
-    body.querySelectorAll('[data-act="contact"]').forEach(b => { b.onclick = contact; });
+    body.querySelector('[data-act="contact"]').onclick = contact;
     if (!progress.firm) setTimeout(() => inp.isConnected && inp.focus({ preventScroll: true }), FOCUS_DELAY_MS);
     body.querySelector('[data-act="cv"]').onclick = () => emit('cv:open', { from: 'finale' });
 }
