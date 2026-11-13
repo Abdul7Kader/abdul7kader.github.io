@@ -134,7 +134,7 @@ export default {
         ownCompanySince: 'Eigenes Unternehmen · seit {since}',
         quarter: 'Mein Projekt-Viertel',
         quarterReward: 'Ihre Belohnung: Hier wird gerade gebaut',
-        quarterTap: 'Gebäude antippen für Details',
+        quarterTap: 'Frei herumlaufen – jedes Gebäude zeigt sein Projekt',
         project: 'Projekt',
         view: 'Ansehen',
         linkSoon: 'Link folgt',
@@ -145,11 +145,12 @@ export default {
     projects: {
         stage: { done: 'Fertig', build: 'Im Bau · {pct} %', base: 'Fundament' },
         legend: { done: 'Fertig', build: 'Im Bau', base: 'Fundament' },
-        signs: { shop: 'WERKZEUGVERLEIH' },
-        expandable: '+ erweiterbar',
+        signs: { shop: 'WERKZEUGVERLEIH', drivingSchool: 'FAHRSCHULE' },
         quarterAria: 'Projekt-Viertel: {list}',
-        walkHint: 'Gebäude antippen – {name} läuft hin · Pfeiltasten laufen, Enter zeigt das Projekt',
-        walkRole: 'begehbares Projekt-Viertel'
+        walkHint: 'Antippen oder ziehen – {name} läuft · Pfeiltasten/WASD · Enter zeigt das Projekt',
+        cardHintKeys: 'Enter · in der Liste zeigen',
+        cardHintTouch: 'Antippen · in der Liste zeigen',
+        walkRole: 'begehbares Projekt-Viertel von oben'
     },
 
     worldmap: {

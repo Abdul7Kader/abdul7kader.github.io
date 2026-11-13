@@ -63,12 +63,12 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   `ACTIVITY_TOKEN` speichern, in GitHub „Private contributions“ im Profil einschalten. ✓ *(Commit „Runde 4 C3: Anleitung für private GitHub-Zahlen“)*
 
 ### D – Neues
-- [ ] **D1 Projekt-Baustelle als Mini-Open-World (Draufsicht 2D):** eigene kleine Szene im Dialog:
+- [x] **D1 Projekt-Baustelle als Mini-Open-World (Draufsicht 2D):** eigene kleine Szene im Dialog:
   Straßen, Grundstücke, Figur läuft frei (WASD/Pfeile, Ziehen, Tippen = hinlaufen). Jedes Projekt als erkennbares
   Gebäude von oben im aktuellen Bauzustand: Werkzeugverleih (Laden mit Werkzeugen), KI-Videos (Studio mit
   Antenne/Bildschirm), Rustfall (Raffinerie in Wüste), Ultranisator (Stadion mit Rasen und Tribünen), Rest-IQ
   (Restaurant mit Terrasse), Drive Pluz (Fahrschule mit Übungsplatz, Fahrschulauto). Vor einem Gebäude: Infokarte.
-  Bauzustand sichtbar (Gerüst, Kran, Fundament). Hell/Dunkel, DE/EN, ≤ 30 Bilder/s, nur zeichnen wenn sichtbar.
+  Bauzustand sichtbar (Gerüst, Kran, Fundament). Hell/Dunkel, DE/EN, ≤ 30 Bilder/s, nur zeichnen wenn sichtbar. ✓ *(Commit „Runde 4 D1: Projekt-Baustelle als Mini-Open-World von oben“)*
 - [ ] **D2 Easter Egg (alle Skill-Sterne gesammelt):** Feuerwerk über dem See, Roboter Bit tanzt, und eine
   „Hinter den Kulissen“-Karte (wie die Seite entstanden ist, ein paar Zahlen, witzig formuliert). Kein Meme –
   Begründung siehe Antwort an Abdul; falls er doch ein Meme möchte, wird es hier ergänzt.

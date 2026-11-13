@@ -26,7 +26,7 @@ window.RESUME.en = {
         "Abdul likes to try new AI models straight away – and checks critically what they can really do.",
         "Arabic, German, English, French – Abdul switches easily between four languages.",
         "Many customer calls taught Abdul to stay friendly under pressure.",
-        "Seen it yet? Abdul’s project quarter is growing behind the construction site.",
+        "Seen it yet? Inside the project site you can walk through a whole quarter.",
         "Abdul has already travelled to more than 20 countries."
     ],
     "stations": {
@@ -182,7 +182,7 @@ window.RESUME.en = {
         { "title": "Rustfall (working title)", "tag": "Mobile game", "tech": "", "detail": "Post-apocalyptic mobile game. The final name will follow.", "progress": 70, "building": "refinery", "link": "" },
         { "title": "Ultranisator", "tag": "App", "tech": "", "detail": "App for football fans: planning and managing fan structures.", "progress": 50, "building": "stadium", "link": "" },
         { "title": "Rest-IQ", "tag": "Platform", "tech": "", "detail": "Platform that lets restaurants build their own websites for free.", "progress": 20, "building": "restaurant", "link": "" },
-        { "title": "Drive Pluz", "tag": "Software", "tech": "", "detail": "Driving school management including a learner driver app.", "progress": 5, "stage": "Foundation", "building": "foundation", "link": "" }
+        { "title": "Drive Pluz", "tag": "Software", "tech": "", "detail": "Driving school management including a learner driver app.", "progress": 5, "stage": "Foundation", "building": "drivingschool", "link": "" }
     ],
     "links": [
         {

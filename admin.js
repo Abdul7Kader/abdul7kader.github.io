@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createJSONField('experience', 'Berufserfahrung (JSON) – optional badge + note, z. B. „100 % ohne KI-Werkzeuge“ bei PSI');
 
         addSectionTitle('Eigene Projekte (Projekt-Viertel)');
-        createJSONField('projects', 'Projekte (JSON: title, tag, tech, detail, progress 0–100, stage optional, building: shop | studio | refinery | stadium | restaurant | foundation, link)');
+        createJSONField('projects', 'Projekte (JSON: title, tag, tech, detail, progress 0–100, stage optional, building: shop | studio | refinery | stadium | restaurant | drivingschool, link)');
     }
 
     function createLinkBuilder() {

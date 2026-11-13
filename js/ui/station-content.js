@@ -115,7 +115,7 @@ export function mountExtras(body, result) {
             onSelect: (i) => { audio.play('click'); mark(i); if (cards[i]) cards[i].scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest' }); }
         });
         cards.forEach((el, i) => {
-            const go = () => { mark(i); q.select(i); q.scrollTo(i); };
+            const go = () => { mark(i); q.select(i); };
             el.addEventListener('click', (e) => { if (!e.target.closest('a')) go(); });
             el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
         });

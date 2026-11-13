@@ -133,7 +133,7 @@ export default {
         ownCompanySince: 'Own company · since {since}',
         quarter: 'My project quarter',
         quarterReward: 'Your reward: construction in progress',
-        quarterTap: 'Tap a building for details',
+        quarterTap: 'Walk around freely – each building shows its project',
         project: 'Project',
         view: 'View',
         linkSoon: 'Link coming soon',
@@ -144,11 +144,12 @@ export default {
     projects: {
         stage: { done: 'Finished', build: 'Under construction · {pct} %', base: 'Foundation' },
         legend: { done: 'Finished', build: 'Under construction', base: 'Foundation' },
-        signs: { shop: 'TOOL RENTAL' },
-        expandable: '+ expandable',
+        signs: { shop: 'TOOL RENTAL', drivingSchool: 'DRIVING SCHOOL' },
         quarterAria: 'Project quarter: {list}',
-        walkHint: 'Tap a building – {name} walks there · arrow keys walk, Enter shows the project',
-        walkRole: 'walkable project quarter'
+        walkHint: 'Tap or drag – {name} walks · arrow keys/WASD · Enter shows the project',
+        cardHintKeys: 'Enter · show in the list',
+        cardHintTouch: 'Tap · show in the list',
+        walkRole: 'walkable project quarter seen from above'
     },
 
     worldmap: {

@@ -62,7 +62,7 @@ window.RESUME.de = {
         "Neue KI-Modelle testet Abdul gern sofort – und prüft kritisch, was sie wirklich können.",
         "Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen.",
         "Viele Kundengespräche am Telefon haben Abdul gelehrt, auch unter Druck freundlich zu bleiben.",
-        "Schon gesehen? Hinter der Baustelle wächst Abduls Projekt-Viertel.",
+        "Schon gesehen? In der Projekt-Baustelle kann man durch ein ganzes Viertel laufen.",
         "Abdul hat schon über 20 Länder bereist."
     ],
     "stations": {
@@ -363,7 +363,7 @@ window.RESUME.de = {
             "detail": "Fahrschulverwaltung inklusive Fahrschüler-App.",
             "progress": 5,
             "stage": "Fundament",
-            "building": "foundation",
+            "building": "drivingschool",
             "link": ""
         }
     ],

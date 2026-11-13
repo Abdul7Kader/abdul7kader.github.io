@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (543 Texte)
+## Deutsch (545 Texte)
 
 ### Doppelungen
 
@@ -138,7 +138,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.facts.ownCompanySince` | Eigenes Unternehmen · seit {since} |
 | `ui.facts.quarter` | Mein Projekt-Viertel |
 | `ui.facts.quarterReward` | Ihre Belohnung: Hier wird gerade gebaut |
-| `ui.facts.quarterTap` | Gebäude antippen für Details |
+| `ui.facts.quarterTap` | Frei herumlaufen – jedes Gebäude zeigt sein Projekt |
 | `ui.facts.project` | Projekt |
 | `ui.facts.view` | Ansehen |
 | `ui.facts.linkSoon` | Link folgt |
@@ -151,10 +151,12 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.legend.build` | Im Bau |
 | `ui.projects.legend.base` | Fundament |
 | `ui.projects.signs.shop` | WERKZEUGVERLEIH |
-| `ui.projects.expandable` | + erweiterbar |
+| `ui.projects.signs.drivingSchool` | FAHRSCHULE |
 | `ui.projects.quarterAria` | Projekt-Viertel: {list} |
-| `ui.projects.walkHint` | Gebäude antippen – {name} läuft hin · Pfeiltasten laufen, Enter zeigt das Projekt |
-| `ui.projects.walkRole` | begehbares Projekt-Viertel |
+| `ui.projects.walkHint` | Antippen oder ziehen – {name} läuft · Pfeiltasten/WASD · Enter zeigt das Projekt |
+| `ui.projects.cardHintKeys` | Enter · in der Liste zeigen |
+| `ui.projects.cardHintTouch` | Antippen · in der Liste zeigen |
+| `ui.projects.walkRole` | begehbares Projekt-Viertel von oben |
 | `ui.worldmap.stat` | Ausgangspunkt: Deutschland |
 | `ui.worldmap.zoomIn` | Hineinzoomen |
 | `ui.worldmap.zoomOut` | Herauszoomen |
@@ -427,7 +429,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.facts[1]` | Neue KI-Modelle testet Abdul gern sofort – und prüft kritisch, was sie wirklich können. |
 | `cv.facts[2]` | Arabisch, Deutsch, Englisch, Französisch – Abdul wechselt locker zwischen vier Sprachen. |
 | `cv.facts[3]` | Viele Kundengespräche am Telefon haben Abdul gelehrt, auch unter Druck freundlich zu bleiben. |
-| `cv.facts[4]` | Schon gesehen? Hinter der Baustelle wächst Abduls Projekt-Viertel. |
+| `cv.facts[4]` | Schon gesehen? In der Projekt-Baustelle kann man durch ein ganzes Viertel laufen. |
 | `cv.facts[5]` | Abdul hat schon über 20 Länder bereist. |
 | `cv.stations.arrival.title` | Ankunft & Reisen |
 | `cv.stations.arrival.era` | seit 10.2014 |
@@ -572,7 +574,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (543 Texte)
+## Englisch (545 Texte)
 
 ### Doppelungen
 
@@ -705,7 +707,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.facts.ownCompanySince` | Own company · since {since} |
 | `ui.facts.quarter` | My project quarter |
 | `ui.facts.quarterReward` | Your reward: construction in progress |
-| `ui.facts.quarterTap` | Tap a building for details |
+| `ui.facts.quarterTap` | Walk around freely – each building shows its project |
 | `ui.facts.project` | Project |
 | `ui.facts.view` | View |
 | `ui.facts.linkSoon` | Link coming soon |
@@ -718,10 +720,12 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.legend.build` | Under construction |
 | `ui.projects.legend.base` | Foundation |
 | `ui.projects.signs.shop` | TOOL RENTAL |
-| `ui.projects.expandable` | + expandable |
+| `ui.projects.signs.drivingSchool` | DRIVING SCHOOL |
 | `ui.projects.quarterAria` | Project quarter: {list} |
-| `ui.projects.walkHint` | Tap a building – {name} walks there · arrow keys walk, Enter shows the project |
-| `ui.projects.walkRole` | walkable project quarter |
+| `ui.projects.walkHint` | Tap or drag – {name} walks · arrow keys/WASD · Enter shows the project |
+| `ui.projects.cardHintKeys` | Enter · show in the list |
+| `ui.projects.cardHintTouch` | Tap · show in the list |
+| `ui.projects.walkRole` | walkable project quarter seen from above |
 | `ui.worldmap.stat` | Starting point: Germany |
 | `ui.worldmap.zoomIn` | Zoom in |
 | `ui.worldmap.zoomOut` | Zoom out |
@@ -994,7 +998,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.facts[1]` | Abdul likes to try new AI models straight away – and checks critically what they can really do. |
 | `cv.facts[2]` | Arabic, German, English, French – Abdul switches easily between four languages. |
 | `cv.facts[3]` | Many customer calls taught Abdul to stay friendly under pressure. |
-| `cv.facts[4]` | Seen it yet? Abdul’s project quarter is growing behind the construction site. |
+| `cv.facts[4]` | Seen it yet? Inside the project site you can walk through a whole quarter. |
 | `cv.facts[5]` | Abdul has already travelled to more than 20 countries. |
 | `cv.stations.arrival.title` | Arrival & Travel |
 | `cv.stations.arrival.era` | since 10.2014 |
