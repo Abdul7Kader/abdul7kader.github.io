@@ -7,6 +7,7 @@ import { skillIcon, noEmoji } from '../core/derive.js';
 import { World } from '../world/world.js';
 import { progress } from '../app/progress.js';
 import { data, derived, station } from '../app/content.js';
+import { allStarsFound } from './backstage.js';
 import { showOverlay, hideOverlay } from './overlays.js';
 
 const MAX_RESULTS = 14;
@@ -33,6 +34,7 @@ function buildIndex() {
     if (next) add(A, '🎯', t('palette.next', { title: title(next) }), t('palette.nextSub'), t('palette.nextQ'), goto(next), { k: 'G' });
     add(A, audio.state.sfx ? '🔇' : '🔊', audio.state.sfx ? t('palette.soundOff') : t('palette.soundOn'), t('palette.soundSub'), t('palette.soundQ'), () => { $('#btn-sound').click(); close(); });
     add(A, '✉️', t('palette.contact'), t('palette.contactSub'), t('palette.contactQ'), () => { close(); emit('contact:open', {}); });
+    if (allStarsFound()) add(A, '🎆', t('palette.backstage'), t('palette.backstageSub'), t('palette.backstageQ'), () => { close(); emit('backstage:open'); });
     add(A, '🌐', t('palette.lang'), t('palette.langSub'), t('palette.langQ'), () => { close(); emit('lang:toggle'); });
     add(A, '🌓', t('palette.theme'), t('palette.themeSub'), t('palette.themeQ'), () => { close(); emit('theme:toggle'); });
     if (c.email) add(A, '✉️', t('palette.email'), c.email, 'kontakt contact mail email', () => { location.href = 'mailto:' + c.email; });

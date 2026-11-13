@@ -245,7 +245,8 @@ function dynamicItems(time) {
         ellipse(c, player.x, player.y, 16 + pr * 16, (16 + pr * 16) * 0.42); c.stroke();
         drawPerson(c, player.x, player.y, player, time);
     } });
-    items.push({ y: robot.y, box: [robot.x + ROBOT_BOX[0], robot.y + ROBOT_BOX[1], robot.x + ROBOT_BOX[2], robot.y + ROBOT_BOX[3]], draw: (c) => drawRobot(c, robot.x, robot.y, time) });
+    const rx = robot.x + (robot.ox || 0), hop = robot.hop || 0;
+    items.push({ y: robot.y, box: [rx + ROBOT_BOX[0] - 6, robot.y + ROBOT_BOX[1] - hop, rx + ROBOT_BOX[2] + 6, robot.y + ROBOT_BOX[3]], draw: (c) => drawRobot(c, rx, robot.y, time, hop, robot.tilt || 0) });
     for (const s of stations) {
         const B = BUILDINGS[s.style];
         if (s.fade > 0) {   // Spieler hinter dem Gebäude: ganz Gebäude halbdurchsichtig über allem davor Liegenden

@@ -103,9 +103,10 @@ export const PERSON_BOX = [-16, -66, 16, 6];
 // ------------------------------------------------------------------ Roboter „Bit“
 const ROBOT = { body: '#ffffff', bodyEdge: '#c6d2e1', visor: '#1b2a4a', eyes: '#4cf0ff', antenna: '#9aa9bd', lightA: '#ff8a3d', lightB: '#ffc24d', thrust: '120,220,255', shadow: 'rgba(25,45,20,0.18)' };
 const HOVER_HEIGHT = 36, HOVER_AMPLITUDE = 4;
-export function drawRobot(c, x, y, time) {
-    const P = ROBOT, by = y - (HOVER_HEIGHT + Math.sin(time * 3) * HOVER_AMPLITUDE);
+export function drawRobot(c, x, y, time, hop = 0, tilt = 0) {
+    const P = ROBOT, by = y - (HOVER_HEIGHT + Math.sin(time * 3) * HOVER_AMPLITUDE) - hop;
     c.fillStyle = P.shadow; ellipse(c, x, y, 9, 3.5); c.fill();
+    if (tilt) { c.save(); c.translate(x, by); c.rotate(tilt); c.translate(-x, -by); }
     c.fillStyle = `rgba(${P.thrust},${0.35 + Math.sin(time * 20) * 0.15})`; ellipse(c, x, by + 12, 5, 3); c.fill();
     c.fillStyle = P.body; c.strokeStyle = P.bodyEdge; c.lineWidth = 1.5;
     rr(c, x - 12, by - 10, 24, 20, 8); c.fill(); c.stroke();
@@ -116,5 +117,6 @@ export function drawRobot(c, x, y, time) {
     rr(c, x + 2, by - 4, 4, 5 * lid, 1.5); c.fill();
     c.strokeStyle = P.antenna; c.beginPath(); c.moveTo(x, by - 10); c.lineTo(x, by - 17); c.stroke();
     c.fillStyle = Math.sin(time * 4) > 0 ? P.lightA : P.lightB; ellipse(c, x, by - 18, 2.6, 2.6); c.fill();
+    if (tilt) c.restore();
 }
 export const ROBOT_BOX = [-13, -62, 13, 4];

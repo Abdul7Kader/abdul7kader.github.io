@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (545 Texte)
+## Deutsch (558 Texte)
 
 ### Doppelungen
 
@@ -20,6 +20,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 - „ki kompetenzen“: `ui.facts.aiSkills`, `ui.cv.aiSkills`
 - „ehrenamtliches engagement“: `ui.facts.volunteering`, `ui.cv.volunteering`
 - „öffentliche projekte“: `ui.github.projectsPublic`, `ui.github.scopePublic`
+- „hinter den kulissen“: `ui.backstage.title`, `ui.palette.backstage`
 - „kapitelübersicht“: `ui.journey.title`, `ui.palette.journey`
 - „als pdf speichern“: `ui.palette.pdf`, `ui.cv.savePdf`
 - „offen für neue herausforderungen“: `cv.cardStatus`, `cv.availability`
@@ -84,6 +85,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.hud.lockedOpen` | Noch {n} Kapitel offen |
 | `ui.hud.hintTouch` | Ziehen zum Laufen · Tippen, um hinzulaufen |
 | `ui.hud.hintKeys` | <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> laufen · Klick = hinlaufen · <kbd>Strg K</kbd> Suche |
+| `ui.robot.dance` | Alle Sterne! Das muss gefeiert werden 🕺 |
 | `ui.robot.welcome` | Hi, ich bin Bit 🤖 – {name}s Assistent. Folgen Sie dem orangen Pfeil – oder {corner} auf „Nächstes Ziel“ klicken! |
 | `ui.robot.welcomeTouch` | Hi, ich bin Bit 🤖 – {name}s Assistent. Folgen Sie dem orangen Pfeil – oder {corner} auf „Nächstes Ziel“ tippen! |
 | `ui.robot.welcomeBack` | Willkommen zurück! {n} Kapitel kennen Sie schon. Weiter geht’s! 🤖 |
@@ -199,6 +201,15 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.projectsPublic` | öffentliche Projekte |
 | `ui.github.scopePublic` | Öffentliche Projekte |
 | `ui.github.scopeAll` | Öffentliche und private Projekte |
+| `ui.backstage.kicker` | Easter Egg · alle Sterne gefunden |
+| `ui.backstage.title` | Hinter den Kulissen |
+| `ui.backstage.intro` | Respekt – Sie haben wirklich jeden Stern gefunden! Zur Belohnung ein Blick hinter die Kulissen dieser Seite: |
+| `ui.backstage.engine` | {games} Minispiele, {stars} Skill-Sterne und {chapters} Kapitel – in reinem JavaScript, ganz ohne Spiele-Engine. |
+| `ui.backstage.drawn` | Jedes Gebäude, jeder Baum und auch Bit sind mit Code gezeichnet. In der Welt steckt keine einzige Bilddatei. |
+| `ui.backstage.noBuild` | Kein Build-Schritt, kein Framework: Der Browser lädt die Dateien genau so, wie sie im Repository liegen. |
+| `ui.backstage.tests` | Automatische Tests prüfen jede Änderung in Chromium, Firefox und WebKit – hell, dunkel, deutsch und englisch. |
+| `ui.backstage.rest` | Gezeichnet wird nur, was sich bewegt. Steht Abdul still, macht die Welt kurz Pause – wie er selbst nach einem langen Commit. |
+| `ui.backstage.outro` | Bit tanzt übrigens nur für Menschen, die so gründlich sind wie Sie. |
 | `ui.finale.photoLabel` | Foto von {name} mit dem Firmennamen auf dem T-Shirt |
 | `ui.finale.stickerBand` | MEIN NÄCHSTES KAPITEL |
 | `ui.finale.firmLabel` | Ihr Unternehmen |
@@ -237,6 +248,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.palette.journey` | Kapitelübersicht |
 | `ui.palette.journeySub` | Alle Stationen & Sterne |
 | `ui.palette.journeyQ` | karte map übersicht kapitel fortschritt |
+| `ui.palette.backstage` | Hinter den Kulissen |
+| `ui.palette.backstageSub` | Easter Egg für alle Sterne |
+| `ui.palette.backstageQ` | easter egg sterne geheimnis kulissen |
 | `ui.palette.next` | Zum nächsten Ziel: {title} |
 | `ui.palette.nextSub` | Automatisch hinlaufen |
 | `ui.palette.nextQ` | weiter nächstes ziel |
@@ -574,7 +588,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (545 Texte)
+## Englisch (558 Texte)
 
 ### Doppelungen
 
@@ -590,6 +604,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 - „work experience“: `ui.facts.experience`, `ui.cv.experience`
 - „under construction“: `ui.projects.stage.build`, `ui.projects.legend.build`
 - „public projects“: `ui.github.projectsPublic`, `ui.github.scopePublic`
+- „behind the scenes“: `ui.backstage.title`, `ui.palette.backstage`
 - „chapter overview“: `ui.journey.title`, `ui.palette.journey`
 - „open to new challenges“: `cv.cardStatus`, `cv.availability`
 
@@ -653,6 +668,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.hud.lockedOpen` | {n} chapters still open |
 | `ui.hud.hintTouch` | Drag to walk · tap to walk there |
 | `ui.hud.hintKeys` | <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk · click = walk there · <kbd>Ctrl K</kbd> search |
+| `ui.robot.dance` | All the stars! Time to celebrate 🕺 |
 | `ui.robot.welcome` | Hi, I’m Bit 🤖 – {name}’s assistant. Follow the orange arrow – or click “Next goal” {corner}! |
 | `ui.robot.welcomeTouch` | Hi, I’m Bit 🤖 – {name}’s assistant. Follow the orange arrow – or tap “Next goal” {corner}! |
 | `ui.robot.welcomeBack` | Welcome back! You already know {n} chapters. Let’s keep going! 🤖 |
@@ -768,6 +784,15 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.github.projectsPublic` | public projects |
 | `ui.github.scopePublic` | Public projects |
 | `ui.github.scopeAll` | Public and private projects |
+| `ui.backstage.kicker` | Easter egg · all stars found |
+| `ui.backstage.title` | Behind the scenes |
+| `ui.backstage.intro` | Respect – you really found every single star! As a reward, a look behind the scenes of this site: |
+| `ui.backstage.engine` | {games} mini-games, {stars} skill stars and {chapters} chapters – in plain JavaScript, without any game engine. |
+| `ui.backstage.drawn` | Every building, every tree, even Bit – all drawn with code. There is not a single image file in the world. |
+| `ui.backstage.noBuild` | No build step, no framework: the browser loads the files exactly as they sit in the repository. |
+| `ui.backstage.tests` | Automated tests check every change in Chromium, Firefox and WebKit – light, dark, German and English. |
+| `ui.backstage.rest` | Only what moves gets redrawn. When Abdul stands still, the world takes a short break – just like he does after a long commit. |
+| `ui.backstage.outro` | By the way, Bit only dances for people who are as thorough as you. |
 | `ui.finale.photoLabel` | Photo of {name} with the company name on the T-shirt |
 | `ui.finale.stickerBand` | MY NEXT CHAPTER |
 | `ui.finale.firmLabel` | Your company |
@@ -806,6 +831,9 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.palette.journey` | Chapter overview |
 | `ui.palette.journeySub` | All stations & stars |
 | `ui.palette.journeyQ` | map overview chapters progress |
+| `ui.palette.backstage` | Behind the scenes |
+| `ui.palette.backstageSub` | Easter egg for all stars |
+| `ui.palette.backstageQ` | easter egg stars secret behind scenes |
 | `ui.palette.next` | To the next goal: {title} |
 | `ui.palette.nextSub` | Walk there automatically |
 | `ui.palette.nextQ` | next goal continue |

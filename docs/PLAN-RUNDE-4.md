@@ -69,9 +69,9 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Antenne/Bildschirm), Rustfall (Raffinerie in Wüste), Ultranisator (Stadion mit Rasen und Tribünen), Rest-IQ
   (Restaurant mit Terrasse), Drive Pluz (Fahrschule mit Übungsplatz, Fahrschulauto). Vor einem Gebäude: Infokarte.
   Bauzustand sichtbar (Gerüst, Kran, Fundament). Hell/Dunkel, DE/EN, ≤ 30 Bilder/s, nur zeichnen wenn sichtbar. ✓ *(Commit „Runde 4 D1: Projekt-Baustelle als Mini-Open-World von oben“)*
-- [ ] **D2 Easter Egg (alle Skill-Sterne gesammelt):** Feuerwerk über dem See, Roboter Bit tanzt, und eine
+- [x] **D2 Easter Egg (alle Skill-Sterne gesammelt):** Feuerwerk über dem See, Roboter Bit tanzt, und eine
   „Hinter den Kulissen“-Karte (wie die Seite entstanden ist, ein paar Zahlen, witzig formuliert). Kein Meme –
-  Begründung siehe Antwort an Abdul; falls er doch ein Meme möchte, wird es hier ergänzt.
+  Begründung siehe Antwort an Abdul; falls er doch ein Meme möchte, wird es hier ergänzt. ✓ *(Commit „Runde 4 D2: Easter Egg für alle Skill-Sterne“)*
 
 ### E – Abschluss
 - [ ] **E1** Alle Tests, Leistungsmessung (darf nicht schlechter werden), Screenshot-Matrix DE/EN × Hell/Dunkel × Desktop/iPhone.

@@ -9,7 +9,7 @@ import { state } from './state.js';
 import { buildWorld } from './build.js';
 import { blocked, findPath, buildGrid } from './pathfinding.js';
 import { setupInput } from './input.js';
-import { spawn, spawnRing, confetti, updateParticles } from './particles.js';
+import { spawn, spawnRing, confetti, fireworks, updateParticles } from './particles.js';
 import * as renderer from './renderer.js';
 
 // Von außen gesetzt (app.js): Fortschritt, Texte, Ereignisse
@@ -200,6 +200,11 @@ function update(dt) {
     const r = state.robot, p = state.player;
     r.x = lerp(r.x, p.x + (p.dir === 'left' ? ROBOT_FOLLOW.dx : -ROBOT_FOLLOW.dx), Math.min(1, dt * ROBOT_FOLLOW.lerp));
     r.y = lerp(r.y, p.y + ROBOT_FOLLOW.dy, Math.min(1, dt * ROBOT_FOLLOW.lerp));
+    // Tanz (Easter Egg): hüpfen, wackeln, sich drehen
+    const dancing = state.time < (r.danceUntil || 0), tt = state.time * DANCE.speed;
+    r.ox = dancing ? Math.sin(tt) * DANCE.sway : 0;
+    r.hop = dancing ? Math.abs(Math.sin(tt * 2)) * DANCE.hop : 0;
+    r.tilt = dancing ? Math.sin(tt) * DANCE.tilt : 0;
     updateFades();
     updateStations();
     updateTokens();
@@ -212,6 +217,8 @@ function update(dt) {
 // ------------------------------------------------------------------ Sprechblasen (DOM über der Welt)
 const bubbles = new Map();
 const BUBBLE_OFFSET = { robot: 70, person: 74 };
+const DANCE = { seconds: 4.5, speed: 6, sway: 12, hop: 14, tilt: 0.35 };
+const FIREWORK_START = 160;  // Raketen starten unterhalb der Spielfigur und zerplatzen gut 200 Einheiten über ihr
 function updateBubbles() {
     bubbles.forEach((b, ent) => {
         if (state.time > b.until) { if (b.shown) { b.el.classList.remove('show'); b.shown = false; } return; }
@@ -354,6 +361,8 @@ export const World = {
     sayRobot: (text, ms) => World.say(state.robot, text, ms),
     sayPlayer: (text, ms) => World.say(state.player, text, ms),
     confettiOnPlayer(n) { confetti(state.player.x, state.player.y - 60, n); },
+    /** Easter Egg: Feuerwerk über der Spielfigur, Bit tanzt */
+    celebrate() { fireworks(state.player.x, state.player.y + FIREWORK_START); state.robot.danceUntil = state.time + DANCE.seconds; World.wake(); },
     isLocked: (id) => hooks.isLocked(id),
     view: () => ({ x: state.cam.x, y: state.cam.y, w: viewW(), h: viewH() }),
     worldToScreen, screenToWorld,

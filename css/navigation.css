@@ -38,3 +38,11 @@
 .pal-empty { padding: 26px; text-align: center; color: var(--muted); }
 .pal-foot { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.78rem; color: var(--muted); background: var(--soft); }
 .pal-foot kbd { margin-right: 2px; }
+
+/* Easter Egg „Hinter den Kulissen“ */
+.bs-intro { color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
+.bs-facts { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.bs-facts li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: var(--soft); line-height: 1.45; font-size: 0.94rem; }
+.bs-facts li > span:first-child { font-size: 1.25rem; line-height: 1.2; }
+.bs-outro { margin-top: 14px; font-weight: 700; }
+.bs-foot { display: flex; justify-content: flex-end; margin-top: 16px; }

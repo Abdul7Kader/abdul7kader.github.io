@@ -65,6 +65,7 @@ export default {
     },
 
     robot: {
+        dance: 'All the stars! Time to celebrate 🕺',
         welcome: 'Hi, I’m Bit 🤖 – {name}’s assistant. Follow the orange arrow – or click “Next goal” {corner}!',
         welcomeTouch: 'Hi, I’m Bit 🤖 – {name}’s assistant. Follow the orange arrow – or tap “Next goal” {corner}!',
         welcomeBack: 'Welcome back! You already know {n} chapters. Let’s keep going! 🤖',
@@ -197,6 +198,18 @@ export default {
         scopeAll: 'Public and private projects'
     },
 
+    backstage: {
+        kicker: 'Easter egg · all stars found',
+        title: 'Behind the scenes',
+        intro: 'Respect – you really found every single star! As a reward, a look behind the scenes of this site:',
+        engine: '{games} mini-games, {stars} skill stars and {chapters} chapters – in plain JavaScript, without any game engine.',
+        drawn: 'Every building, every tree, even Bit – all drawn with code. There is not a single image file in the world.',
+        noBuild: 'No build step, no framework: the browser loads the files exactly as they sit in the repository.',
+        tests: 'Automated tests check every change in Chromium, Firefox and WebKit – light, dark, German and English.',
+        rest: 'Only what moves gets redrawn. When Abdul stands still, the world takes a short break – just like he does after a long commit.',
+        outro: 'By the way, Bit only dances for people who are as thorough as you.'
+    },
+
     finale: {
         photoLabel: 'Photo of {name} with the company name on the T-shirt',
         stickerBand: 'MY NEXT CHAPTER',
@@ -234,6 +247,7 @@ export default {
         cv: 'Open compact CV', cvSub: 'All facts on one page', cvQ: 'cv resume lebenslauf compact',
         pdf: 'Save as PDF', pdfSub: 'Colour CV as a PDF file', pdfQ: 'pdf print download save',
         journey: 'Chapter overview', journeySub: 'All stations & stars', journeyQ: 'map overview chapters progress',
+        backstage: 'Behind the scenes', backstageSub: 'Easter egg for all stars', backstageQ: 'easter egg stars secret behind scenes',
         next: 'To the next goal: {title}', nextSub: 'Walk there automatically', nextQ: 'next goal continue',
         soundOn: 'Turn sound on', soundOff: 'Turn sound off', soundSub: 'Sound effects', soundQ: 'sound audio mute quiet',
         contact: 'Get in touch', contactSub: 'Send me a message directly', contactQ: 'contact mail email message form enquiry',

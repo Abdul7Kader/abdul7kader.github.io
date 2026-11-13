@@ -97,6 +97,15 @@ for (const [label, opts] of VIEWPORTS) {
     check(await page.locator('#journey-list li').count() === 7, 'Kapitelübersicht mit 7 Einträgen');
     await page.keyboard.press('Escape');
 
+    // Easter Egg: Feuerwerk + Bit tanzt, danach „Hinter den Kulissen“
+    await app(A => A.celebrate());
+    await app(A => A.openBackstage());
+    await page.waitForTimeout(150);
+    check(await page.locator('#backstage:not(.hidden) .bs-facts li').count() === 5, 'Easter Egg „Hinter den Kulissen“ mit 5 Fakten');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(100);
+    check(await page.evaluate(() => document.querySelector('#backstage').classList.contains('hidden')), 'Easter Egg schließt mit Esc');
+
     await app(A => A.openCv());
     await page.waitForTimeout(400);
     check(await page.locator('#cv-sheet .cv-page').count() === 1, 'Lebenslauf geöffnet');

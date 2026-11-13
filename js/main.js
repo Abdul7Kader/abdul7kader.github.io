@@ -25,9 +25,10 @@ import { openCv, closeCv, renderCv, savePdfFromCv, setupPrint } from './ui/cv.js
 import { openContact, closeContact } from './ui/contact.js';
 import { renderStart, setupStartCard } from './ui/start.js';
 import { activityLevels } from './ui/github.js';
+import { openBackstage } from './ui/backstage.js';
 
 const ACTION_POLL_MS = 150;
-const DELAY = { allDoneToast: 400, collectorToast: 300, startFocus: 300 };
+const DELAY = { allDoneToast: 400, collectorToast: 300, startFocus: 300, backstage: 4800 };
 const COLLECTOR_CONFETTI = 120;
 const CLICK_OUTSIDE_CLOSES = ['station', 'journey', 'palette', 'contact'];
 
@@ -109,7 +110,11 @@ function setupWorld() {
                     setTimeout(() => {
                         achieve('⭐', t('toast.collector'), t('toast.collectorTitle', { n: max }), TIMING.GOLD_TOAST_MS, 'gold');
                         World.confettiOnPlayer(COLLECTOR_CONFETTI);
+                        World.celebrate();
+                        World.sayRobot(t('robot.dance'), DELAY.backstage - DELAY.collectorToast);
                         audio.play('fanfare');
+                        // danach die Karte „Hinter den Kulissen“ – nur, wenn gerade kein anderer Dialog offen ist
+                        setTimeout(() => { if (!topOverlay()) openBackstage(); }, DELAY.backstage);
                     }, DELAY.collectorToast);
                 }
                 idleReset();
@@ -199,6 +204,7 @@ function setupEvents() {
     });
     on('station:open', ({ id, info }) => openStation(id, { info }));
     on('contact:open', (prefill) => openContact(prefill));
+    on('backstage:open', () => openBackstage());
     on('journey:open', () => openJourney());
     on('cv:open', ({ from }) => { if (from === 'finale') { closeStation(); openCv('world'); } else openCv(from); });
     on('pdf:save', () => savePdfFromCv());
@@ -234,7 +240,8 @@ function exposeTestApi() {
         frameCount: () => World.frames,
         setLang: (l) => setLang(l), lang: () => lang(),
         setTheme: (m) => emit('theme:set', m), theme: () => theme(),
-        finishGame: () => emit('game:finish')
+        finishGame: () => emit('game:finish'),
+        openBackstage: () => openBackstage(), celebrate: () => World.celebrate()
     };
 }
 

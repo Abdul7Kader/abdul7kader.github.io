@@ -95,7 +95,7 @@ for (const theme of themes) {
     await page.waitForTimeout(2200);
     await check('Minispiel Ergebniskarte');
     await app(A => A.closeStation());
-    for (const [label, fn, sel] of [['Kapitelübersicht', A => A.openJourney(), 'journey'], ['Suche', A => A.openPalette(), 'palette'], ['Kontakt', A => A.openContact(), 'contact'], ['Lebenslauf', A => A.openCv(), 'cv']]) {
+    for (const [label, fn, sel] of [['Kapitelübersicht', A => A.openJourney(), 'journey'], ['Suche', A => A.openPalette(), 'palette'], ['Kontakt', A => A.openContact(), 'contact'], ['Hinter den Kulissen', A => A.openBackstage(), 'backstage'], ['Lebenslauf', A => A.openCv(), 'cv']]) {
         await app(fn); await check(label); await app((A, s) => A.hide(s), sel);
     }
     await page.close();

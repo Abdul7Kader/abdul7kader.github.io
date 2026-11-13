@@ -66,6 +66,7 @@ export default {
     },
 
     robot: {
+        dance: 'Alle Sterne! Das muss gefeiert werden 🕺',
         welcome: 'Hi, ich bin Bit 🤖 – {name}s Assistent. Folgen Sie dem orangen Pfeil – oder {corner} auf „Nächstes Ziel“ klicken!',
         welcomeTouch: 'Hi, ich bin Bit 🤖 – {name}s Assistent. Folgen Sie dem orangen Pfeil – oder {corner} auf „Nächstes Ziel“ tippen!',
         welcomeBack: 'Willkommen zurück! {n} Kapitel kennen Sie schon. Weiter geht’s! 🤖',
@@ -198,6 +199,18 @@ export default {
         scopeAll: 'Öffentliche und private Projekte'
     },
 
+    backstage: {
+        kicker: 'Easter Egg · alle Sterne gefunden',
+        title: 'Hinter den Kulissen',
+        intro: 'Respekt – Sie haben wirklich jeden Stern gefunden! Zur Belohnung ein Blick hinter die Kulissen dieser Seite:',
+        engine: '{games} Minispiele, {stars} Skill-Sterne und {chapters} Kapitel – in reinem JavaScript, ganz ohne Spiele-Engine.',
+        drawn: 'Jedes Gebäude, jeder Baum und auch Bit sind mit Code gezeichnet. In der Welt steckt keine einzige Bilddatei.',
+        noBuild: 'Kein Build-Schritt, kein Framework: Der Browser lädt die Dateien genau so, wie sie im Repository liegen.',
+        tests: 'Automatische Tests prüfen jede Änderung in Chromium, Firefox und WebKit – hell, dunkel, deutsch und englisch.',
+        rest: 'Gezeichnet wird nur, was sich bewegt. Steht Abdul still, macht die Welt kurz Pause – wie er selbst nach einem langen Commit.',
+        outro: 'Bit tanzt übrigens nur für Menschen, die so gründlich sind wie Sie.'
+    },
+
     finale: {
         photoLabel: 'Foto von {name} mit dem Firmennamen auf dem T-Shirt',
         stickerBand: 'MEIN NÄCHSTES KAPITEL',
@@ -235,6 +248,7 @@ export default {
         cv: 'Lebenslauf kompakt öffnen', cvSub: 'Alle Fakten auf einer Seite', cvQ: 'lebenslauf cv kompakt resume',
         pdf: 'Als PDF speichern', pdfSub: 'Farbiger Lebenslauf als PDF-Datei', pdfQ: 'pdf drucken print download speichern',
         journey: 'Kapitelübersicht', journeySub: 'Alle Stationen & Sterne', journeyQ: 'karte map übersicht kapitel fortschritt',
+        backstage: 'Hinter den Kulissen', backstageSub: 'Easter Egg für alle Sterne', backstageQ: 'easter egg sterne geheimnis kulissen',
         next: 'Zum nächsten Ziel: {title}', nextSub: 'Automatisch hinlaufen', nextQ: 'weiter nächstes ziel',
         soundOn: 'Ton einschalten', soundOff: 'Ton ausschalten', soundSub: 'Soundeffekte', soundQ: 'ton sound audio leise mute',
         contact: 'Jetzt kontaktieren', contactSub: 'Nachricht direkt an mich senden', contactQ: 'kontakt mail email anfrage formular nachricht',

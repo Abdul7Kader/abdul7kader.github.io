@@ -7,7 +7,7 @@ import { World } from '../world/world.js';
 import { progress } from '../app/progress.js';
 
 // Reihenfolge = Vorrang: oben liegende Dialoge zuerst (Esc schließt den obersten)
-export const OVERLAYS = ['contact', 'station', 'journey', 'cv', 'palette'];
+export const OVERLAYS = ['contact', 'backstage', 'station', 'journey', 'cv', 'palette'];
 export const isOpen = (id) => !$('#' + id).classList.contains('hidden');
 /** Oberster offener Dialog oder undefined */
 export const topOverlay = () => OVERLAYS.find(isOpen);
