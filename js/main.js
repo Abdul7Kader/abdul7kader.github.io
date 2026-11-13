@@ -233,7 +233,8 @@ function exposeTestApi() {
         state: () => ({ visited: progress.visited.size, all: progress.allVisited(), locked: progress.isLocked(FINALE) }),
         frameCount: () => World.frames,
         setLang: (l) => setLang(l), lang: () => lang(),
-        setTheme: (m) => emit('theme:set', m), theme: () => theme()
+        setTheme: (m) => emit('theme:set', m), theme: () => theme(),
+        finishGame: () => emit('game:finish')
     };
 }
 

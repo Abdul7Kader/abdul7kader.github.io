@@ -76,6 +76,17 @@ for (const theme of themes) {
         await check('Station ' + id);
         await app(A => A.closeStation());
     }
+    // Minispiel: Startkarte und Ergebniskarte (dunkle Karte über dem Spielfeld)
+    await app(A => A.openStation('career'));
+    await page.waitForTimeout(300);
+    await page.evaluate(() => document.querySelector('#station [data-act=play], #station [data-act=replay]').click());
+    await check('Minispiel Startkarte');
+    await page.evaluate(() => document.querySelector('[data-act=go]').click());
+    await page.waitForTimeout(1800);
+    await app(A => A.finishGame());
+    await page.waitForTimeout(2200);
+    await check('Minispiel Ergebniskarte');
+    await app(A => A.closeStation());
     for (const [label, fn, sel] of [['Kapitelübersicht', A => A.openJourney(), 'journey'], ['Suche', A => A.openPalette(), 'palette'], ['Kontakt', A => A.openContact(), 'contact'], ['Lebenslauf', A => A.openCv(), 'cv']]) {
         await app(fn); await check(label); await app((A, s) => A.hide(s), sel);
     }

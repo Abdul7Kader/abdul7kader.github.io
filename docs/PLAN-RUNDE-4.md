@@ -19,9 +19,9 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   „Danke, Nachricht gesendet“ erscheint. Test mit simulierter FormSubmit-Antwort (Erfolg, Fehler, Nicht-JSON). ✓ *(Commit „Runde 4 A1: Kontaktformular schließt nach dem Senden“)*
 - [x] **A2 Farbmodus nur Hell/Dunkel:** „Wie das System“ entfällt. Ein Knopf wechselt Hell ↔ Dunkel; beim allerersten
   Besuch gilt die Systemeinstellung als Startwert. Startseite: zwei Knöpfe (Sonne, Mond). ✓ *(Commit „Runde 4 A2: Farbmodus nur Hell oder Dunkel“)*
-- [ ] **A3 Kontrast aller Knöpfe:** „Weiter zu den Fakten“ in den Minispielen ist im Dunkelmodus weiß auf weiß.
+- [x] **A3 Kontrast aller Knöpfe:** „Weiter zu den Fakten“ in den Minispielen ist im Dunkelmodus weiß auf weiß.
   Alle Knöpfe in Hell und Dunkel prüfen (auch Spiel-Start-/Ergebniskarten, Werkstatt, Finale, Lebenslauf),
-  Kontrasttest um Spielkarten und Knöpfe erweitern.
+  Kontrasttest um Spielkarten und Knöpfe erweitern. ✓ *(Commit „Runde 4 A3: Knöpfe in Hell und Dunkel lesbar“)*
 - [ ] **A4 Firmenfeld im Finale (Hellmodus dunkel):** Ursache: Formularfelder folgen dem dunklen System-Design.
   `color-scheme: light` für den Hellmodus setzen, Feldfarben ausdrücklich über Tokens.
 - [ ] **A5 Spielfenster responsiv:** Beim Minispiel nutzt der Dialog den ganzen Bildschirm (kleiner Rand),

@@ -11,6 +11,7 @@ import { esc } from '../core/dom.js';
 import { store } from '../core/store.js';
 import { reducedMotion } from '../core/env.js';
 import { theme } from '../core/theme.js';
+import { on } from '../core/events.js';
 import { TAU, easeOut, rand, pick } from '../core/math.js';
 import { t } from '../core/i18n.js';
 import { GAME_PERF } from '../config/performance.js';
@@ -136,6 +137,7 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
     };
     g.ring = (x, y, col = '#fff', r = 40) => parts.push({ x, y, vx: 0, vy: 0, life: 0, max: 0.45, col, size: r, grav: 0, shape: 'ring' });
     g.end = () => { if (g.state === 'play') finish(); };
+    const offFinish = on('game:finish', () => g.end());   // nur für Tests: laufendes Spiel sofort beenden
 
     // ----------------------------------------------------- Start- und Ergebniskarte
     const best = () => store.get('best:' + id, 0);
@@ -362,6 +364,7 @@ export function mountGame(spec, stage, done, sfx = () => {}, env = {}) {
 
     return () => {
         alive = false;
+        offFinish();
         cancelAnimationFrame(raf);
         clearTimeout(resultTimer);
         window.removeEventListener('resize', fit);

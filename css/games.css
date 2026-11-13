@@ -34,5 +34,6 @@
 .arc-btns button { padding: 11px 18px; border-radius: 999px; font-weight: 800; font-size: 0.95rem; transition: transform 0.2s var(--spring); }
 .arc-btns button:hover { transform: translateY(-2px); }
 .arc-again { background: rgba(255, 255, 255, 0.14); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25); }
-.arc-next { background: #fff; color: var(--ink); box-shadow: 0 10px 22px -8px rgba(0, 0, 0, 0.5); }
+.arc-next { background: #fff; color: #141b2d;   /* Karte ist immer dunkel: feste Farben statt Tokens */
+    box-shadow: 0 10px 22px -8px rgba(0, 0, 0, 0.5); }
 .mg-foot { text-align: center; padding: 8px 0 14px; }

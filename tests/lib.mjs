@@ -75,5 +75,5 @@ export const APP = `(window.cvApp || (window.CV && {
     walkTo: (id) => CV.World.walkToStation(id),
     order: () => CV.game.order,
     state: () => ({ visited: CV.game.visited.size, all: CV.game.allVisited(), locked: CV.World.isLocked('finale') }),
-    setLang: () => {}, setTheme: () => {}
+    setLang: () => {}, setTheme: () => {}, finishGame: () => {}
 }))`;
