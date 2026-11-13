@@ -149,6 +149,7 @@ export default {
         signs: { shop: 'WERKZEUGVERLEIH', drivingSchool: 'FAHRSCHULE' },
         quarterAria: 'Projekt-Viertel: {list}',
         walkHint: 'Antippen oder ziehen – {name} läuft · Pfeiltasten/WASD · Enter zeigt das Projekt',
+        walkHintShort: 'Antippen oder ziehen – {name} läuft',
         cardHintKeys: 'Enter · in der Liste zeigen',
         cardHintTouch: 'Antippen · in der Liste zeigen',
         walkRole: 'begehbares Projekt-Viertel von oben'

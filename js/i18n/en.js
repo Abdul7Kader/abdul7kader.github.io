@@ -148,6 +148,7 @@ export default {
         signs: { shop: 'TOOL RENTAL', drivingSchool: 'DRIVING SCHOOL' },
         quarterAria: 'Project quarter: {list}',
         walkHint: 'Tap or drag – {name} walks · arrow keys/WASD · Enter shows the project',
+        walkHintShort: 'Tap or drag – {name} walks',
         cardHintKeys: 'Enter · show in the list',
         cardHintTouch: 'Tap · show in the list',
         walkRole: 'walkable project quarter seen from above'

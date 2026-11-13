@@ -92,7 +92,7 @@ export const BUILDINGS = {
             car(c, x + 216, y + 192, Math.PI / 2, '#3b82f6');
             car(c, x + 280, y + 192, Math.PI / 2, '#f4f4f5');
         },
-        lights(c, x, y) { glowAt(c, x + 155, y + 152, 46, 'rgba(255,214,120,0.38)'); }
+        lights(c, x, y, t, night) { if (night) glowAt(c, x + 155, y + 152, 46, 'rgba(255,214,120,0.38)'); }
     },
     // KI-Videos: Studio mit großem Bildschirm auf dem Dach und Sendemast
     studio: {

@@ -23,7 +23,7 @@ export const WORLD_PERF = {
 
 export const GAME_PERF = {
     MAX_DPR: 1.5,
-    MAX_BACKING_PX: 1500,      // höchstens so viele Bildpunkte Breite, auch wenn das Spiel den ganzen Bildschirm füllt
+    MAX_BACKING_PX: 1200,      // höchstens so viele Bildpunkte Breite, auch wenn das Spiel den ganzen Bildschirm füllt (gemessen: 1500 kostete ~8 Punkte Hauptthread mehr)
     IDLE_FRAME_MS: 1000 / 30,  // Start- und Ergebniskarte der Minispiele
     MAX_PARTICLES: 500
 };

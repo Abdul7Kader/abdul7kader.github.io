@@ -74,7 +74,7 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Begründung siehe Antwort an Abdul; falls er doch ein Meme möchte, wird es hier ergänzt. ✓ *(Commit „Runde 4 D2: Easter Egg für alle Skill-Sterne“)*
 
 ### E – Abschluss
-- [ ] **E1** Alle Tests, Leistungsmessung (darf nicht schlechter werden), Screenshot-Matrix DE/EN × Hell/Dunkel × Desktop/iPhone.
+- [x] **E1** Alle Tests, Leistungsmessung (darf nicht schlechter werden), Screenshot-Matrix DE/EN × Hell/Dunkel × Desktop/iPhone. ✓ *(Commit „Runde 4 E1: Abnahme: Tests, Leistung, Screenshot-Matrix“)*
 - [ ] **E2** `docs/REFACTORING-BERICHT.md` (Abschnitt Runde 4), `TODO.md`, README aktualisieren, pushen.
 - [ ] **E3** Merge auf `main`, CI und Pages-Build prüfen, kurze Zusammenfassung für Abdul.
 

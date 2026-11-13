@@ -1,7 +1,8 @@
 // Kontrastprüfung (WCAG 2.1 AA) für alle sichtbaren Texte – hell und dunkel.
 // Text ≥ 4,5 : 1, große Schrift (≥ 24 px oder ≥ 18,67 px fett) ≥ 3 : 1.
-// Geprüft wird gegen die erste deckende Hintergrundfarbe darüber. Texte auf Bildern, Verläufen oder der Spielwelt
-// lassen sich so nicht berechnen und werden übersprungen (sie haben eigene Kontur/Schatten).
+// Geprüft wird gegen die erste deckende Hintergrundfarbe darüber. Bei Karten mit Farbverlauf (SURFACES) zählt die
+// ungünstigste Verlaufsfarbe. Bunte Knöpfe/Kopfzeilen mit Verlauf (weiße, große Schrift mit Schatten), Bilder und
+// die Spielwelt lassen sich so nicht berechnen und werden übersprungen.
 //   node tests/contrast.mjs [--theme=light|dark]   (ohne Angabe: beide)
 import { createRequire } from 'node:module';
 import { startServer, isolate, sampleActivity, APP } from './lib.mjs';
@@ -13,20 +14,35 @@ const themes = arg('theme', '') ? [arg('theme', '')] : ['light', 'dark'];
 const failures = [];
 
 function scan() {
-    const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 }; };
+    const SURFACES = '.timeline > li, .role-card, .pv-card, .cert, .vol, .gh-act, .ai-item, .fact, .hobby, .game-card';
+    const parse = (c) => {
+        const s = c.match(/color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.]+))?\)/);   // Ergebnis von color-mix()
+        if (s) return { r: +s[1] * 255, g: +s[2] * 255, b: +s[3] * 255, a: s[4] !== undefined ? +s[4] : 1 };
+        const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null;
+        const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+    };
     const lum = ({ r, g, b }) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
     const blend = (top, bottom) => ({ r: top.r * top.a + bottom.r * (1 - top.a), g: top.g * top.a + bottom.g * (1 - top.a), b: top.b * top.a + bottom.b * (1 - top.a), a: 1 });
+    // Liefert alle möglichen Hintergrundfarben (bei Verläufen mehrere), oder null wenn nicht berechenbar
     function background(el) {
         const layers = [];
+        let stops = null;
         for (let e = el; e; e = e.parentElement) {
             const cs = getComputedStyle(e);
-            if (cs.backgroundImage !== 'none' || cs.filter !== 'none' && e !== el) return null;   // Verlauf/Bild: nicht berechenbar
+            if (cs.filter !== 'none' && e !== el) return null;
+            if (cs.backgroundImage !== 'none') {
+                // Deckender Farbverlauf (ohne Bild): seine Farben als Kandidaten; sonst nicht berechenbar
+                const cols = /url\(/.test(cs.backgroundImage) ? [] : (cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g) || []).map(parse).filter(Boolean);
+                if (!e.matches(SURFACES) || !cols.length || cols.some(c => c.a < 0.99) || layers.length) return null;
+                stops = cols; break;
+            }
             const c = parse(cs.backgroundColor);
             if (c && c.a > 0) { layers.push(c); if (c.a >= 0.99) break; }
             if (e.id === 'world') return null;
         }
+        if (stops) return stops;
         if (!layers.length || layers[layers.length - 1].a < 0.99) return null;   // liegt über der Spielwelt
-        return layers.reverse().reduce((acc, l) => (acc ? blend(l, acc) : l), null);
+        return [layers.reverse().reduce((acc, l) => (acc ? blend(l, acc) : l), null)];
     }
     const out = [];
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -43,10 +59,9 @@ function scan() {
         let op = 1;
         for (let e = el; e; e = e.parentElement) op *= +getComputedStyle(e).opacity;
         if (op < 0.5) continue;
-        const fg = parse(cs.color), bg = background(el);
-        if (!fg || !bg) continue;
-        const col = blend(fg, bg);
-        const L1 = lum(col), L2 = lum(bg), ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+        const fg = parse(cs.color), bgs = background(el);
+        if (!fg || !bgs) continue;
+        const ratio = Math.min(...bgs.map(bg => { const L1 = lum(blend(fg, bg)), L2 = lum(bg); return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05); }));
         const size = parseFloat(cs.fontSize), bold = +cs.fontWeight >= 700;
         // große Schrift 3 : 1; leere Bewertungssterne sind eine Grafik (ebenfalls 3 : 1)
         const need = size >= 24 || (bold && size >= 18.66) || el.matches('.off') ? 3 : 4.5;

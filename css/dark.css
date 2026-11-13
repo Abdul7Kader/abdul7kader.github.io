@@ -125,3 +125,5 @@
     [data-theme="dark"] .cv-projects .cv-stage.base { background: #eceff6; color: #5f6880; }
     [data-theme="dark"] .cv-projects .cv-stage.done { background: #d9f7e8; color: #0f6b44; }
 }
+/* Aktueller Eintrag der Zeitleiste: dunkle Karte statt hellem Verlauf */
+[data-theme="dark"] .timeline > li.current { background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 16%, #1c2442), #1c2442); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c1) 55%, transparent); }

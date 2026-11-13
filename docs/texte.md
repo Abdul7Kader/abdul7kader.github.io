@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (558 Texte)
+## Deutsch (559 Texte)
 
 ### Doppelungen
 
@@ -156,6 +156,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.signs.drivingSchool` | FAHRSCHULE |
 | `ui.projects.quarterAria` | Projekt-Viertel: {list} |
 | `ui.projects.walkHint` | Antippen oder ziehen – {name} läuft · Pfeiltasten/WASD · Enter zeigt das Projekt |
+| `ui.projects.walkHintShort` | Antippen oder ziehen – {name} läuft |
 | `ui.projects.cardHintKeys` | Enter · in der Liste zeigen |
 | `ui.projects.cardHintTouch` | Antippen · in der Liste zeigen |
 | `ui.projects.walkRole` | begehbares Projekt-Viertel von oben |
@@ -588,7 +589,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (558 Texte)
+## Englisch (559 Texte)
 
 ### Doppelungen
 
@@ -739,6 +740,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.projects.signs.drivingSchool` | DRIVING SCHOOL |
 | `ui.projects.quarterAria` | Project quarter: {list} |
 | `ui.projects.walkHint` | Tap or drag – {name} walks · arrow keys/WASD · Enter shows the project |
+| `ui.projects.walkHintShort` | Tap or drag – {name} walks |
 | `ui.projects.cardHintKeys` | Enter · show in the list |
 | `ui.projects.cardHintTouch` | Tap · show in the list |
 | `ui.projects.walkRole` | walkable project quarter seen from above |

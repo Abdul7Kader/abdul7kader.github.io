@@ -3,7 +3,7 @@
 // oder fertig mit Besuchern. Abdul läuft über die Straßen – Pfeiltasten/WASD, Ziehen (er folgt dem Finger/der Maus)
 // oder Tippen (er läuft über die Straßen hin). Steht er vor einem Gebäude, erscheint unten die Projektkarte;
 // Enter oder Antippen der Karte markiert das Projekt in der Liste darunter.
-// Zeichnet höchstens 30 Bilder/s und nur, solange das Viertel sichtbar ist.
+// Zeichnet höchstens 30 Bilder/s (im Stand 20) und nur, solange das Viertel sichtbar ist.
 import { clamp, dist } from '../core/math.js';
 import { rr, ellipse as ell, FONT } from '../core/canvas.js';
 import { reducedMotion, isTouch } from '../core/env.js';
@@ -31,7 +31,8 @@ const WALKER = { scale: 0.62, speed: 210, radius: 9, stepRate: 0.09, hintS: 8, s
 // Ausschnitt und Zoom
 const VIEW = { minWorld: 430, maxWorld: 760, perCss: 0.95, aspect: 0.62, minH: 260, maxH: 460, follow: 8 };
 const ZOOM = { max: 2.2, step: 1.3, wheelStep: 1.1, dragPx: 6 };
-const MAX_DPR = 2, CACHE_RES = 1.75;
+const MAX_DPR = 1.5, CACHE_RES = 1.5;          // wie die Welt: höhere Pixeldichte kostet viel, sieht kaum besser aus
+const IDLE_FRAME_MS = 1000 / 20;               // steht Abdul, reichen 20 Bilder/s (Kräne drehen sich langsam)
 const CARD = { h: 64, maxW: 340, pad: 10 };
 // Tag und Nacht
 const SCENE = {
@@ -415,7 +416,8 @@ export function mountQuarter(wrap, projects, opts = {}) {
     (function frame(ts) {
         if (!cnv.isConnected) { ro.disconnect(); if (io) io.disconnect(); return; }
         requestAnimationFrame(frame);
-        if (!visible || document.hidden || ts - lastDraw < WIDGET_FRAME_MS) return;
+        const busy = walker.moving || walker.path || walker.steer || keys.size || (animate && ts - t0 < growEnd * 1000);
+        if (!visible || document.hidden || ts - lastDraw < (busy ? WIDGET_FRAME_MS : IDLE_FRAME_MS)) return;
         const dt = lastTs ? Math.min(0.1, (ts - lastTs) / 1000) : 0;
         lastDraw = ts; lastTs = ts;
         const t = reducedMotion ? 0 : (ts - t0) / 1000;
@@ -438,7 +440,7 @@ export function mountQuarter(wrap, projects, opts = {}) {
         drawWalker(c, walker, t);
         c.setTransform(dpr, 0, 0, dpr, 0, 0);
         cardRect = near >= 0 ? drawCard(c, list[near], cssW, cssH, S) : null;
-        drawHint(c, tr('projects.walkHint', { name: opts.name || '' }), walker.moved ? 0 : clamp(WALKER.hintS - t, 0, 1));
+        drawHint(c, tr(isTouch || cssW < 560 ? 'projects.walkHintShort' : 'projects.walkHint', { name: opts.name || '' }), walker.moved ? 0 : clamp(WALKER.hintS - t, 0, 1));
     })(t0);
 
     return {
