@@ -1,6 +1,6 @@
 # Aktualisiert github-activity.json (Commit-Kacheln auf der Webseite) täglich und nach jedem Push auf main.
-# Optional: Repository-Secret ACTIVITY_TOKEN (Personal Access Token, nur Leserechte) anlegen –
-# dann zählen auch private Beiträge mit, sofern sie im GitHub-Profil freigegeben sind.
+# Optional: Repository-Secret ACTIVITY_TOKEN (fine-grained Token, nur Leserechte) anlegen –
+# dann zählen Commits in privaten Repositories mit (nur als Zahl) und die Anzahl privater Projekte. Anleitung: README.
 name: GitHub-Aktivität aktualisieren
 
 on:
