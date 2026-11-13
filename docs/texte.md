@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (545 Texte)
+## Deutsch (543 Texte)
 
 ### Doppelungen
 
@@ -485,10 +485,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.education[0].bullets[1]` | Projektarbeiten: IT-Service-Management mit BMC Helix ITSM (Incidents, Service und Change Requests); Scrum-basierte Website für Kinderaktivitäten der Stadt Herne; eigenständige Java-Verwaltungsanwendung. |
 | `cv.education[1].title` | Allgemeine Hochschulreife |
 | `cv.education[1].detail` | Westfalen-Kolleg Dortmund |
-| `cv.education[2].title` | Sprachkurs B1 |
-| `cv.education[2].detail` | Auslandsgesellschaft Dortmund |
-| `cv.education[3].title` | Integrationskurs VHS |
-| `cv.education[3].detail` | Marburg-Biedenkopf |
+| `cv.education[2].title` | Integrations- und Sprachkurse bis B1 |
+| `cv.education[2].detail` | VHS Marburg-Biedenkopf · Auslandsgesellschaft Dortmund |
 | `cv.travels[0].country` | Syrien & Deutschland |
 | `cv.travels[1].country` | Einreise nach Deutschland |
 | `cv.travels[2].country` | Spanien, Griechenland, Italien, Algerien, Marokko, Kroatien |
@@ -574,7 +572,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (545 Texte)
+## Englisch (543 Texte)
 
 ### Doppelungen
 
@@ -1053,10 +1051,8 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.education[0].bullets[1]` | Projects: IT service management with BMC Helix ITSM (incidents, service and change requests); Scrum-based website for children’s activities of the city of Herne; standalone Java management application. |
 | `cv.education[1].title` | University entrance qualification (Abitur) |
 | `cv.education[1].detail` | Westfalen-Kolleg Dortmund |
-| `cv.education[2].title` | Language course B1 |
-| `cv.education[2].detail` | Auslandsgesellschaft Dortmund |
-| `cv.education[3].title` | Integration course VHS |
-| `cv.education[3].detail` | Marburg-Biedenkopf |
+| `cv.education[2].title` | Integration and language courses up to B1 |
+| `cv.education[2].detail` | VHS Marburg-Biedenkopf · Auslandsgesellschaft Dortmund |
 | `cv.travels[0].country` | Syria & Germany |
 | `cv.travels[1].country` | Arrival in Germany |
 | `cv.travels[2].country` | Spain, Greece, Italy, Algeria, Morocco, Croatia |

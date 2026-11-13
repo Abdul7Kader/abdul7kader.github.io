@@ -101,8 +101,7 @@ window.RESUME.en = {
             ]
         },
         { "date": "08.2016 - 12.2019", "title": "University entrance qualification (Abitur)", "detail": "Westfalen-Kolleg Dortmund" },
-        { "date": "01.2016 - 04.2016", "title": "Language course B1", "detail": "Auslandsgesellschaft Dortmund" },
-        { "date": "03.2015 - 06.2015", "title": "Integration course VHS", "detail": "Marburg-Biedenkopf" }
+        { "date": "03.2015 - 04.2016", "title": "Integration and language courses up to B1", "detail": "VHS Marburg-Biedenkopf · Auslandsgesellschaft Dortmund" }
     ],
     "travels": [
         { "date": "Home", "country": "Syria & Germany" },

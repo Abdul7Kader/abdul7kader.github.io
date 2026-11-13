@@ -180,14 +180,9 @@ window.RESUME.de = {
             "detail": "Westfalen-Kolleg Dortmund"
         },
         {
-            "date": "01.2016 - 04.2016",
-            "title": "Sprachkurs B1",
-            "detail": "Auslandsgesellschaft Dortmund"
-        },
-        {
-            "date": "03.2015 - 06.2015",
-            "title": "Integrationskurs VHS",
-            "detail": "Marburg-Biedenkopf"
+            "date": "03.2015 - 04.2016",
+            "title": "Integrations- und Sprachkurse bis B1",
+            "detail": "VHS Marburg-Biedenkopf · Auslandsgesellschaft Dortmund"
         }
     ],
     "travels": [

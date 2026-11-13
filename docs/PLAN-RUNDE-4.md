@@ -29,9 +29,9 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 
 ### B – Inhalte (keine Doppelungen)
 - [x] **B1 Flaggen entfernen:** Syrien-Flagge raus, überall nur Ländernamen (Länderliste, Weltkarten-Tooltip, Suche). ✓ *(Commit „Runde 4 B1: Flaggen entfernt, nur Ländernamen“)*
-- [ ] **B2 Sprachkurse zusammenlegen:** Integrationskurs VHS und Sprachkurs B1 → ein Eintrag „Integrations- und
+- [x] **B2 Sprachkurse zusammenlegen:** Integrationskurs VHS und Sprachkurs B1 → ein Eintrag „Integrations- und
   Sprachkurse bis B1“, Zeitraum **03.2015 – 04.2016** (Abdul schrieb „3.2025 bis 4.2026“ – ich gehe von 2015/2016 aus,
-  weil die Kurse vor dem Abitur lagen; bitte bestätigen).
+  weil die Kurse vor dem Abitur lagen; bitte bestätigen). ✓ *(Commit „Runde 4 B2: Sprachkurse in einem Eintrag“)*
 - [ ] **B3 Deutsch C2:** Statt „verhandlungssicher“ die Bezeichnung des Gemeinsamen europäischen Referenzrahmens:
   „C2 – höchste Stufe des GER (kompetente Sprachverwendung)“, EN „C2 – Mastery, highest CEFR level“.
   (Der Europarat betont, dass C2 nicht „muttersprachlich“ bedeutet; „verhandlungssicher“ ist eine Lebenslauf-Floskel,
