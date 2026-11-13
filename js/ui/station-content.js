@@ -23,7 +23,7 @@ const chips = (list) => `<div class="chips">${list.map(x => `<span class="chip">
 const langBars = () => `<div class="langs">${derived().languages.map(l => `
     <div class="lang"><div class="lang-top"><strong>${esc(l.name)}</strong><span>${esc(l.level)}</span></div>
     <div class="bar"><i data-pct="${levelPct(l.level)}"></i></div></div>`).join('')}</div>`;
-export function githubCard() {
+function githubCard() {
     const gh = (data().contact || {}).github;
     return gh ? `<a class="gh-card" href="${esc(gh)}" target="_blank" rel="noopener"><span class="gh-ic">${icon('github')}</span><span><strong>${esc(t('facts.myGithub'))}</strong><small>${esc(gh.replace(/^https?:\/\/(www\.)?/, ''))}</small></span><span class="gh-go">${esc(t('facts.open'))} ↗</span></a>` : '';
 }
@@ -81,8 +81,7 @@ export const CONTENT = {
                 ${p.tech ? `<small class="pv-tech">${esc(p.tech)}</small>` : ''}
                 ${p.link ? `<a class="pv-link" href="${esc(p.link)}" target="_blank" rel="noopener">${esc(t('facts.view'))} ${icon('external')}</a>` : `<span class="pv-soon">${esc(t('facts.linkSoon'))}</span>`}
             </article>`;
-        }).join('')}</div>
-        ${githubCard()}`;
+        }).join('')}</div>`;
     },
     lake() {
         const d = data();
