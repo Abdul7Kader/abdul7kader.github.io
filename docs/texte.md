@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (543 Texte)
+## Deutsch (542 Texte)
 
 ### Doppelungen
 
@@ -525,7 +525,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.experience[2].role` | Kundenservice und Vertrieb – Telekom-Auftrag (Vollzeit) |
 | `cv.experience[2].company` | Amevida, Dortmund |
 | `cv.experience[2].bullets[0]` | Beratung von Telekom-Kunden zu Tarifen, Verträgen und Produkten. |
-| `cv.experience[2].bullets[1]` | Bedarfsorientierter Verkauf von Tarifen und Zusatzoptionen (Up- und Cross-Selling). |
 | `cv.experience[3].role` | Kundenservice und technische Beratung – Samsung-Auftrag |
 | `cv.experience[3].company` | TELUS Digital, Dortmund |
 | `cv.experience[3].bullets[0]` | Technische Beratung und Support zu Samsung-Geräten. |
@@ -572,7 +571,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (543 Texte)
+## Englisch (542 Texte)
 
 ### Doppelungen
 
@@ -1091,7 +1090,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.experience[2].role` | Customer service and sales – Telekom account (full-time) |
 | `cv.experience[2].company` | Amevida, Dortmund |
 | `cv.experience[2].bullets[0]` | Advising Telekom customers on tariffs, contracts and products. |
-| `cv.experience[2].bullets[1]` | Needs-based sales of tariffs and add-ons (up- and cross-selling). |
 | `cv.experience[3].role` | Customer service and technical support – Samsung account |
 | `cv.experience[3].company` | TELUS Digital, Dortmund |
 | `cv.experience[3].bullets[0]` | Technical advice and support for Samsung devices. |

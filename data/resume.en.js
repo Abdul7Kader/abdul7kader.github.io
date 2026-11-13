@@ -156,8 +156,7 @@ window.RESUME.en = {
             "role": "Customer service and sales – Telekom account (full-time)",
             "company": "Amevida, Dortmund",
             "bullets": [
-                "Advising Telekom customers on tariffs, contracts and products.",
-                "Needs-based sales of tariffs and add-ons (up- and cross-selling)."
+                "Advising Telekom customers on tariffs, contracts and products."
             ]
         },
         {

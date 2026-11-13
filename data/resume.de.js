@@ -288,8 +288,7 @@ window.RESUME.de = {
             "role": "Kundenservice und Vertrieb – Telekom-Auftrag (Vollzeit)",
             "company": "Amevida, Dortmund",
             "bullets": [
-                "Beratung von Telekom-Kunden zu Tarifen, Verträgen und Produkten.",
-                "Bedarfsorientierter Verkauf von Tarifen und Zusatzoptionen (Up- und Cross-Selling)."
+                "Beratung von Telekom-Kunden zu Tarifen, Verträgen und Produkten."
             ]
         },
         {

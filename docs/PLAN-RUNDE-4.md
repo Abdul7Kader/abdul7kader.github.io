@@ -40,7 +40,7 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   UI/UX-Design, Programmentwicklung, Qualitätssicherung, Deployment und Support“. Nirgends „KI-generierter Code“:
   Formulierungen so, dass Abdul entwickelt und KI-Agenten unterstützen (auch Minispiel „Prompt-Fabrik“: Schritt
   „KI-Code“ → „Entwicklung“, KI-Kompetenzen, Kurzprofil, Stärken – Deutsch und Englisch). ✓ *(Commit „Runde 4 B4: Business-Viertel: Abdul entwickelt, KI unterstützt“)*
-- [ ] **B5 Telekom:** Punkt „Bedarfsorientierter Verkauf … (Up- und Cross-Selling)“ löschen.
+- [x] **B5 Telekom:** Punkt „Bedarfsorientierter Verkauf … (Up- und Cross-Selling)“ löschen. ✓ *(Commit „Runde 4 B5: Telekom ohne Up-/Cross-Selling-Punkt“)*
 - [ ] **B6 PSI nur einmal:** Werkstudent PSI steht nur im Business-Viertel – dort einmal „100 % ohne KI-Werkzeuge“
   (der doppelte Satz „Code-Reviews ohne KI-Unterstützung“ entfällt).
 - [ ] **B7 Tech-Lab = Werkzeuge + GitHub:** Im Tech-Lab nur noch Technologien und Werkzeuge (Sprachen, Datenbanken,
