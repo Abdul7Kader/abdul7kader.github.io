@@ -2,6 +2,7 @@
    Farben, Schriften, Radien, Schatten, Bewegungskurven. Alle anderen Dateien benutzen nur diese Variablen. */
 
 :root {
+    color-scheme: light;        /* Formularfelder und Scrollleisten folgen dem Seitenmodus, nicht dem System */
     --night: #0b1228;
     --navy: #16213f;
     --navy-2: #2b3d63;

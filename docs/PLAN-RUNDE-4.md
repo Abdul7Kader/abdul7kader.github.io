@@ -22,8 +22,8 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
 - [x] **A3 Kontrast aller Knöpfe:** „Weiter zu den Fakten“ in den Minispielen ist im Dunkelmodus weiß auf weiß.
   Alle Knöpfe in Hell und Dunkel prüfen (auch Spiel-Start-/Ergebniskarten, Werkstatt, Finale, Lebenslauf),
   Kontrasttest um Spielkarten und Knöpfe erweitern. ✓ *(Commit „Runde 4 A3: Knöpfe in Hell und Dunkel lesbar“)*
-- [ ] **A4 Firmenfeld im Finale (Hellmodus dunkel):** Ursache: Formularfelder folgen dem dunklen System-Design.
-  `color-scheme: light` für den Hellmodus setzen, Feldfarben ausdrücklich über Tokens.
+- [x] **A4 Firmenfeld im Finale (Hellmodus dunkel):** Ursache: Formularfelder folgen dem dunklen System-Design.
+  `color-scheme: light` für den Hellmodus setzen, Feldfarben ausdrücklich über Tokens. ✓ *(Commit „Runde 4 A4: Eingabefelder folgen dem Seitenmodus“)*
 - [ ] **A5 Spielfenster responsiv:** Beim Minispiel nutzt der Dialog den ganzen Bildschirm (kleiner Rand),
   das Spielfeld skaliert auf die größtmögliche Fläche – Handy hoch/quer und Rechner.
 

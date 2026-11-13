@@ -59,7 +59,8 @@ const server = await startServer();
 const browser = await chromium.launch();
 for (const theme of themes) {
     console.log(`\nKontrast · ${theme}`);
-    const page = await browser.newPage({ viewport: { width: 1366, height: 860 }, colorScheme: theme });
+    // System absichtlich im anderen Modus: so fallen Felder auf, die dem System statt der Seite folgen
+    const page = await browser.newPage({ viewport: { width: 1366, height: 860 }, colorScheme: theme === 'dark' ? 'light' : 'dark' });
     await isolate(page, { activity: sampleActivity() });
     await page.goto(`${server.url}/index.html?lang=de&theme=${theme}`, { waitUntil: 'networkidle' });
     const app = (fn, ...a) => page.evaluate(`(${fn})(${APP}, ...${JSON.stringify(a)})`);
@@ -74,6 +75,13 @@ for (const theme of themes) {
     for (const id of await app(A => A.order())) {
         await app((A, i) => A.openStation(i, { info: true }), id);
         await check('Station ' + id);
+        if (id === 'finale') {
+            // Eingabefeld passt zum Seitenmodus (helle Fläche im Hellmodus, dunkle im Dunkelmodus)
+            const lum = await page.evaluate(() => { const m = getComputedStyle(document.querySelector('#firm-input')).backgroundColor.match(/\d+/g).map(Number); return (m[0] * 0.299 + m[1] * 0.587 + m[2] * 0.114) / 255; });
+            const fits = theme === 'dark' ? lum < 0.4 : lum > 0.85;
+            if (!fits) failures.push(`${theme} · Firmenfeld im Finale passt nicht zum Modus (Helligkeit ${lum.toFixed(2)})`);
+            console.log(`${fits ? '  ✓' : '  ✗'} Firmenfeld passt zum Modus`);
+        }
         await app(A => A.closeStation());
     }
     // Minispiel: Startkarte und Ergebniskarte (dunkle Karte über dem Spielfeld)
