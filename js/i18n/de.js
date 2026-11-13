@@ -7,7 +7,7 @@ export default {
         description: 'Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als begehbare Spielwelt mit sechs Minispielen – oder kompakt in 30 Sekunden.'
     },
     common: { close: 'Schließen' },
-    theme: { system: 'Wie das System', light: 'Hell', dark: 'Dunkel' },
+    theme: { light: 'Hell', dark: 'Dunkel' },
     time: { justNow: 'gerade eben', today: 'heute' },
 
     start: {
@@ -242,7 +242,7 @@ export default {
         contact: 'Jetzt kontaktieren', contactSub: 'Nachricht direkt an mich senden', contactQ: 'kontakt mail email anfrage formular nachricht',
         email: 'E-Mail schreiben',
         lang: 'Sprache: English', langSub: 'Switch to English', langQ: 'sprache language englisch english deutsch',
-        theme: 'Farbmodus wechseln', themeSub: 'System · Hell · Dunkel', themeQ: 'dark mode dunkel hell farbe theme nacht',
+        theme: 'Farbmodus wechseln', themeSub: 'Hell ↔ Dunkel', themeQ: 'dark mode dunkel hell farbe theme nacht',
         github: 'GitHub öffnen',
         skill: 'Kenntnis · {place}',
         jobQ: 'beruf job arbeit',

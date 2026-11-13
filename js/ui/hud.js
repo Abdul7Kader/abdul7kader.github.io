@@ -4,7 +4,7 @@ import { $, $$, esc } from '../core/dom.js';
 import { isTouch, isNarrow } from '../core/env.js';
 import { icon } from '../core/icons.js';
 import { t, lang } from '../core/i18n.js';
-import { themePref } from '../core/theme.js';
+import { theme } from '../core/theme.js';
 import { audio } from '../core/audio.js';
 import { stationColors, BADGE_ICONS } from '../config/theme.js';
 import { World } from '../world/world.js';
@@ -47,22 +47,22 @@ export function translateHud() {
     syncThemeButtons();
 }
 
-const THEME_ICON = { system: 'monitor', light: 'sun', dark: 'moon' };
-/** Farbmodus-Knöpfe (HUD und Startseite) auf die aktuelle Wahl setzen */
-export function syncThemeButtons() {
-    const pref = themePref(), label = t('hud.theme', { mode: t('theme.' + pref) });
-    $$('[data-cycle-theme]').forEach(el => { el.innerHTML = icon(THEME_ICON[pref]); el.title = label; el.setAttribute('aria-label', label); });
-    $$('[data-set-theme]').forEach(el => {
-        el.innerHTML = icon(THEME_ICON[el.dataset.setTheme]);
-        el.setAttribute('aria-pressed', String(el.dataset.setTheme === pref));
-    });
-}
-
 export function syncAudioButtons() {
     const snd = $('#btn-sound'), mus = $('#btn-music');
     snd.innerHTML = icon(audio.state.sfx ? 'volume' : 'mute');
     snd.classList.toggle('off', !audio.state.sfx);
     mus.classList.toggle('off', !audio.state.music);
+}
+
+const THEME_ICON = { light: 'sun', dark: 'moon' };
+/** Farbmodus-Knöpfe (HUD und Startseite) auf den aktuellen Modus setzen */
+export function syncThemeButtons() {
+    const now = theme(), label = t('hud.theme', { mode: t('theme.' + now) });
+    $$('[data-toggle-theme]').forEach(el => { el.innerHTML = icon(THEME_ICON[now]); el.title = label; el.setAttribute('aria-label', label); });
+    $$('[data-set-theme]').forEach(el => {
+        el.innerHTML = icon(THEME_ICON[el.dataset.setTheme]);
+        el.setAttribute('aria-pressed', String(el.dataset.setTheme === now));
+    });
 }
 
 /** Steuerungshinweis unten beim Spielstart */

@@ -35,7 +35,7 @@ function buildIndex() {
     add(A, audio.state.sfx ? '🔇' : '🔊', audio.state.sfx ? t('palette.soundOff') : t('palette.soundOn'), t('palette.soundSub'), t('palette.soundQ'), () => { $('#btn-sound').click(); close(); });
     add(A, '✉️', t('palette.contact'), t('palette.contactSub'), t('palette.contactQ'), () => { close(); emit('contact:open', {}); });
     add(A, '🌐', t('palette.lang'), t('palette.langSub'), t('palette.langQ'), () => { close(); emit('lang:toggle'); });
-    add(A, '🌓', t('palette.theme'), t('palette.themeSub'), t('palette.themeQ'), () => { close(); emit('theme:cycle'); });
+    add(A, '🌓', t('palette.theme'), t('palette.themeSub'), t('palette.themeQ'), () => { close(); emit('theme:toggle'); });
     if (c.email) add(A, '✉️', t('palette.email'), c.email, 'kontakt contact mail email', () => { location.href = 'mailto:' + c.email; });
     if (c.github) add(A, '🐙', t('palette.github'), c.github.replace(/^https?:\/\//, ''), 'github code repo', () => window.open(c.github, '_blank', 'noopener'));
 

@@ -16,10 +16,10 @@
         (function () {
             var p = new URLSearchParams(location.search).get('theme'), s = null;
             try { s = JSON.parse(localStorage.getItem('cvworld:theme')); } catch (e) { /* privater Modus */ }
-            var pref = /^(light|dark|system)$/.test(p) ? p : /^(light|dark|system)$/.test(s) ? s : 'system';
-            var dark = pref === 'dark' || (pref === 'system' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+            // eigene Wahl (Hell/Dunkel) oder – ohne Wahl – die Systemeinstellung
+            var pref = /^(light|dark)$/.test(p) ? p : /^(light|dark)$/.test(s) ? s : null;
+            var dark = pref ? pref === 'dark' : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
             document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-            document.documentElement.dataset.themePref = pref;
         })();
     </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
@@ -75,7 +75,7 @@
             <button id="btn-search" class="glass hbtn search" data-i18n-title="hud.searchKey" title="Suchen &amp; springen (Strg+K)"><span class="ic" data-ic="search"></span><span class="lbl" data-i18n="hud.search">Suchen</span><kbd class="lbl" data-i18n="hud.ctrlK">Strg K</kbd></button>
             <button id="btn-contact" class="hbtn accent" data-i18n-title="hud.contactTitle" title="Kontakt aufnehmen"><span class="ic" data-ic="send"></span><span class="lbl" data-i18n="hud.contactNow">Jetzt kontaktieren</span><span class="lbl-s" data-i18n="hud.contactShort">Kontakt</span></button>
             <button id="btn-cv" class="hbtn dark" data-i18n-title="hud.cvKey" title="Lebenslauf kompakt (L)"><span class="ic" data-ic="file"></span><span class="lbl" data-i18n="hud.cv">Lebenslauf</span></button>
-            <button id="btn-theme" class="glass hbtn icon" data-cycle-theme title="Farbmodus" aria-label="Farbmodus"></button>
+            <button id="btn-theme" class="glass hbtn icon" data-toggle-theme title="Farbmodus" aria-label="Farbmodus"></button>
             <button id="btn-lang" class="glass hbtn icon lang-btn" data-toggle-lang data-i18n-title="hud.langSwitch" title="English" aria-label="English"><span class="lang-code" data-i18n="hud.langOther">EN</span></button>
             <button id="btn-map" class="glass hbtn icon" data-i18n-title="hud.journeyKey" title="Kapitelübersicht (M)" aria-label="Kapitelübersicht" data-ic="map"></button>
             <button id="btn-sound" class="glass hbtn icon" data-i18n-title="hud.sound" title="Soundeffekte an/aus" aria-label="Soundeffekte an/aus"></button>
@@ -107,7 +107,6 @@
             <button type="button" class="seg-btn" data-set-lang="de" lang="de">DE</button>
             <button type="button" class="seg-btn" data-set-lang="en" lang="en">EN</button>
             <span class="seg-sep" aria-hidden="true"></span>
-            <button type="button" class="seg-btn icon" data-set-theme="system" data-i18n-title="theme.system" title="System"></button>
             <button type="button" class="seg-btn icon" data-set-theme="light" data-i18n-title="theme.light" title="Hell"></button>
             <button type="button" class="seg-btn icon" data-set-theme="dark" data-i18n-title="theme.dark" title="Dunkel"></button>
         </div>

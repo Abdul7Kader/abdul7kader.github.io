@@ -6,7 +6,7 @@ export default {
         description: 'Abdul Kader Sabouni – software developer and computer science student (FH Dortmund). My CV as a walkable game world with six mini-games – or as a compact page in 30 seconds.'
     },
     common: { close: 'Close' },
-    theme: { system: 'Same as system', light: 'Light', dark: 'Dark' },
+    theme: { light: 'Light', dark: 'Dark' },
     time: { justNow: 'just now', today: 'today' },
 
     start: {
@@ -241,7 +241,7 @@ export default {
         contact: 'Get in touch', contactSub: 'Send me a message directly', contactQ: 'contact mail email message form enquiry',
         email: 'Write an email',
         lang: 'Sprache: Deutsch', langSub: 'Auf Deutsch umschalten', langQ: 'language sprache german deutsch english',
-        theme: 'Change colour mode', themeSub: 'System · Light · Dark', themeQ: 'dark mode light colour theme night',
+        theme: 'Change colour mode', themeSub: 'Light ↔ Dark', themeQ: 'dark mode light colour theme night',
         github: 'Open GitHub',
         skill: 'Skill · {place}',
         jobQ: 'job work career',

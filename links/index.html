@@ -12,8 +12,8 @@
     <script>
         (function () {
             var q = new URLSearchParams(location.search), get = function (k) { try { return JSON.parse(localStorage.getItem('cvworld:' + k)); } catch (e) { return null; } };
-            var t = q.get('theme'); t = /^(light|dark|system)$/.test(t) ? t : (get('theme') || 'system');
-            var dark = t === 'dark' || (t === 'system' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+            var t = q.get('theme'); t = /^(light|dark)$/.test(t) ? t : (/^(light|dark)$/.test(get('theme')) ? get('theme') : null);
+            var dark = t ? t === 'dark' : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
             var l = q.get('lang'); l = /^(de|en)$/.test(l) ? l : (get('lang') || ((navigator.language || 'de').slice(0, 2) === 'en' ? 'en' : 'de'));
             document.documentElement.dataset.theme = dark ? 'dark' : 'light';
             document.documentElement.lang = l === 'en' ? 'en' : 'de';

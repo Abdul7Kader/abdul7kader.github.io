@@ -17,8 +17,8 @@ sofort pushen · keine Doppelungen irgendwo im Spiel · alles zweisprachig und i
   Erfolgsprüfung robuster machen (Antwort von FormSubmit auswerten: `res.ok` + `success`, Text- statt JSON-Antwort
   abfangen), Fehler nur bei echtem Fehlschlag. Nach erfolgreichem Senden schließt sich das Formular und ein Toast
   „Danke, Nachricht gesendet“ erscheint. Test mit simulierter FormSubmit-Antwort (Erfolg, Fehler, Nicht-JSON). ✓ *(Commit „Runde 4 A1: Kontaktformular schließt nach dem Senden“)*
-- [ ] **A2 Farbmodus nur Hell/Dunkel:** „Wie das System“ entfällt. Ein Knopf wechselt Hell ↔ Dunkel; beim allerersten
-  Besuch gilt die Systemeinstellung als Startwert. Startseite: zwei Knöpfe (Sonne, Mond).
+- [x] **A2 Farbmodus nur Hell/Dunkel:** „Wie das System“ entfällt. Ein Knopf wechselt Hell ↔ Dunkel; beim allerersten
+  Besuch gilt die Systemeinstellung als Startwert. Startseite: zwei Knöpfe (Sonne, Mond). ✓ *(Commit „Runde 4 A2: Farbmodus nur Hell oder Dunkel“)*
 - [ ] **A3 Kontrast aller Knöpfe:** „Weiter zu den Fakten“ in den Minispielen ist im Dunkelmodus weiß auf weiß.
   Alle Knöpfe in Hell und Dunkel prüfen (auch Spiel-Start-/Ergebniskarten, Werkstatt, Finale, Lebenslauf),
   Kontrasttest um Spielkarten und Knöpfe erweitern.

@@ -6,7 +6,7 @@ import { t, lang, setLang, LANGS } from './core/i18n.js';
 import { on, emit } from './core/events.js';
 import { audio } from './core/audio.js';
 import { store } from './core/store.js';
-import { theme, setThemePref, cycleTheme } from './core/theme.js';
+import { theme, setTheme, toggleTheme } from './core/theme.js';
 import { WORLD_DAY, WORLD_NIGHT } from './config/theme.js';
 import { FINALE, WORKSHOP, WORKSHOP_WEEKS } from './config/layout.js';
 import { TIMING } from './config/timing.js';
@@ -144,8 +144,8 @@ function setupButtons() {
     $('#btn-music').onclick = () => { audio.setMusic(!audio.state.music); syncAudioButtons(); };
     $$('[data-set-lang]').forEach(b => { b.onclick = () => { audio.play('click'); setLang(b.dataset.setLang); }; });
     $$('[data-toggle-lang]').forEach(b => { b.onclick = () => { audio.play('click'); emit('lang:toggle'); }; });
-    $$('[data-cycle-theme]').forEach(b => { b.onclick = () => { audio.play('click'); cycleTheme(); }; });
-    $$('[data-set-theme]').forEach(b => { b.onclick = () => { audio.play('click'); setThemePref(b.dataset.setTheme); }; });
+    $$('[data-toggle-theme]').forEach(b => { b.onclick = () => { audio.play('click'); toggleTheme(); }; });
+    $$('[data-set-theme]').forEach(b => { b.onclick = () => { audio.play('click'); setTheme(b.dataset.setTheme); }; });
     $('#action-btn').onclick = () => { if (World.nearStation) { audio.play('click'); World.enter(World.nearStation); } };
     setInterval(updateActionButton, ACTION_POLL_MS);
     // Klick neben das Fenster schließt es
@@ -205,9 +205,8 @@ function setupEvents() {
     on('game:start', () => startGame());
     on('lang:toggle', () => setLang(LANGS[(LANGS.indexOf(lang()) + 1) % LANGS.length]));
     on('firm:changed', () => World.refresh());
-    on('theme:set', (p) => setThemePref(p));
-    on('theme:cycle', () => cycleTheme());
-    on('theme:pref', () => syncThemeButtons());
+    on('theme:set', (m) => setTheme(m));
+    on('theme:toggle', () => toggleTheme());
     on('theme:changed', () => { syncThemeButtons(); applyWorldTheme(); });
     on('lang:changed', () => {
         translateHud();

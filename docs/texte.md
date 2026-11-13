@@ -3,7 +3,7 @@
 Automatisch erzeugt mit `node tools/texte.mjs` – nicht von Hand bearbeiten.
 Zweck: Wiederholungen zwischen Startseite, Stationen, Finale, Sprüchen und Lebenslauf finden.
 
-## Deutsch (546 Texte)
+## Deutsch (545 Texte)
 
 ### Doppelungen
 
@@ -31,7 +31,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.meta.title` | Abdul Kader Sabouni – Interaktiver Lebenslauf |
 | `ui.meta.description` | Abdul Kader Sabouni – Softwareentwickler und Informatikstudent (FH Dortmund). Mein Lebenslauf als begehbare Spielwelt mit sechs Minispielen – oder kompakt in 30 Sekunden. |
 | `ui.common.close` | Schließen |
-| `ui.theme.system` | Wie das System |
 | `ui.theme.light` | Hell |
 | `ui.theme.dark` | Dunkel |
 | `ui.time.justNow` | gerade eben |
@@ -249,7 +248,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.palette.langSub` | Switch to English |
 | `ui.palette.langQ` | sprache language englisch english deutsch |
 | `ui.palette.theme` | Farbmodus wechseln |
-| `ui.palette.themeSub` | System · Hell · Dunkel |
+| `ui.palette.themeSub` | Hell ↔ Dunkel |
 | `ui.palette.themeQ` | dark mode dunkel hell farbe theme nacht |
 | `ui.palette.skill` | Kenntnis · {place} |
 | `ui.palette.jobQ` | beruf job arbeit |
@@ -575,7 +574,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `cv.traits[6]` | Neugier |
 | `cv.traits[7]` | Eigeninitiative |
 
-## Englisch (546 Texte)
+## Englisch (545 Texte)
 
 ### Doppelungen
 
@@ -600,7 +599,6 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.meta.title` | Abdul Kader Sabouni – Interactive CV |
 | `ui.meta.description` | Abdul Kader Sabouni – software developer and computer science student (FH Dortmund). My CV as a walkable game world with six mini-games – or as a compact page in 30 seconds. |
 | `ui.common.close` | Close |
-| `ui.theme.system` | Same as system |
 | `ui.theme.light` | Light |
 | `ui.theme.dark` | Dark |
 | `ui.time.justNow` | just now |
@@ -818,7 +816,7 @@ Gewollt gleich (gleiche Aktion an mehreren Stellen):
 | `ui.palette.langSub` | Auf Deutsch umschalten |
 | `ui.palette.langQ` | language sprache german deutsch english |
 | `ui.palette.theme` | Change colour mode |
-| `ui.palette.themeSub` | System · Light · Dark |
+| `ui.palette.themeSub` | Light ↔ Dark |
 | `ui.palette.themeQ` | dark mode light colour theme night |
 | `ui.palette.skill` | Skill · {place} |
 | `ui.palette.jobQ` | job work career |
